@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace MyThings.Common.Models
 {
-    class Group
+    public class Group
     {
+        public int Id { get; set; }
+        public String Name { get; set; }
+
+        public List<Sensor> Sensors { get; set; }
     }
 }
