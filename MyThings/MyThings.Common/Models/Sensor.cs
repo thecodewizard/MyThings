@@ -9,6 +9,7 @@ namespace MyThings.Common.Models
     public class Sensor
     {
         public int Id { get; set; }
+        public String Name { get; set; }
         public String Company { get; set; }
         public String MACAddress { get; set; }
         public String Location { get; set; }

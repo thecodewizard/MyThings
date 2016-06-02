@@ -15,6 +15,8 @@ namespace MyThings.Common.Models
 
         //This is fetched from the NoSql -> Exclude from relational
         [NotMapped]
-        public float value { get; set; }
+        public float Value { get; set; }
+        [NotMapped]
+        public DateTime ValueTime { get; set; }
     }
 }
