@@ -1,0 +1,40 @@
+﻿
+$font_dirs: '../fonts/';
+$font_extension: '.ttf';
+$basicfonts: Helvetica, sans-serif;
+$proximusmainpurple: #5C2D91;
+$proximuslightfont: Proximus-Light;
+$proximuslightitalicfont: Proximus-LightItalic;
+$proximusregularfont: Proximus-Regular;
+$proximusregularitalicfont: Proximus-RegularItalic;
+$proximusboldfont: Proximus-Bold;
+$proximusbolditalicfont: Proximus-BoldItalic;
+$proximusboldhardfont: Proximus-ExtraBold;
+
+@function _customfont($name)
+{
+    @return $font_dirs+$name+$font_extension;
+}
+
+@font-face
+{
+    font-family: $proximuslightfont;
+    src: url(_customfont($proximuslightfont));
+    font-family: $proximuslightitalicfont;
+    src: url(_customfont($proximuslightitalicfont));
+    font-family: $proximusregularfont;
+    src: url(_customfont($proximusregularfont));
+    font-family: $proximusregularitalicfont;
+    src: url(_customfont($proximusregularitalicfont));
+    font-family: $proximusboldfont;
+    src: url(_customfont($proximusboldfont));
+    font-family: $proximusbolditalicfont;
+    src: url(_customfont($proximusbolditalicfont));
+    font-family: $proximusboldhardfont;
+    src: url(_customfont($proximusboldhardfont));
+}
+
+body {
+  //color: $proximusmainpurple;
+  font-family: $proximusregularfont, $basicfonts;
+}

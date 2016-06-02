@@ -1,0 +1,19 @@
+﻿@font-face {
+  font-family: Proximus-Light;
+  src: url("../fonts/Proximus-Light.ttf");
+  font-family: Proximus-LightItalic;
+  src: url("../fonts/Proximus-LightItalic.ttf");
+  font-family: Proximus-Regular;
+  src: url("../fonts/Proximus-Regular.ttf");
+  font-family: Proximus-RegularItalic;
+  src: url("../fonts/Proximus-RegularItalic.ttf");
+  font-family: Proximus-Bold;
+  src: url("../fonts/Proximus-Bold.ttf");
+  font-family: Proximus-BoldItalic;
+  src: url("../fonts/Proximus-BoldItalic.ttf");
+  font-family: Proximus-ExtraBold;
+  src: url("../fonts/Proximus-ExtraBold.ttf"); }
+
+body {
+  font-family: Proximus-Regular, Helvetica, sans-serif; }
+
