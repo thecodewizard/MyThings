@@ -1,6 +1,7 @@
 ﻿//This is the general Javascript file
     //The general namespace to avoid conflicts
 var MyThings = MyThings || {};
+var Test = Test || {}; //TODO: Remove test code
 
 MyThings = {
     //TODO: Add Main Javascript functions here
@@ -9,6 +10,22 @@ MyThings = {
         console.log(logtext);
     }
 };
+
+Test = {
+    getSensor: function(id) {
+        Sensor.load(id,
+            function(sensor) {
+                console.log(sensor);
+            });
+    },
+
+    getSensors: function() {
+        Sensor.loadMany(50,
+            function(sensor) {
+                console.log(sensor);
+            });
+    }
+}
 
 //OBJECTS API - MANUAL //TODO: Remove these comment lines.
 

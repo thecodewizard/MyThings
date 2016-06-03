@@ -26,6 +26,12 @@ namespace MyThings.Web
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            //Own Bundles
+            bundles.Add(new ScriptBundle("~/Scripts/mythings").Include(
+                    "~/Scripts/MyThingsObjects.js",
+                    "~/Scripts/MyThings.js"
+                ));
         }
     }
 }
