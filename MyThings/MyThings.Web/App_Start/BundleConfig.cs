@@ -27,7 +27,7 @@ namespace MyThings.Web
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
             bundles.Add(new StyleBundle("~/Styles/css").Include(
-                       "~/Styles/Bundled.css"));
+                       "~/Styles/Bundled.min.css"));
         }
     }
 }
