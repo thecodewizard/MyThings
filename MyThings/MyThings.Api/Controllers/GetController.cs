@@ -20,8 +20,9 @@ namespace MyThings.Api.Controllers
         // Load Container details on ID
         // Load Group details on ID
         // Get last value from container on ID. (return json with value and valueid)
-        
+
         //TODO: Delete The Testmethods
+        #region TestMethods javascript Objects
         [HttpGet]
         public HttpResponseMessage GetSensor(int? sensorId)
         {
@@ -90,5 +91,31 @@ namespace MyThings.Api.Controllers
 
             return new HttpResponseMessage(HttpStatusCode.InternalServerError);
         }
+        #endregion
+
+        #region TestMethods ErrorHandling
+        [HttpGet]
+        public HttpResponseMessage GetRandomError()
+        {
+            Sensor sensor = new Sensor();
+            sensor.Name = "test";
+            sensor.Containers = new List<Container>()
+                {
+                    new Container() { Id= 1, Name = "TestContainer", SensorId =  sensor.Id},
+                    new Container() { Id= 2, Name = "TestContainer2", SensorId =  sensor.Id},
+                    new Container() { Id= 3, Name = "TestContainer3", SensorId =  sensor.Id}
+                };
+
+            Error randomError = Error.GenericError(sensor, sensor.Containers.FirstOrDefault());
+
+            String json = JsonConvert.SerializeObject(randomError);
+
+            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+            message.Content = new StringContent(json);
+            message.Headers.Add("Access-Control-Allow-Origin", "*");
+            return message;
+        }
+        #endregion
+
     }
 }
