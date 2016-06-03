@@ -101,6 +101,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\MyThingsContext.cs" />
+    <Compile Include="Migrations\201606031539486_InitDb.cs" />
+    <Compile Include="Migrations\201606031539486_InitDb.Designer.cs">
+      <DependentUpon>201606031539486_InitDb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ContainerType.cs" />
     <Compile Include="Models\LegacyModels\AccountViewModels.cs" />
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\Error.cs" />
@@ -116,7 +123,11 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201606031539486_InitDb.resx">
+      <DependentUpon>201606031539486_InitDb.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
