@@ -208,6 +208,13 @@
     <Content Include="fonts\Proximus-LightItalic.ttf" />
     <Content Include="fonts\Proximus-Regular.ttf" />
     <Content Include="fonts\Proximus-RegularItalic.ttf" />
+    <Content Include="fonts\Proximus-Bold.woff" />
+    <Content Include="fonts\Proximus-BoldItalic.woff" />
+    <Content Include="fonts\Proximus-ExtraBold.woff" />
+    <Content Include="fonts\Proximus-Light.woff" />
+    <Content Include="fonts\Proximus-LightItalic.woff" />
+    <Content Include="fonts\Proximus-Regular.woff" />
+    <Content Include="fonts\Proximus-RegularItalic.woff" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
