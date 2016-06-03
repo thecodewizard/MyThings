@@ -1,7 +1,7 @@
 # MyThings
 Dashboard for the MyThings Platform
 
-shizzle ma nizzle
+shizzle ma nizzle in the hizzle ma fizzle
 
 ___________________________________________________________________________________
 //OBJECTS API - MANUAL
