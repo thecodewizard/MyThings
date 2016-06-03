@@ -28,10 +28,11 @@ namespace MyThings.Web
                       "~/Content/site.css"));
 
             //Own Bundles
+            bundles.Add(new StyleBundle("~/Styles/css").Include(
+                       "~/Styles/Bundled.min.css"));
             bundles.Add(new ScriptBundle("~/Scripts/mythings").Include(
                     "~/Scripts/MyThingsObjects.js",
-                    "~/Scripts/MyThings.js"
-                ));
+                    "~/Scripts/MyThings.js"));
         }
     }
 }
