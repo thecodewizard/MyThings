@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Container.cs" />
+    <Compile Include="Models\Error.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Sensor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
