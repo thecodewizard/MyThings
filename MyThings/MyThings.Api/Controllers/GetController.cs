@@ -30,6 +30,12 @@ namespace MyThings.Api.Controllers
                 int id = sensorId.Value;
                 Sensor sensor = new Sensor();
                 sensor.Name = "test";
+                sensor.Containers = new List<Container>()
+                {
+                    new Container() { Id= 1, Name = "TestContainer", SensorId =  sensor.Id},
+                    new Container() { Id= 2, Name = "TestContainer2", SensorId =  sensor.Id},
+                    new Container() { Id= 3, Name = "TestContainer3", SensorId =  sensor.Id}
+                };
 
                 String json = JsonConvert.SerializeObject(sensor);
 
@@ -64,5 +70,25 @@ namespace MyThings.Api.Controllers
             return new HttpResponseMessage(HttpStatusCode.InternalServerError);
         }
 
+        [HttpGet]
+        public HttpResponseMessage GetValue(int? sensorId, int? containerId)
+        {
+            if (sensorId.HasValue && containerId.HasValue)
+            {
+                Container container = new Container();
+                container.Name = "testContainer69";
+                container.Value = 13;
+                container.ValueTime = DateTime.Now;
+
+                String json = JsonConvert.SerializeObject(container);
+
+                HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                message.Content = new StringContent(json);
+                message.Headers.Add("Access-Control-Allow-Origin", "*");
+                return message;
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+        }
     }
 }

@@ -19,6 +19,15 @@ Test = {
             });
     },
 
+    getSensorWithContainers: function(id) {
+        Sensor.load(id,
+            function(sensor) {
+                console.log(sensor);
+            }, true, function(container) {
+                console.log(container);
+            });
+    },
+
     getSensors: function() {
         Sensor.loadMany(50,
             function(sensor) {
@@ -47,11 +56,15 @@ Test = {
 */
 
 //The Sensor object has the following extra (not shared) functionality:
-/* 1. var sensor = Sensor.load(sensorId, onSensorLoaded, loadContainerValues, onContainerValueLoaded);
+/* 1. Sensor.load(sensorId, onSensorLoaded, loadContainerValues, onContainerValueLoaded);
         -> Loads sensor by id from server. Triggers the onSensorLoaded(sensor) when successfully loaded.
         -> if loadContainerValues is 'true', the onContainerValueLoaded(container) triggers per successfully loaded container.
 
-   2. var sensor = Sensor.loadFromJson(json, loadContainerValues, onContainerValueLoaded);
+   2. Sensor.loadMany(count, onSensorLoaded, loadContainerValues, onContainerValueLoaded);
+        -> Loads multiple sensors from the server. Triggers the onSensorLoaded(sensor) per sensor that is successfully loaded.
+        -> if loadContainerValues is 'true', the onContainerValueLoaded(container) triggers per successfully loaded container.
+
+   3. var sensor = Sensor.loadFromJson(json, loadContainerValues, onContainerValueLoaded);
         -> Parses sensor from json. loadContainervalues fetches current values from database and triggers onContainerValueLoaded(container) per loaded container.
 */
 

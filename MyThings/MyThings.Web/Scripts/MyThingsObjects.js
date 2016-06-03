@@ -1,6 +1,10 @@
 ﻿//This is the javascript file with the objects
     //Always load this AFTER jquery and BEFORE other self made scripts
 
+//Serverlocations
+var apiBaseUrl = "http://localhost:22056/api/";
+var siteBaseUrl = "http://http://localhost:16964/Dashboard/";
+
 //OBJECTS
 function Sensor(id, name, company, macaddress, location, creationdate, sensorentries, basestationlat, basestationlng, containers) {
     //Fields
@@ -37,11 +41,12 @@ function Sensor(id, name, company, macaddress, location, creationdate, sensorent
     }
 }
 
-function Container(id, name, creationtime, value, valuetime) {
+function Container(id, name, creationtime, sensor, value, valuetime) {
     //Fields
     this.id = id;
     this.name = name;
     this.creationtime = creationtime;
+    this.sensor = sensor;
     this.value = value;
     this.valuetime = valuetime;
 
@@ -56,15 +61,15 @@ function Container(id, name, creationtime, value, valuetime) {
 
         if (that.id != null && that.name != null) {
             $.ajax({
-                    url: "http://localhost:16964/api/get/getValue/" + that.id,
+                url: apiBaseUrl + "get/getvalue?sensorId=" + that.sensor.id + "&containerId=" + that.id,
                     method: "GET"
                 })
                 .done(function(json) {
                     if (json != null) {
                         var data = JSON.parse(json);
 
-                        that.value = data.value;
-                        that.valuetime = data.valuetime;
+                        that.value = data.Value;
+                        that.valuetime = data.ValueTime;
 
                         onCurrentValueLoaded(that);
                     }
@@ -152,7 +157,7 @@ Sensor.load = function (sensorId, onSensorLoaded, loadContainerValues, onContain
     if ($.isFunction(onSensorLoaded)) {
         if (sensorId != null) {
             $.ajax({
-                url: "http://localhost:22056/Api/Get/GetSensor?sensorId=" + sensorId,
+                url: apiBaseUrl + "get/getSensor?sensorId=" + sensorId,
                 method: "GET",
                 contentType: "application/json"
             }).done(function (json) {
@@ -162,7 +167,7 @@ Sensor.load = function (sensorId, onSensorLoaded, loadContainerValues, onContain
                     onSensorLoaded(sensor);
 
                     //Load Containervalues if requested
-                    loadContainerValues = loadContainerValues || true;
+                    loadContainerValues = loadContainerValues || false;
                     if (loadContainerValues == true && $.isFunction(onContainerValueLoaded)) {
                         for (var i = 0; i < sensor.containers.length; i++) {
                             var container = sensor.containers[i];
@@ -185,7 +190,7 @@ Sensor.loadMany = function (count, onSensorLoaded, loadContainerValues, onContai
     if ($.isFunction(onSensorLoaded)) {
         if (count != null) {
             $.ajax({
-                url: "http://localhost:22056/Api/Get/GetSensors?count=" + count,
+                url: apiBaseUrl + "get/getsensors?count=" + count,
                 method: "GET",
                 contentType: "application/json"
             }).done(function (json) {
@@ -226,6 +231,10 @@ Sensor.loadFromJson = function(json, loadContainerValues, onContainerValueLoaded
     if (json != null) {
         var data = JSON.parse(json);
 
+        //Make the sensorobject
+        var sensor = new Sensor(data["Id"], data["Name"], data["Company"], data["MACAddress"], data["Location"], data["CreationDate"],
+                data["SensorEntries"], data["BasestationLat"], data["BasestationLng"]);
+
         //Make containerobjects from the data
         var containers = [];
         if (data.hasOwnProperty("Containers") && data["Containers"] != null) {
@@ -233,10 +242,10 @@ Sensor.loadFromJson = function(json, loadContainerValues, onContainerValueLoaded
                 var obj = data["Containers"][i];
                 if (obj.hasOwnProperty("Id") && obj.hasOwnProperty("Name")) {
                     //Make containerobject
-                    var container = new Container(obj.id, obj.name, obj.creationtime);
+                    var container = new Container(obj["Id"], obj["Name"], obj["CreationTime"], sensor);
 
                     //Add to sensor
-                    containers.add(container);
+                    containers.push(container);
 
                     //Load Containervalues if requested
                     loadContainerValues = loadContainerValues || true;
@@ -248,8 +257,8 @@ Sensor.loadFromJson = function(json, loadContainerValues, onContainerValueLoaded
         }
 
         //Make and return sensor from JSON & Containers
-        return new Sensor(data["Id"], data["Name"], data["Company"], data["MACAddress"], data["Location"], data["CreationDate"],
-                data["SensorEntries"], data["BasestationLat"], data["BasestationLng"], containers);
+        sensor.containers = containers;
+        return sensor;
     }
 
     return null;

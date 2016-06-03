@@ -12,6 +12,9 @@ namespace MyThings.Common.Models
         public int Id { get; set; }
         public String Name { get; set; }
         public DateTime CreationTime { get; set; }
+        
+        public int SensorId { get; set; }
+        public Sensor Sensor { get; set; }
 
         //This is fetched from the NoSql -> Exclude from relational
         [NotMapped]
