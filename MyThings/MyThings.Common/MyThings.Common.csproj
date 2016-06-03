@@ -70,12 +70,6 @@
     <Compile Include="Repositories\Interfaces\IGenericRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyThings.Web\MyThings.Web.csproj">
-      <Project>{5EEEF312-3B65-48E9-BAA0-A29B61EE206B}</Project>
-      <Name>MyThings.Web</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
