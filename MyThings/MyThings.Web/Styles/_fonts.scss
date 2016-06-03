@@ -1,0 +1,64 @@
+﻿
+$font_dirs: '../fonts/';
+$font_extension_ttf: '.ttf';
+$font_extension_woff: '.woff';
+$font_format_ttf: format('truetype');
+$font_format_woff: format('woff');
+$basicfonts: Helvetica, sans-serif;
+$proximusmainpurple: #5C2D91;
+$proximuslightfont: Proximus-Light;
+$proximuslightitalicfont: Proximus-LightItalic;
+$proximusregularfont: Proximus-Regular;
+$proximusregularitalicfont: Proximus-RegularItalic;
+$proximusboldfont: Proximus-Bold;
+$proximusbolditalicfont: Proximus-BoldItalic;
+$proximusboldhardfont: Proximus-ExtraBold;
+
+@function _customfont($name)
+{
+    @return url($font_dirs+$name+$font_extension_ttf) $font_format_ttf,url($font_dirs+$name+$font_extension_woff) $font_format_woff;
+
+}
+
+@font-face
+    {
+     font-family: $proximusregularfont;
+    src: _customfont($proximusregularfont);
+    }
+@font-face
+    {
+      font-family: $proximuslightfont;
+    src: _customfont($proximuslightfont);
+    }
+@font-face
+    {
+   font-family: $proximuslightitalicfont;
+    src: _customfont($proximuslightitalicfont);
+    }
+@font-face
+    {
+    font-family: $proximusregularitalicfont;
+    src: _customfont($proximusregularitalicfont);
+    }
+@font-face
+    {
+    font-family: $proximusboldfont;
+    src: _customfont($proximusboldfont);
+    }
+@font-face
+    {
+    font-family: $proximusbolditalicfont;
+    src: _customfont($proximusbolditalicfont);
+    }
+@font-face
+    {
+    font-family: $proximusboldhardfont;
+    src: _customfont($proximusboldhardfont);
+    }
+
+
+
+body {
+  
+  font-family: $proximusregularfont, $basicfonts;
+     }

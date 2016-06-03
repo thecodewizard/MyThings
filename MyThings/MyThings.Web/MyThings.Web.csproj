@@ -199,6 +199,24 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <Content Include="fonts\Proximus-Bold.ttf" />
+    <Content Include="fonts\Proximus-BoldItalic.ttf" />
+    <Content Include="fonts\Proximus-ExtraBold.ttf" />
+    <Content Include="fonts\Proximus-Light.ttf" />
+    <Content Include="fonts\Proximus-LightItalic.ttf" />
+    <Content Include="fonts\Proximus-Regular.ttf" />
+    <Content Include="fonts\Proximus-RegularItalic.ttf" />
+    <Content Include="fonts\Proximus-Bold.woff" />
+    <Content Include="fonts\Proximus-BoldItalic.woff" />
+    <Content Include="fonts\Proximus-ExtraBold.woff" />
+    <Content Include="fonts\Proximus-Light.woff" />
+    <Content Include="fonts\Proximus-LightItalic.woff" />
+    <Content Include="fonts\Proximus-Regular.woff" />
+    <Content Include="fonts\Proximus-RegularItalic.woff" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -217,6 +235,12 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Styles\Bundled.css">
+      <DependentUpon>Bundled.scss</DependentUpon>
+    </Content>
+    <Content Include="Styles\Bundled.min.css">
+      <DependentUpon>Bundled.css</DependentUpon>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -249,6 +273,9 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Styles\Bundled.scss" />
+    <Content Include="Styles\_fonts.scss" />
+    <Content Include="Styles\_colors.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -296,7 +323,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.2.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.2.2\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\BuildWebCompiler.1.11.315\build\BuildWebCompiler.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BuildWebCompiler.1.11.315\build\BuildWebCompiler.targets'))" />
   </Target>
+  <Import Project="..\packages\BuildWebCompiler.1.11.315\build\BuildWebCompiler.targets" Condition="Exists('..\packages\BuildWebCompiler.1.11.315\build\BuildWebCompiler.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
