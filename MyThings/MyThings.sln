@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.Common", "MyThings
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.Api", "MyThings.Api\MyThings.Api.csproj", "{1043FA63-6DAF-476C-A96A-D5E1BD8EB64A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.Receiver", "..\..\..\Proximus API\Proximus API\MyThings.Receiver.csproj", "{DA12EFF0-85E3-46AF-888A-4FE4C987FCE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.Receiver", "MyThings.Receiver\MyThings.Receiver.csproj", "{DA12EFF0-85E3-46AF-888A-4FE4C987FCE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
