@@ -19,13 +19,13 @@ namespace MyThings.Common.Models
         public String Advice { get; set; }
         public DateTime Time { get; set; }
 
-        //User Triggerd Fields
+        //User Triggered Fields
         public Boolean Read { get; set; }
 
-        //User Defined Fields
-        public int SensorId { get; set; }
+        //References
+        public int? SensorId { get; set; }
         public Sensor Sensor { get; set; }
-        public int ContainerId { get; set; }
+        public int? ContainerId { get; set; }
         public Container Container { get; set; }
 
         //Constructor
@@ -48,7 +48,7 @@ namespace MyThings.Common.Models
             Time = DateTime.Now;
         }
 
-        //Creator
+        //Creators
         public static Error MinThresholdWarning(Sensor sensor, Container container)
         {
             return new Error(201, ErrorType.Warning, ErrorCategory.Threshold, "Minimum Threshold Not Met", 

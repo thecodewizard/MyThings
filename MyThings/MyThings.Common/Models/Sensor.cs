@@ -19,6 +19,8 @@ namespace MyThings.Common.Models
         public Double BasestationLat { get; set; }
         public Double BasestationLng { get; set; }
 
+        //References
         public List<Container> Containers { get; set; }
+        public List<Group> Groups { get; set; }
     }
 }

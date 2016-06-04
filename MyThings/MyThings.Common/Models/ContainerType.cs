@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace MyThings.Common.Models
 {
-    public class Group
+    public class ContainerType
     {
         public int Id { get; set; }
         public String Name { get; set; }
-
-        //References
-        public List<Sensor> Sensors { get; set; }
     }
 }

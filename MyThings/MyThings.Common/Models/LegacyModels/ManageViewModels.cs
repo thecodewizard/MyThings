@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
-namespace MyThings.Web.Models
+namespace MyThings.Common.Models
 {
     public class IndexViewModel
     {

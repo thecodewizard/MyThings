@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyThings.Web.Models
+namespace MyThings.Common.Models
 {
     public class ExternalLoginConfirmationViewModel
     {
