@@ -21,7 +21,7 @@ namespace MyThings.Common.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("MyThingsContext", throwIfV1Schema: false)
         {
         }
 
