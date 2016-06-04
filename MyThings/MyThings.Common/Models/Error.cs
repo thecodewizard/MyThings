@@ -19,7 +19,7 @@ namespace MyThings.Common.Models
         public String Advice { get; set; }
         public DateTime Time { get; set; }
 
-        //User Triggerd Fields
+        //User Triggered Fields
         public Boolean Read { get; set; }
 
         //References
