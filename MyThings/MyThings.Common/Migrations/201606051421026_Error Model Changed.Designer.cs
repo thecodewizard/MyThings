@@ -7,13 +7,13 @@ namespace MyThings.Common.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class InitDatabase : IMigrationMetadata
+    public sealed partial class ErrorModelChanged : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitDatabase));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ErrorModelChanged));
         
         string IMigrationMetadata.Id
         {
-            get { return "201606041243178_Init Database"; }
+            get { return "201606051421026_Error Model Changed"; }
         }
         
         string IMigrationMetadata.Source

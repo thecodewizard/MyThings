@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,9 @@ namespace MyThings.Common.Models
     public class Error
     {
         //Fixed Fields
+        [Column(Order = 0), Key]
         public int Id { get; set; }
+        [Column(Order = 1), Key]
         public int ErrorCode { get; set; } //1xx == ERROR //2xx == WARNING
         public ErrorType Type { get; set; }
         public ErrorCategory Category { get; set; }
@@ -51,7 +54,7 @@ namespace MyThings.Common.Models
         //Creators
         public static Error MinThresholdWarning(Sensor sensor, Container container)
         {
-            return new Error(201, ErrorType.Warning, ErrorCategory.Threshold, "Minimum Threshold Not Met", 
+            return new Error(201, ErrorType.Warning, ErrorCategory.Threshold, "Minimum Threshold Not Met",
                 "The minimum threshold is not met on Sensor " + sensor.Name + " at " + container.Name + ".",
                 "Check on-site what would cause this message or raise the minimum threshold value at the container.",
                 sensor, container);

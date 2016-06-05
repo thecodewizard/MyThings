@@ -56,8 +56,7 @@ namespace MyThings.Common.Repositories
             {
                 //The error already exists -> Update the error
                 Update(error);
-            }
-            else
+            } else
             {
                 //The error doesn't exist -> Insert the error
                 error = Insert(error);

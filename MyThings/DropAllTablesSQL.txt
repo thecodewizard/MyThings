@@ -1,0 +1,40 @@
+USE [MyThings]
+GO
+
+/****** Object:  Table [dbo].[Sensors]    Script Date: 5/06/2016 16:04:56 ******/
+DROP TABLE [dbo].[Sensors]
+GO
+DROP TABLE [dbo].[SensorContainers]
+GO
+DROP TABLE [dbo].[Groups]
+GO
+DROP TABLE [dbo].[GroupedSensors]
+GO
+DROP TABLE [dbo].[Errors]
+GO
+DROP TABLE [dbo].[ContainerTypes]
+GO
+DROP TABLE [dbo].[Containers]
+GO
+DROP TABLE [dbo].[AspNetUsers]
+GO
+DROP TABLE [dbo].[AspNetUserRoles]
+GO
+DROP TABLE [dbo].[AspNetUSerLogins]
+GO
+DROP TABLE [dbo].[AspNetUserClaims]
+GO
+DROP TABLE [dbo].[AspNetRoles]
+GO
+DROP TABLE [dbo].[Sensors]
+GO
+DROP TABLE [dbo].[Groups]
+GO
+DROP TABLE [dbo].[ContainerTypes]
+GO
+DROP TABLE [dbo].[AspNetUsers]
+GO
+DROP TABLE [dbo].[Sensors]
+GO
+DROP TABLE [dbo].[__MigrationHistory]
+GO
