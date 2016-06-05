@@ -34,7 +34,7 @@ namespace MyThings.Common.Repositories
 
         #region Functionality Methods
 
-        public List<Container> GetContainers(int? count)
+        public List<Container> GetContainers(int? count = null)
         {
             if (count.HasValue)
                 return

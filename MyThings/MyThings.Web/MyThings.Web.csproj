@@ -173,6 +173,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SqlTestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -273,6 +274,11 @@
     <Content Include="Styles\Bundled.scss" />
     <Content Include="Styles\_fonts.scss" />
     <Content Include="Styles\_colors.scss" />
+    <Content Include="Views\SqlTest\Index.cshtml" />
+    <Content Include="Views\SqlTest\Create.cshtml" />
+    <Content Include="Views\SqlTest\Edit.cshtml" />
+    <Content Include="Views\SqlTest\Details.cshtml" />
+    <Content Include="Views\SqlTest\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

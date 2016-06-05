@@ -1,0 +1,83 @@
+﻿@model MyThings.Common.Models.Sensor
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Sensor</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Company)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Company)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MACAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MACAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Location)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SensorEntries)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SensorEntries)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BasestationLat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BasestationLat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BasestationLng)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BasestationLng)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

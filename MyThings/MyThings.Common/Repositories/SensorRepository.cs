@@ -52,7 +52,7 @@ namespace MyThings.Common.Repositories
 
         #region Functionality Methods
 
-        public List<Sensor> GetSensors(int? count)
+        public List<Sensor> GetSensors(int? count = null)
         {
             if (count.HasValue)
                 return
