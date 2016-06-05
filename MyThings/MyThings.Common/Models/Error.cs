@@ -10,7 +10,7 @@ namespace MyThings.Common.Models
     public class Error
     {
         //Fixed Fields
-        [Key]
+        public int Id { get; set; }
         public int ErrorCode { get; set; } //1xx == ERROR //2xx == WARNING
         public ErrorType Type { get; set; }
         public ErrorCategory Category { get; set; }

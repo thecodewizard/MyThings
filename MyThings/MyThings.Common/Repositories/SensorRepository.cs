@@ -18,6 +18,7 @@ namespace MyThings.Common.Repositories
                 (from s in Context.Sensors
                     .Include(s => s.Containers.Select(c => c.ContainerType))
                     .Include(s => s.Groups)
+                 orderby s.CreationDate descending
                  select s)
                     .ToList();
         }
@@ -51,16 +52,46 @@ namespace MyThings.Common.Repositories
 
         #region Functionality Methods
 
-        public List<Sensor> GetSensors()
+        public List<Sensor> GetSensors(int? count)
         {
+            if (count.HasValue)
+                return
+                    (from s in Context.Sensors
+                        .Include(s => s.Containers.Select(c => c.ContainerType))
+                        .Include(s => s.Groups)
+                     orderby s.CreationDate descending 
+                     select s)
+                        .Take(count.Value)
+                        .ToList();
+            
             return All().ToList();
         }
 
-        public Sensor SaveSensor(Sensor sensor)
+        public Sensor GetSensorById(int sensorId)
         {
-            Sensor savedSensor = Insert(sensor);
+            return GetByID(sensorId);
+        }
+
+        public Sensor SaveOrUpdateSensor(Sensor sensor)
+        {
+            if (DbSet.Find(sensor.Id) != null)
+            {
+                //The sensor already exists -> Update the sensor
+                Update(sensor);
+            }
+            else
+            {
+                //The sensor doesn't exist -> Insert the sensor
+                sensor = Insert(sensor);
+            }
             SaveChanges();
-            return savedSensor;
+            return sensor;
+        }
+
+        public void DeleteSensor(Sensor sensor)
+        {
+            Delete(sensor);
+            SaveChanges();
         }
 
         #endregion

@@ -14,7 +14,7 @@ namespace MyThings.Common.Repositories
 
         public override IEnumerable<Group> All()
         {
-            return (from g in Context.Group.Include(g => g.Sensors) select g).ToList();
+            return (from g in Context.Group.Include(g => g.Sensors) orderby g.Name select g).ToList();
         }
 
         public override Group GetByID(object id)
@@ -34,6 +34,43 @@ namespace MyThings.Common.Repositories
             Context.Group.Add(group);
             return group;
         }
+        #endregion
+
+        #region Functionality Methods
+
+        public List<Group> GetGroups()
+        {
+            return All().ToList();
+        }
+
+        public Group GetGroupById(int groupId)
+        {
+            return GetByID(groupId);
+        }
+
+        public Group SaveOrUpdateGroup(Group group)
+        {
+            if (DbSet.Find(group.Id) != null)
+            {
+                //The group already exists -> Update the group
+                Update(group);
+            }
+            else
+            {
+                //The group doesn't exist -> Insert the group
+                Insert(group);
+            }
+
+            SaveChanges();
+            return group;
+        }
+
+        public void DeleteGroup(Group group)
+        {
+            Delete(group);
+            SaveChanges();
+        }
+
         #endregion
     }
 }

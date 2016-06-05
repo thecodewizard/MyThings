@@ -14,7 +14,7 @@ namespace MyThings.Common.Repositories
 
         public override IEnumerable<Container> All()
         {
-            return (from c in Context.Container.Include(c => c.ContainerType) select c).ToList();
+            return (from c in Context.Container.Include(c => c.ContainerType) orderby c.CreationTime descending select c).ToList();
         }
 
         public override Container GetByID(object id)
@@ -22,24 +22,57 @@ namespace MyThings.Common.Repositories
             return (from c in Context.Container.Include(c => c.ContainerType) select c).FirstOrDefault();
         }
 
-        public override Container Insert(Container entity)
+        public override Container Insert(Container container)
         {
-            return base.Insert(entity);
+            if (Context.Entry(container.ContainerType).State != EntityState.Unchanged)
+                Context.Entry(container.ContainerType).State = EntityState.Unchanged;
+
+            Context.Container.Add(container);
+            return container;
+        }
+        #endregion
+
+        #region Functionality Methods
+
+        public List<Container> GetContainers(int? count)
+        {
+            if (count.HasValue)
+                return
+                    (from c in Context.Container.Include(c => c.ContainerType)
+                        orderby c.CreationTime descending
+                        select c).Take(count.Value).ToList();
+
+            return All().ToList();
         }
 
-        //public override Sensor Insert(Sensor sensor)
-        //{
-        //    foreach (Container container in sensor.Containers)
-        //        if (Context.Entry<Container>(container).State != EntityState.Unchanged)
-        //            Context.Entry<Container>(container).State = EntityState.Unchanged;
+        public Container GetContainerById(int containerId)
+        {
+            return GetByID(containerId);
+        }
 
-        //    foreach (Group group in sensor.Groups)
-        //        if (Context.Entry<Group>(group).State != EntityState.Unchanged)
-        //            Context.Entry<Group>(group).State = EntityState.Unchanged;
+        public Container SaveOrUpdateContainer(Container container)
+        {
+            if (DbSet.Find(container.Id) != null)
+            {
+                //The container already exists -> Update the container
+                Update(container);
+            }
+            else
+            {
+                //The container doesn't exist -> Insert the container
+                container = Insert(container);
+            }
+            
+            SaveChanges();
+            return container;
+        }
 
-        //    Context.Sensors.Add(sensor);
-        //    return sensor;
-        //}
+        public void DeleteContainer(Container container)
+        {
+            Delete(container);
+            SaveChanges();
+        }
+
         #endregion
     }
 }

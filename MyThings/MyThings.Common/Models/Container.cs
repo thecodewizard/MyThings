@@ -12,7 +12,6 @@ namespace MyThings.Common.Models
         public int Id { get; set; }
         public String Name { get; set; }
         public DateTime CreationTime { get; set; }
-        public DateTime LastUpdatedTime { get; set; }
 
         //References
         public int ContainerTypeId { get; set; }
@@ -23,7 +22,9 @@ namespace MyThings.Common.Models
 
         //This is fetched from the NoSql -> Exclude from relational
         [NotMapped]
-        public float Value { get; set; }
+        public DateTime LastUpdatedTime { get; set; }
+        [NotMapped]
+        public double Value { get; set; }
         [NotMapped]
         public DateTime ValueTime { get; set; }
     }
