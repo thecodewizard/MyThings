@@ -18,7 +18,6 @@ namespace MyThings.Common.Models
         public ContainerType ContainerType { get; set; }
 
         public int? SensorId { get; set; }
-        public Sensor Sensor { get; set; }
 
         //This is fetched from the NoSql -> Exclude from relational
         [NotMapped]

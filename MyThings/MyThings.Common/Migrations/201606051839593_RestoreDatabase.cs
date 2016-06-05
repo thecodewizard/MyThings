@@ -3,7 +3,7 @@ namespace MyThings.Common.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitDatabase : DbMigration
+    public partial class RestoreDatabase : DbMigration
     {
         public override void Up()
         {
@@ -14,15 +14,12 @@ namespace MyThings.Common.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         Name = c.String(),
                         CreationTime = c.DateTime(nullable: false),
-                        LastUpdatedTime = c.DateTime(nullable: false),
                         ContainerTypeId = c.Int(nullable: false),
                         SensorId = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.ContainerTypes", t => t.ContainerTypeId, cascadeDelete: true)
-                .ForeignKey("dbo.Sensors", t => t.SensorId)
-                .Index(t => t.ContainerTypeId)
-                .Index(t => t.SensorId);
+                .Index(t => t.ContainerTypeId);
             
             CreateTable(
                 "dbo.ContainerTypes",
@@ -32,6 +29,28 @@ namespace MyThings.Common.Migrations
                         Name = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.Errors",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        ErrorCode = c.Int(nullable: false),
+                        Type = c.Int(nullable: false),
+                        Category = c.Int(nullable: false),
+                        Title = c.String(),
+                        Description = c.String(),
+                        Advice = c.String(),
+                        Time = c.DateTime(nullable: false),
+                        Read = c.Boolean(nullable: false),
+                        SensorId = c.Int(nullable: false),
+                        ContainerId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Containers", t => t.ContainerId)
+                .ForeignKey("dbo.Sensors", t => t.SensorId)
+                .Index(t => t.SensorId)
+                .Index(t => t.ContainerId);
             
             CreateTable(
                 "dbo.Sensors",
@@ -55,32 +74,8 @@ namespace MyThings.Common.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Name = c.String(),
-                        Sensor_Id = c.Int(),
                     })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Sensors", t => t.Sensor_Id)
-                .Index(t => t.Sensor_Id);
-            
-            CreateTable(
-                "dbo.Errors",
-                c => new
-                    {
-                        ErrorCode = c.Int(nullable: false, identity: true),
-                        Type = c.Int(nullable: false),
-                        Category = c.Int(nullable: false),
-                        Title = c.String(),
-                        Description = c.String(),
-                        Advice = c.String(),
-                        Time = c.DateTime(nullable: false),
-                        Read = c.Boolean(nullable: false),
-                        SensorId = c.Int(nullable: false),
-                        ContainerId = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.ErrorCode)
-                .ForeignKey("dbo.Containers", t => t.ContainerId)
-                .ForeignKey("dbo.Sensors", t => t.SensorId)
-                .Index(t => t.SensorId)
-                .Index(t => t.ContainerId);
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -184,14 +179,12 @@ namespace MyThings.Common.Migrations
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Errors", "SensorId", "dbo.Sensors");
-            DropForeignKey("dbo.Errors", "ContainerId", "dbo.Containers");
-            DropForeignKey("dbo.Containers", "SensorId", "dbo.Sensors");
-            DropForeignKey("dbo.Groups", "Sensor_Id", "dbo.Sensors");
             DropForeignKey("dbo.GroupedSensors", "SensorId", "dbo.Sensors");
             DropForeignKey("dbo.GroupedSensors", "GroupId", "dbo.Groups");
+            DropForeignKey("dbo.Errors", "SensorId", "dbo.Sensors");
             DropForeignKey("dbo.SensorContainers", "ContainerId", "dbo.Containers");
             DropForeignKey("dbo.SensorContainers", "SensorId", "dbo.Sensors");
+            DropForeignKey("dbo.Errors", "ContainerId", "dbo.Containers");
             DropForeignKey("dbo.Containers", "ContainerTypeId", "dbo.ContainerTypes");
             DropIndex("dbo.GroupedSensors", new[] { "SensorId" });
             DropIndex("dbo.GroupedSensors", new[] { "GroupId" });
@@ -205,8 +198,6 @@ namespace MyThings.Common.Migrations
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.Errors", new[] { "ContainerId" });
             DropIndex("dbo.Errors", new[] { "SensorId" });
-            DropIndex("dbo.Groups", new[] { "Sensor_Id" });
-            DropIndex("dbo.Containers", new[] { "SensorId" });
             DropIndex("dbo.Containers", new[] { "ContainerTypeId" });
             DropTable("dbo.GroupedSensors");
             DropTable("dbo.SensorContainers");
@@ -215,9 +206,9 @@ namespace MyThings.Common.Migrations
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
-            DropTable("dbo.Errors");
             DropTable("dbo.Groups");
             DropTable("dbo.Sensors");
+            DropTable("dbo.Errors");
             DropTable("dbo.ContainerTypes");
             DropTable("dbo.Containers");
         }

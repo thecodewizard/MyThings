@@ -22,14 +22,15 @@ namespace MyThings.Common.Repositories
             int groupId = -1;
             return !int.TryParse(id.ToString(), out groupId) 
                 ? null 
-                : (from g in Context.Group.Include(g => g.Sensors) select g).FirstOrDefault();
+                : (from g in Context.Group.Include(g => g.Sensors) where g.Id == groupId select g).FirstOrDefault();
         }
 
         public override Group Insert(Group group)
         {
-            foreach (Sensor sensor in group.Sensors)
-                if(Context.Entry<Sensor>(sensor).State != EntityState.Unchanged)
-                    Context.Entry<Sensor>(sensor).State = EntityState.Unchanged;
+            if (group.Sensors != null)
+                foreach (Sensor sensor in group.Sensors)
+                    if (Context.Entry<Sensor>(sensor).State != EntityState.Unchanged)
+                        Context.Entry<Sensor>(sensor).State = EntityState.Unchanged;
 
             Context.Group.Add(group);
             return group;
@@ -48,29 +49,29 @@ namespace MyThings.Common.Repositories
             return GetByID(groupId);
         }
 
-        public Group SaveOrUpdateGroup(Group group)
-        {
-            if (DbSet.Find(group.Id) != null)
-            {
-                //The group already exists -> Update the group
-                Update(group);
-            }
-            else
-            {
-                //The group doesn't exist -> Insert the group
-                Insert(group);
-            }
-
-            SaveChanges();
-            return group;
-        }
-
         public void DeleteGroup(Group group)
         {
             Delete(group);
             SaveChanges();
         }
 
+        //public Group SaveOrUpdateGroup(Group group)
+        //{
+        //    if (DbSet.Find(group.Id) != null)
+        //    {
+        //        //The group already exists -> Update the group
+        //        Update(group);
+        //    } else
+        //    {
+        //        //The group doesn't exist -> Insert the group
+        //        Insert(group);
+        //    }
+
+        //    SaveChanges();
+        //    return group;
+        //}
+
         #endregion
     }
 }
+

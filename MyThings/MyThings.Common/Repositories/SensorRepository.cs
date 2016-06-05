@@ -17,7 +17,6 @@ namespace MyThings.Common.Repositories
             return
                 (from s in Context.Sensors
                     .Include(s => s.Containers.Select(c => c.ContainerType))
-                    .Include(s => s.Groups)
                  orderby s.CreationDate descending
                  select s)
                     .ToList();
@@ -30,20 +29,35 @@ namespace MyThings.Common.Repositories
                 ? null
                 : (from s in Context.Sensors
                     .Include(s => s.Containers.Select(c => c.ContainerType))
-                    .Include(s => s.Groups)
                     where s.Id == sensorId
                     select s).FirstOrDefault();
         }
 
+        public override void Update(Sensor sensor)
+        {
+            if (sensor.Containers != null)
+                foreach (Container container in sensor.Containers)
+                {
+                    if (Context.Entry(container).State != EntityState.Unchanged)
+                        Context.Entry(container).State = EntityState.Unchanged;
+                    if(container.ContainerType != null && Context.Entry(container.ContainerType).State != EntityState.Unchanged)
+                        Context.Entry(container.ContainerType).State = EntityState.Unchanged;
+                }
+
+            DbSet.Attach(sensor);
+            Context.Entry(sensor).State = EntityState.Modified;
+        }
+
         public override Sensor Insert(Sensor sensor)
         {
-            foreach (Container container in sensor.Containers)
-                if (Context.Entry<Container>(container).State != EntityState.Unchanged)
-                    Context.Entry<Container>(container).State = EntityState.Unchanged;
-
-            foreach (Group group in sensor.Groups)
-                if (Context.Entry<Group>(group).State != EntityState.Unchanged)
-                    Context.Entry<Group>(group).State = EntityState.Unchanged;
+            if(sensor.Containers != null)
+                foreach (Container container in sensor.Containers)
+                {
+                    if (Context.Entry<Container>(container).State != EntityState.Unchanged)
+                        Context.Entry<Container>(container).State = EntityState.Unchanged;
+                    if (container.ContainerType != null && Context.Entry(container.ContainerType).State != EntityState.Unchanged)
+                        Context.Entry(container.ContainerType).State = EntityState.Unchanged;
+                }
 
             Context.Sensors.Add(sensor);
             return sensor;
@@ -58,7 +72,6 @@ namespace MyThings.Common.Repositories
                 return
                     (from s in Context.Sensors
                         .Include(s => s.Containers.Select(c => c.ContainerType))
-                        .Include(s => s.Groups)
                      orderby s.CreationDate descending 
                      select s)
                         .Take(count.Value)
@@ -72,27 +85,28 @@ namespace MyThings.Common.Repositories
             return GetByID(sensorId);
         }
 
-        public Sensor SaveOrUpdateSensor(Sensor sensor)
-        {
-            if (DbSet.Find(sensor.Id) != null)
-            {
-                //The sensor already exists -> Update the sensor
-                Update(sensor);
-            }
-            else
-            {
-                //The sensor doesn't exist -> Insert the sensor
-                sensor = Insert(sensor);
-            }
-            SaveChanges();
-            return sensor;
-        }
-
         public void DeleteSensor(Sensor sensor)
         {
             Delete(sensor);
             SaveChanges();
         }
+
+        //public Sensor SaveOrUpdateSensor(Sensor sensor)
+        //{
+        //    if (DbSet.Find(sensor.Id) != null)
+        //    {
+        //        //The sensor already exists -> Update the sensor
+        //        Update(sensor);
+        //    }
+        //    else
+        //    {
+        //        //The sensor doesn't exist -> Insert the sensor
+        //        sensor = Insert(sensor);
+        //    }
+
+        //    SaveChanges();
+        //    return sensor;
+        //}
 
         #endregion
     }

@@ -11,9 +11,8 @@ namespace MyThings.Common.Models
     public class Error
     {
         //Fixed Fields
-        [Column(Order = 0), Key]
+        [Key]
         public int Id { get; set; }
-        [Column(Order = 1), Key]
         public int ErrorCode { get; set; } //1xx == ERROR //2xx == WARNING
         public ErrorType Type { get; set; }
         public ErrorCategory Category { get; set; }
@@ -32,6 +31,10 @@ namespace MyThings.Common.Models
         public Container Container { get; set; }
 
         //Constructor
+        public Error()
+        {
+            //An empty Constructor is required for entity framework
+        }
         public Error(int id, ErrorType type, ErrorCategory category, string title, string description, string advice, Sensor sensor, Container container)
         {
             //Pass Through

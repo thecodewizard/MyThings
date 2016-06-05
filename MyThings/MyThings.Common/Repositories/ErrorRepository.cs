@@ -27,9 +27,9 @@ namespace MyThings.Common.Repositories
 
         public override Error Insert(Error error)
         {
-            if(Context.Entry(error.Sensor).State != EntityState.Unchanged)
+            if(error.Sensor != null && Context.Entry(error.Sensor).State != EntityState.Unchanged)
                 Context.Entry(error.Sensor).State = EntityState.Unchanged;
-            if(Context.Entry(error.Container).State != EntityState.Unchanged)
+            if(error.Container != null && Context.Entry(error.Container).State != EntityState.Unchanged)
                 Context.Entry(error.Container).State = EntityState.Unchanged;
 
             Context.Error.Add(error);
@@ -50,27 +50,27 @@ namespace MyThings.Common.Repositories
             return GetByID(errorId);
         }
 
-        public Error SaveOrUpdateError(Error error)
-        {
-            if (DbSet.Find(error.Id) != null)
-            {
-                //The error already exists -> Update the error
-                Update(error);
-            } else
-            {
-                //The error doesn't exist -> Insert the error
-                error = Insert(error);
-            }
-
-            SaveChanges();
-            return error;
-        }
-
         public void DeleteError(Error error)
         {
             Delete(error);
             SaveChanges();
         }
+
+        //public Error SaveOrUpdateError(Error error)
+        //{
+        //    if (DbSet.Find(error.Id) != null)
+        //    {
+        //        //The error already exists -> Update the error
+        //        Update(error);
+        //    } else
+        //    {
+        //        //The error doesn't exist -> Insert the error
+        //        error = Insert(error);
+        //    }
+
+        //    SaveChanges();
+        //    return error;
+        //}
 
         #endregion
     }

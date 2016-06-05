@@ -24,7 +24,7 @@ namespace MyThings.Common.Repositories
 
         public override Container Insert(Container container)
         {
-            if (Context.Entry(container.ContainerType).State != EntityState.Unchanged)
+            if (container.ContainerType != null && Context.Entry(container.ContainerType).State != EntityState.Unchanged)
                 Context.Entry(container.ContainerType).State = EntityState.Unchanged;
 
             Context.Container.Add(container);
@@ -50,28 +50,27 @@ namespace MyThings.Common.Repositories
             return GetByID(containerId);
         }
 
-        public Container SaveOrUpdateContainer(Container container)
-        {
-            if (DbSet.Find(container.Id) != null)
-            {
-                //The container already exists -> Update the container
-                Update(container);
-            }
-            else
-            {
-                //The container doesn't exist -> Insert the container
-                container = Insert(container);
-            }
-            
-            SaveChanges();
-            return container;
-        }
-
         public void DeleteContainer(Container container)
         {
             Delete(container);
             SaveChanges();
         }
+
+        //public Container SaveOrUpdateContainer(Container container)
+        //{
+        //    if (DbSet.Find(container.Id) != null)
+        //    {
+        //        //The container already exists -> Update the container
+        //        Update(container);
+        //    } else
+        //    {
+        //        //The container doesn't exist -> Insert the container
+        //        container = Insert(container);
+        //    }
+
+        //    SaveChanges();
+        //    return container;
+        //}
 
         #endregion
     }
