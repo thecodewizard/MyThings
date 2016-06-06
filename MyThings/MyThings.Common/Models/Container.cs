@@ -23,15 +23,11 @@ namespace MyThings.Common.Models
 
         //This is fetched from the NoSql -> Exclude from relational
         [NotMapped]
+        public DateTime LastUpdatedTime { get; set; }
+        [NotMapped]
         public ContainerValue CurrentValue { get; set; }
-
-        //Trend
         [NotMapped]
         public List<ContainerValue> History { get; set; }
-        [NotMapped]
-        public double Value { get; set; }
-        [NotMapped]
-        public DateTime ValueTime { get; set; }
 
         //Functionality
         public Container Save()
