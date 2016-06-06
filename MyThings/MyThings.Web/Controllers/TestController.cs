@@ -21,9 +21,10 @@ namespace MyThings.Web.Controllers
             Container c = new Container();
             c.ContainerType = new ContainerType();
             c.ContainerType.Name = "Battery level";
+            c.MACAddress = s.MACAddress;
             s.Containers = new List<Container>() {c};
 
-            c =  TableStorageRepository.GetHistory(s, c, new TimeSpan(24, 0, 0));
+            c =  TableStorageRepository.GetHistory(c, new TimeSpan(24, 0, 0));
 
             return View();
         }

@@ -14,7 +14,7 @@ namespace MyThings.Common.Repositories
 {
     public class TableStorageRepository
     {
-        public static Container UpdateValue(Sensor sensor, Container container)
+        public static Container UpdateValue(Container container)
         {
             // Retrieve the storage account from the connection string.
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
@@ -25,7 +25,7 @@ namespace MyThings.Common.Repositories
             CloudTable table = tableClient.GetTableReference("proximusdecodedtable");
             // Create the table query.
             TableQuery<ContainerEntity> rangeQuery = new TableQuery<ContainerEntity>().Where(TableQuery.CombineFilters(
-                            TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, sensor.MACAddress), TableOperators.And,
+                            TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, container.MACAddress), TableOperators.And,
                             TableQuery.GenerateFilterCondition("container", QueryComparisons.Equal, container.ContainerType.Name))
                             ).Take(1);
 
@@ -37,7 +37,7 @@ namespace MyThings.Common.Repositories
             return container;
         }
 
-        public static Container GetHistory(Sensor sensor, Container container, TimeSpan timespan)
+        public static Container GetHistory(Container container, TimeSpan timespan)
         {
             // Retrieve the storage account from the connection string.
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
@@ -51,7 +51,7 @@ namespace MyThings.Common.Repositories
             string tijd = (DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks + timespan.Ticks).ToString();
 
             var rangeQuery = (from entry in table.CreateQuery<ContainerEntity>()
-                            where entry.PartitionKey == sensor.MACAddress
+                            where entry.PartitionKey == container.MACAddress
                             && entry.container == container.ContainerType.Name
                             && entry.RowKey.CompareTo(String.Format("{0:D19}", tijd)) <= 0
                             select entry);

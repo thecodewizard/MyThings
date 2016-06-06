@@ -13,6 +13,7 @@ namespace MyThings.Common.Models
         //Fields
         public int Id { get; set; }
         public String Name { get; set; }
+        public String MACAddress { get; set; }
         public DateTime CreationTime { get; set; }
 
         //References
