@@ -102,7 +102,7 @@ namespace MyThings.Common.Models
         public static Error BatteryCriticalError(Sensor sensor, Container container)
         {
             return new Error(102, ErrorType.Error, ErrorCategory.Power, "Battery Power Critical",
-                "The battery level on sensor " + sensor.Name + " is at " + container.Value + "%!",
+                "The battery level on sensor " + sensor.Name + " is at " + container.CurrentValue.Value + "%!",
                 "Change or charge the battery at this sensor. Not doing this could evoke a NetworkConnectivityError in the near future",
                 sensor, container);
         }
@@ -110,7 +110,7 @@ namespace MyThings.Common.Models
         public static Error BatteryWarning(Sensor sensor, Container container)
         {
             return new Error(203, ErrorType.Warning, ErrorCategory.Power, "Battery Power Low",
-                "The battery level on sensor " + sensor.Name + " is at " + container.Value + "%.",
+                "The battery level on sensor " + sensor.Name + " is at " + container.CurrentValue.Value + "%.",
                 "Change or charge the battery at this sensor.",
                 sensor, container);
         }
