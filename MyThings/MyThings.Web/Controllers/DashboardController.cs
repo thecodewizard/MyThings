@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace MyThings.Web.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         [HttpGet]

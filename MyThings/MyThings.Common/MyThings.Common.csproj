@@ -146,6 +146,7 @@
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\Error.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\LegacyModels\ApplicationRoles.cs" />
     <Compile Include="Models\LegacyModels\IdentityModels.cs" />
     <Compile Include="Models\LegacyModels\ManageViewModels.cs" />
     <Compile Include="Models\NoSQL Entities\ContainerEntity.cs" />
