@@ -131,9 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\MyThingsContext.cs" />
-    <Compile Include="Migrations\201606041243178_Init Database.cs" />
-    <Compile Include="Migrations\201606041243178_Init Database.Designer.cs">
-      <DependentUpon>201606041243178_Init Database.cs</DependentUpon>
+    <Compile Include="Migrations\201606051839593_RestoreDatabase.cs" />
+    <Compile Include="Migrations\201606051839593_RestoreDatabase.Designer.cs">
+      <DependentUpon>201606051839593_RestoreDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContainerValue.cs" />
@@ -147,8 +147,13 @@
     <Compile Include="Models\NoSQL Entities\ContainerEntity.cs" />
     <Compile Include="Models\Sensor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ContainerRepository.cs" />
+    <Compile Include="Repositories\ContainerTypeRepository.cs" />
+    <Compile Include="Repositories\ErrorRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
+    <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\Interfaces\IGenericRepository.cs" />
+    <Compile Include="Repositories\SensorRepository.cs" />
     <Compile Include="Repositories\TableStorageRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -156,8 +161,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201606041243178_Init Database.resx">
-      <DependentUpon>201606041243178_Init Database.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201606051839593_RestoreDatabase.resx">
+      <DependentUpon>201606051839593_RestoreDatabase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

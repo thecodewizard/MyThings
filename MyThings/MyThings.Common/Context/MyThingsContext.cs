@@ -16,6 +16,11 @@ namespace MyThings.Common.Context
         public DbSet<Group> Group { get; set; }
         public DbSet<Error> Error { get; set; }
 
+        public MyThingsContext()
+        {
+            Database.SetInitializer<MyThingsContext>(null);
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
