@@ -135,6 +135,10 @@
     <Compile Include="Migrations\201606051839593_RestoreDatabase.Designer.cs">
       <DependentUpon>201606051839593_RestoreDatabase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606061210235_Mergefix.cs" />
+    <Compile Include="Migrations\201606061210235_Mergefix.Designer.cs">
+      <DependentUpon>201606061210235_Mergefix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
@@ -142,6 +146,7 @@
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\Error.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\LegacyModels\ApplicationRoles.cs" />
     <Compile Include="Models\LegacyModels\IdentityModels.cs" />
     <Compile Include="Models\LegacyModels\ManageViewModels.cs" />
     <Compile Include="Models\NoSQL Entities\ContainerEntity.cs" />
@@ -163,6 +168,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201606051839593_RestoreDatabase.resx">
       <DependentUpon>201606051839593_RestoreDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606061210235_Mergefix.resx">
+      <DependentUpon>201606061210235_Mergefix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
