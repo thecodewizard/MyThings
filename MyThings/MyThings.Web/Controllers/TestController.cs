@@ -15,13 +15,15 @@ namespace MyThings.Web.Controllers
         // GET: Test
         public ActionResult Index()
         {
+            Sensor s = new Sensor();
+            s.MACAddress = "0E7E35430610005F";
+
             Container c = new Container();
-            c.Sensor = new Sensor();
-            c.Sensor.MACAddress = "0E7E35430610005F";
             c.ContainerType = new ContainerType();
             c.ContainerType.Name = "Battery level";
+            s.Containers = new List<Container>() {c};
 
-            c =  TableStorageRepository.GetHistory(c, new TimeSpan(24, 0, 0));
+            c =  TableStorageRepository.GetHistory(s, c, new TimeSpan(24, 0, 0));
 
             return View();
         }
