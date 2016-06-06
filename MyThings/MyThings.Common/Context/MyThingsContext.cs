@@ -10,11 +10,16 @@ namespace MyThings.Common.Context
 {
     public class MyThingsContext : ApplicationDbContext
     {
+        //Basic Models
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<Container> Container { get; set; }
         public DbSet<ContainerType> ContainerTypes { get; set; }
         public DbSet<Group> Group { get; set; }
         public DbSet<Error> Error { get; set; }
+
+        //Front-end Models
+        public DbSet<Tile> Tiles { get; set; }
+        public DbSet<Pin> Pins { get; set; }
 
         public MyThingsContext()
         {
@@ -24,6 +29,8 @@ namespace MyThings.Common.Context
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //Tussentabellen
             modelBuilder.Entity<Sensor>()
                 .HasMany(r => r.Containers)
                 .WithMany()
@@ -41,6 +48,15 @@ namespace MyThings.Common.Context
                     m.MapLeftKey("GroupId");
                     m.MapRightKey("SensorId");
                     m.ToTable("GroupedSensors");
+                });
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(r => r.UserTilesHome)
+                .WithMany()
+                .Map(m =>
+                {
+                    m.MapLeftKey("UserId");
+                    m.MapRightKey("TileId");
+                    m.ToTable("UserTiles");
                 });
 
             //Remove any Circular References in Cascading

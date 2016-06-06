@@ -50,6 +50,14 @@ namespace MyThings.Common.Repositories
             return GetByID(errorId);
         }
 
+        public Error MarkErrorAsReaded(Error error)
+        {
+            error.Read = true;
+            Update(error);
+            SaveChanges();
+            return error;
+        }
+
         public void DeleteError(Error error)
         {
             Delete(error);
