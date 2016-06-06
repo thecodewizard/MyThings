@@ -114,7 +114,7 @@ namespace Proximus_Webservice.Repositories
             public DecodedEntity(string company, string macaddress, string container, string locationid, string payload, string timestamp)
             {
                 this.PartitionKey = macaddress;
-                this.RowKey = container + DateTime.Now.Ticks.ToString();
+                this.RowKey = String.Format("{0:D19}", DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks);
                 this.company = company;
                 this.macaddress = macaddress;
                 this.container = container;
@@ -141,7 +141,7 @@ namespace Proximus_Webservice.Repositories
                                 CustomerData customerData, string ModelCfg)
             {
                 this.PartitionKey = CustomerID;
-                this.RowKey = DevEUI + DateTime.Now.Ticks.ToString();
+                this.RowKey = String.Format("{0:D19}", DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks);
                 this.Timestamp = DateTime.Now;
                 this.Time = Time;
                 this.DevEUI = DevEUI;
