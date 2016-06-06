@@ -21,7 +21,7 @@ namespace MyThings.Web.Controllers
             c.ContainerType = new ContainerType();
             c.ContainerType.Name = "Battery level";
 
-            c =  TableStorageRepository.UpdateValue(c);
+            c =  TableStorageRepository.GetHistory(c, new TimeSpan(24, 0, 0));
 
             return View();
         }

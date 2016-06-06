@@ -78,8 +78,7 @@ namespace MyThings.Api.Controllers
             {
                 Container container = new Container();
                 container.Name = "testContainer69";
-                container.Value = 13;
-                container.ValueTime = DateTime.Now;
+                container.CurrentValue = new ContainerValue(13, DateTime.Now);
 
                 String json = JsonConvert.SerializeObject(container);
 
