@@ -297,6 +297,12 @@ namespace MyThings.Api.Controllers
         }
 
         #endregion
-        
+
+        #region TestMethods Pin&Tiles
+
+
+
+        #endregion
+
     }
 }

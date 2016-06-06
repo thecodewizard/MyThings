@@ -139,6 +139,10 @@
     <Compile Include="Migrations\201606061210235_Mergefix.Designer.cs">
       <DependentUpon>201606061210235_Mergefix.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606061503351_GridStructureToDb.cs" />
+    <Compile Include="Migrations\201606061503351_GridStructureToDb.Designer.cs">
+      <DependentUpon>201606061503351_GridStructureToDb.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FrontEndModels\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
@@ -175,6 +179,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606061210235_Mergefix.resx">
       <DependentUpon>201606061210235_Mergefix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606061503351_GridStructureToDb.resx">
+      <DependentUpon>201606061503351_GridStructureToDb.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

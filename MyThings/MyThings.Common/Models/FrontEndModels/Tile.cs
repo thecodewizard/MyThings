@@ -36,4 +36,3 @@ namespace MyThings.Common.Models
         }
     }
 }
-}

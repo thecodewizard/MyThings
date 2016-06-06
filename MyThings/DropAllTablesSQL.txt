@@ -26,6 +26,12 @@ DROP TABLE [dbo].[AspNetUserClaims]
 GO
 DROP TABLE [dbo].[AspNetRoles]
 GO
+DROP TABLE [dbo].[Pins]
+GO
+DROP TABLE [dbo].[Tiles]
+GO
+DROP TABLE [dbo].[UserTiles]
+GO
 DROP TABLE [dbo].[Sensors]
 GO
 DROP TABLE [dbo].[Groups]
