@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyThings.Common.Repositories;
 
 namespace MyThings.Common.Models
 {
@@ -29,6 +30,25 @@ namespace MyThings.Common.Models
         public Sensor Sensor { get; set; }
         public int? ContainerId { get; set; }
         public Container Container { get; set; }
+
+        //Functionality
+        public Error Save()
+        {
+            //Only use this method to create a single error. With multiple errors, working with the repository directly is more efficient.
+            ErrorRepository errorRepository = new ErrorRepository();
+            if (this.Id == 0)
+            {
+                //The error does not have an ID -> Add this to the database
+                Error savedError = errorRepository.Insert(this);
+                errorRepository.SaveChanges();
+                return savedError;
+            } else
+            {
+                //The error has an ID -> Update the existing error
+                errorRepository.Update(this);
+            }
+            return this;
+        }
 
         //Constructor
         public Error()
@@ -120,6 +140,7 @@ namespace MyThings.Common.Models
         }
     }
 
+    //Enumerations
     public enum ErrorCategory
     {
         Threshold, Connectivity, Power, Generic
