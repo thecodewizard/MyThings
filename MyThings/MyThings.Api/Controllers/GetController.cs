@@ -121,6 +121,20 @@ namespace MyThings.Api.Controllers
         #region TestMethods SQL Database
 
         [HttpGet]
+        public HttpResponseMessage GetSensorsDb()
+        {
+            SensorRepository sensorRepository = new SensorRepository();
+            List<Sensor> sensors = sensorRepository.GetSensors();
+
+            //Send back
+            String json = JsonConvert.SerializeObject(sensors);
+            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+            message.Content = new StringContent(json);
+            message.Headers.Add("Access-Control-Allow-Origin", "*");
+            return message;
+        }
+
+        [HttpGet]
         public HttpResponseMessage GetSensorsFromDb()
         {
             SensorRepository sensorRepository = new SensorRepository();
