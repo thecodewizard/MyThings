@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\MyThingsContext.cs" />
+    <Compile Include="Helpers\GridsterHelper.cs" />
     <Compile Include="Migrations\201606051839593_RestoreDatabase.cs" />
     <Compile Include="Migrations\201606051839593_RestoreDatabase.Designer.cs">
       <DependentUpon>201606051839593_RestoreDatabase.cs</DependentUpon>

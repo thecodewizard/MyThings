@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,9 @@ namespace MyThings.Common.Models
         public int SavedId { get; set; }
         public PinType SavedType { get; set; }
 
+        //Marking Field
+        [NotMapped]
+        public bool IsDeleted { get; private set; }
 
         //Functionality
         public Pin Save()
@@ -38,6 +42,14 @@ namespace MyThings.Common.Models
                 pinRepository.Update(this);
             }
             return this;
+        }
+
+        public void Delete()
+        {
+            //Only use this method to delete a single pin. With multiple pins, working with the repository directly is more efficient.
+            PinRepository pinRepository = new PinRepository();
+            pinRepository.DeletePin(this);
+            this.IsDeleted = true;
         }
     }
 

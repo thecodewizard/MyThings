@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,14 @@ namespace MyThings.Common.Models
         public int Row { get; set; }
         public float Size_X { get; set; }
         public float Size_Y { get; set; }
+
+        //Reference Field
+        [NotMapped]
+        public Pin Pin { get; set; }
+
+        //Marking Field
+        [NotMapped]
+        public bool IsDeleted { get; private set; }
 
         //Functionality
         public Tile Save()
@@ -34,5 +43,22 @@ namespace MyThings.Common.Models
             }
             return this;
         }
+
+
+        public void Delete()
+        {
+            //Only use this method to delete a single tile. With multiple pins, working with the repository directly is more efficient.
+            TileRepository tileRepository = new TileRepository();
+            tileRepository.DeleteTile(this);
+            this.IsDeleted = true;
+        }
+    }
+
+    public class RawGridsterTile
+    {
+        public int Col { get; set; }
+        public int Row { get; set; }
+        public float Size_X { get; set; }
+        public float Size_Y { get; set; }
     }
 }
