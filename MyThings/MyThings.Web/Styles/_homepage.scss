@@ -1,0 +1,115 @@
+﻿@import "_colors.scss";
+@import "_fonts.scss";
+
+$largeblock: 200px;
+$smallblock: 100px;
+$fontsizelarge: 6em;
+$fontsizemedium: 2em;
+$fontsizesmall: 1.2em;
+$fontsizestiny: 0.85em;
+
+.mainhomepagediv {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: scroll; 
+    overflow-y:hidden; 
+    max-height: 1080px;
+}
+.horizontalrectangletile{
+ font-family: $proximusregularfont;
+    display:table-cell;
+    overflow:hidden;
+    font-size:$fontsizestiny;
+    background-color: $proximussecpurple; 
+    color: #fff;
+    width: $largeblock; 
+    height: $smallblock;
+    vertical-align:middle;
+    align-content:center;
+    justify-content:center;
+}
+.verticalrectangletile{
+ font-family: $proximusregularfont;
+    display:table-cell;
+    overflow:hidden;
+    font-size:$fontsizestiny;
+    background-color: $proximussecpurple; 
+    color: #fff;
+    width: $smallblock; 
+    height: $largeblock;
+    vertical-align:middle;
+    align-content:center;
+    justify-content:center;
+}
+.smallsquaretile {
+    font-family: $proximusregularfont;
+    display:table-cell;
+    overflow:hidden;
+    font-size:$fontsizestiny;
+    background-color: $proximussecpurple; 
+    color: #fff;
+    width: $smallblock; 
+    height: $smallblock;
+    vertical-align:middle;
+    align-content:center;
+    justify-content:center;
+}
+.largesquaretile {
+    font-family: $proximusregularfont;
+    overflow:hidden;
+    background-color: $proximussecpurple;
+    color: #fff;
+    width: $largeblock; 
+    height: $largeblock;
+    display: inline-block;
+    margin: 0 10px 5px 5px;
+    
+}
+.largesquaretile:hover{
+    font-family: $proximusterdarkpurple;
+    
+}
+
+.textdiv {
+    font-size:$fontsizemedium;
+    text-align:center;
+    vertical-align:bottom;
+}
+.textdivsmallsquare {
+    font-size:$fontsizesmall;
+    text-align:center;
+}
+.ciphervalue{
+    margin:0 10px;
+    font-size:$fontsizelarge;
+    text-align:left;
+}
+.errorimg {
+    position:relative;
+    width:128px;
+    height:128px;
+    float: right;
+    display:table-cell;
+    vertical-align: bottom;
+    bottom: 80px;
+    right: -40px;
+    margin: auto;
+}
+.warningimg {
+    position:relative;
+    width:128px;
+height:128px;
+    float: right;
+    display:table-cell;
+    vertical-align: bottom;
+    bottom: 80px;
+    right: -40px;
+    margin: auto;
+
+}
+.maindiv {
+    display:flex;
+    align-content:center;
+    justify-content:center;
+    border-spacing:5px;
+}
