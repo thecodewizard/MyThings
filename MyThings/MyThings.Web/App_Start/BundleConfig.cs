@@ -32,7 +32,8 @@ namespace MyThings.Web
                        "~/Styles/Bundled.min.css"));
             bundles.Add(new ScriptBundle("~/Scripts/mythings").Include(
                     "~/Scripts/MyThingsObjects.js",
-                    "~/Scripts/MyThings.js"));
+                    "~/Scripts/MyThings.js",
+                    "~/Scripts/MyThingsClock.js"));
         }
     }
 }
