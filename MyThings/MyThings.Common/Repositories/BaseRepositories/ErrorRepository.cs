@@ -40,8 +40,16 @@ namespace MyThings.Common.Repositories
 
         #region Functionality Methods
 
-        public List<Error> GetErrors()
+        public List<Error> GetErrors(int? count = null)
         {
+            if (count.HasValue)
+                return
+                    (from e in Context.Error
+                     orderby e.Time descending
+                     select e)
+                        .Take(count.Value)
+                        .ToList();
+
             return All().ToList();
         }
 

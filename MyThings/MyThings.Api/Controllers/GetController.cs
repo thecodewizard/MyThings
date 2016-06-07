@@ -22,7 +22,7 @@ namespace MyThings.Api.Controllers
         private readonly GroupRepository _groupRepository = new GroupRepository();
         private readonly ErrorRepository _errorRepository = new ErrorRepository();
 
-        #region GetObject Methods
+        #region GetSingleObject Methods
         [HttpGet]
         public HttpResponseMessage GetSensor(int? sensorId = null)
         {
@@ -124,6 +124,128 @@ namespace MyThings.Api.Controllers
         }
         #endregion
 
-        // TODO: Get last value from container on ID. (return json with value and valueid)
+        #region GetMultiObject Methods
+
+        [HttpGet]
+        public HttpResponseMessage GetSensors(int? count = null)
+        {
+            if (count.HasValue)
+            {
+                List<Sensor> sensors = _sensorRepository.GetSensors(count);
+
+                if (sensors != null && sensors.Count > 0)
+                {
+                    String json = JsonConvert.SerializeObject(sensors);
+
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                } 
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetErrors(int? count = null)
+        {
+            if (count.HasValue)
+            {
+                List<Error> errors = _errorRepository.GetErrors(count);
+
+                if (errors != null && errors.Count > 0)
+                {
+                    String json = JsonConvert.SerializeObject(errors);
+
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                }
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+
+        #endregion
+
+        #region GetNoSqlValue Methods
+
+        [HttpGet]
+        public HttpResponseMessage GetMostRecentValue(int? containerId = null)
+        {
+            if (containerId.HasValue)
+            {
+                int id = containerId.Value;
+                Container container = _containerRepository.GetByID(id);
+                if (container != null)
+                {
+                    if(container.MACAddress == null || container.ContainerType == null)
+                        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+                    //Update the values of the container
+                    container = TableStorageRepository.UpdateValue(container);
+
+                    //Return the json of the updated container
+                    String json = JsonConvert.SerializeObject(container);
+
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetHistory(int? containerId = null, int? historyTimeInHours = null)
+        {
+            if (containerId.HasValue && historyTimeInHours.HasValue)
+            {
+                int id = containerId.Value;
+                int timeInHours = historyTimeInHours.Value;
+                Container container = _containerRepository.GetByID(id);
+                if (container != null)
+                {
+                    if (container.MACAddress == null || container.ContainerType == null)
+                        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+                    //Update the values of the container
+                    TimeSpan span = TimeSpan.FromHours(timeInHours);
+                    container = TableStorageRepository.GetHistory(container, span);
+
+                    //Return the json of the updated container
+                    String json = JsonConvert.SerializeObject(container);
+
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+
+        #endregion
+
+        #region Group Management Methods
+
+        //[HttpGet]
+        //public HttpResponseMessage GroupHasSensor(int? groupId, int? sensorId)
+        //{
+        //    //TODO: via GroupRepo -> SensorInGroup()
+        //}
+
+        #endregion
     }
 }
