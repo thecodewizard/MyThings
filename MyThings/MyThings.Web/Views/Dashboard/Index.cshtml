@@ -99,77 +99,72 @@
 </div>
 @section scripts{
     <script>
-        (function () {
+        //Clock Javascript
+        (function() {
             initLocalClocks();
             moveSecondHands();
             setUpMinuteHands();
         })();
-</script>
-}
-       
-<h2>Index</h2>
 
-@section scripts
-{
-    <script>
-    var originalGridsterJson = "@Model.OriginalGridsterJson";
-    var gridsterJson = "@Model.GridsterJson";
+        //GRIDSTER DEMO JAVASCRIPT //TODO: Remodel this javascript
+        var originalGridsterJson = "@Model.OriginalGridsterJson";
+        var gridsterJson = "@Model.GridsterJson";
 
-    var pinnedSensors = [];
-    var pinnedContainers = [];
-    var pinnedGroups = [];
-    var pinnedErrors = [];
-    var errors = [];
+        var pinnedSensors = [];
+        var pinnedContainers = [];
+        var pinnedGroups = [];
+        var pinnedErrors = [];
+        var errors = [];
 
-    var errorCount = @ViewBag.ErrorCount.ToString();
-    var warningCount = @ViewBag.WarningCount.ToString();
+        var errorCount = @ViewBag.ErrorCount.ToString();
+        var warningCount = @ViewBag.WarningCount.ToString();
 
-    var fixedTileCount = @ViewBag.FixedTileCount.ToString();
-    var customTileCount = @ViewBag.CustomTileCount.ToString();
-    var totalTileCount = @ViewBag.TotalTileCount.ToString();
+        var fixedTileCount = @ViewBag.FixedTileCount.ToString();
+        var customTileCount = @ViewBag.CustomTileCount.ToString();
+        var totalTileCount = @ViewBag.TotalTileCount.ToString();
 
-    @foreach (Sensor sensor in Model.PinnedSensors)
-    {
-        @: var sensor = Sensor.loadFromJson("@JsonConvert.SerializeObject(sensor)");
-        @: pinnedSensors.push(sensor);
-    }
+        @foreach (Sensor sensor in Model.PinnedSensors)
+        {
+            @: var sensor = Sensor.loadFromJson("@JsonConvert.SerializeObject(sensor)");
+            @: pinnedSensors.push(sensor);
+        }
 
-    @foreach (Container container in Model.PinnedContainers)
-    {
-        @: var container = new Container("@container.Id.ToString()", "@container.Name",  "@container.MACAddress",  "@container.CreationTime.ToShortDateString()", "@container.LastUpdatedTime.ToShortDateString()",
-        @: "@container.ContainerType.ToString()", "@container.SensorId.ToString()", "@container.CurrentValue", "@container.History");
-        @: pinnedContainers.push(container);
-    }
+        @foreach (Container container in Model.PinnedContainers)
+        {
+            @: var container = new Container("@container.Id.ToString()", "@container.Name",  "@container.MACAddress",  "@container.CreationTime.ToShortDateString()", "@container.LastUpdatedTime.ToShortDateString()",
+            @: "@container.ContainerType.ToString()", "@container.SensorId.ToString()", "@container.CurrentValue", "@container.History");
+            @: pinnedContainers.push(container);
+        }
 
-    @foreach (Group group in Model.PinnedGroups)
-    {
-        @: var group = new Group("@group.Id", "@group.Name", "@group.Sensors");
-        @: pinnedGroups.push(group);
-    }
+        @foreach (Group group in Model.PinnedGroups)
+        {
+            @: var group = new Group("@group.Id", "@group.Name", "@group.Sensors");
+            @: pinnedGroups.push(group);
+        }
 
-    @foreach (Error error in Model.PinnedErrors)
-    {
-        @: var error = new Error("@error.Id", "@error.ErrorCode", "@error.Type", "@error.Category", "@error.Title", "@error.Description", "@error.Advice",
-        @: "@error.Time", "@error.Read", "@error.Sensor", "@error.Container");
-        @: pinnedErrors.push(error);
-    }
+        @foreach (Error error in Model.PinnedErrors)
+        {
+            @: var error = new Error("@error.Id", "@error.ErrorCode", "@error.Type", "@error.Category", "@error.Title", "@error.Description", "@error.Advice",
+            @: "@error.Time", "@error.Read", "@error.Sensor", "@error.Container");
+            @: pinnedErrors.push(error);
+        }
 
-    @foreach (Error error in Model.Errors)
-    {
-        @: var error = new Error("@error.Id", "@error.ErrorCode", "@error.Type", "@error.Category", "@error.Title", "@error.Description", "@error.Advice",
-        @: "@error.Time", "@error.Read", "@error.Sensor", "@error.Container");
-        @: errors.push(error);
-    }
+        @foreach (Error error in Model.Errors)
+        {
+            @: var error = new Error("@error.Id", "@error.ErrorCode", "@error.Type", "@error.Category", "@error.Title", "@error.Description", "@error.Advice",
+            @: "@error.Time", "@error.Read", "@error.Sensor", "@error.Container");
+            @: errors.push(error);
+        }
 
-    console.log(gridsterJson);
+        console.log(gridsterJson);
 
-    console.log(pinnedSensors);
-    console.log(pinnedContainers);
-    console.log(pinnedGroups);
-    console.log(pinnedErrors);
+        console.log(pinnedSensors);
+        console.log(pinnedContainers);
+        console.log(pinnedGroups);
+        console.log(pinnedErrors);
 
-    console.log(errors);
+        console.log(errors);
 
-    console.log(totalTileCount);
-</script>
+        console.log(totalTileCount);
+    </script>
 }
