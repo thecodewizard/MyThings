@@ -274,6 +274,8 @@
     <Content Include="Styles\Bundled.scss" />
     <Content Include="Styles\_fonts.scss" />
     <Content Include="Styles\_colors.scss" />
+    <Content Include="Styles\_homepage.scss" />
+    <Content Include="Styles\_style.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
