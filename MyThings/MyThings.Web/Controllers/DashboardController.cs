@@ -36,12 +36,57 @@ namespace MyThings.Web.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            //Make a new dummy sensor
+            Sensor dummySensor = new Sensor()
+            {
+                Name = "Lora Mc Loraface",
+                Company = "Telenet",
+                MACAddress = Guid.NewGuid().ToString(),
+                Location = "Hier",
+                CreationDate = DateTime.Now,
+                SensorEntries = 1,
+                BasestationLat = 50.8242477,
+                BasestationLng = 3.2497482
+            };
+            dummySensor.Save();
+
+            //Make a dummy container
+            Container dummyContainer = new Container()
+            {
+                Name = "Frank",
+                MACAddress = dummySensor.MACAddress,
+                CreationTime = DateTime.Now,
+                ContainerType = new ContainerType()
+                {
+                    Name = "Money Counter"
+                },
+                SensorId = dummySensor.Id
+            };
+            dummyContainer.Save();
+
+            //Make a dummy group
+            Group dummyGroup = new Group()
+            {
+                Name = "Plankton",
+                Sensors = new List<Sensor>()
+                {
+                    dummySensor
+                }
+            };
+            dummyGroup.Save();
+
+            //Make a dummy error
+            Error dummyWarning = Error.GenericWarning(dummySensor, dummyContainer);
+            Error dummyError = Error.GenericError(dummySensor, dummyContainer);
+            _errorRepository.Insert(dummyError);
+            _errorRepository.Insert(dummyWarning);
+            _errorRepository.SaveChanges();
+
             //This will result in the user specific custom homepage
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
             //Fetch the tiles of the user & their location
             String originalGridsterJson = user.GridsterJson;
-            List<Tile> tiles = GridsterHelper.JsonToTileList(originalGridsterJson);
 
             //Define the possible objects to pin
             List<Sensor> pinnedSensors = new List<Sensor>();
@@ -49,77 +94,79 @@ namespace MyThings.Web.Controllers
             List<Group> pinnedGroups = new List<Group>();
             List<Error> pinnedErrors = new List<Error>();
 
-            //Fetch the content of the user tiles
+            //Fetch all pinned objects for the current user.
             List<Tile> pinnedTiles = new List<Tile>();
             List<Pin> allPins = _pinRepository.GetPinsForUser(user.Id);
-            foreach (Tile tile in tiles)
+
+            //Fetch the content of the user tiles
+            if (originalGridsterJson != null)
             {
-                Pin pin = (from p in allPins where p.TileId == tile.Id select p).FirstOrDefault();
-                if (pin != null)
+                List<Tile> tiles = GridsterHelper.JsonToTileList(originalGridsterJson);
+                foreach (Tile tile in tiles)
                 {
-                    //Remove the pin from the list of all pins
-                    allPins.Remove(pin);
-
-                    //Container & sensor values are fetched with ajax. Group and errors are fetched now
-                    switch (pin.SavedType)
+                    Pin pin = (from p in allPins where p.TileId == tile.Id select p).FirstOrDefault();
+                    if (pin != null)
                     {
-                        case PinType.Group:
-                            //Give the found group to javascript.
-                            Group group = _groupRepository.GetGroupById(pin.SavedId);
-                            if (group != null)
-                            {
-                                pinnedGroups.Add(group);
-                            }
-                            else
-                            {
-                                pin.Delete(); //If the pinned group could not be resolved, remove the faulty pin.
-                            }
-                            break;
-                        case PinType.Error:
-                            //Give the found error to javascript.
-                            Error error = _errorRepository.GetErrorById(pin.SavedId);
-                            if (error != null)
-                            {
-                                pinnedErrors.Add(error);
-                            }
-                            else
-                            {
-                                pin.Delete(); //If the pinned error could not be resolved, remove the faulty pin.
-                            }
-                            break;
-                        case PinType.Sensor:
-                            //Give the found sensor to javascript
-                            Sensor sensor = _sensorRepository.GetSensorById(pin.SavedId);
-                            if (sensor != null)
-                            {
-                                pinnedSensors.Add(sensor);
-                            }
-                            else
-                            {            
-                                pin.Delete(); //If the pinned sensor could not be resolved, remove the faulty pin.
-                            }
-                            break;
-                        case PinType.Container:
-                            //Give the found container to javascript
-                            Container container = _containerRepository.GetContainerById(pin.SavedId);
-                            if (container != null)
-                            {
-                                pinnedContainers.Add(container);
-                            }
-                            else
-                            {
-                                pin.Delete(); //If the pinned container could not be resolved, remove the faulty pin.
-                            }
-                            break;
-                        default:
-                            pin.Delete(); //If the pin doesn't match any of the known types, remove the faulty pin.
-                            break; 
-                    }
+                        //Remove the pin from the list of all pins
+                        allPins.Remove(pin);
 
-                    if (!pin.IsDeleted)
-                    {
-                        tile.Pin = pin;
-                        pinnedTiles.Add(tile);
+                        //Container & sensor values are fetched with ajax. Group and errors are fetched now
+                        switch (pin.SavedType)
+                        {
+                            case PinType.Group:
+                                //Give the found group to javascript.
+                                Group group = _groupRepository.GetGroupById(pin.SavedId);
+                                if (group != null)
+                                {
+                                    pinnedGroups.Add(group);
+                                } else
+                                {
+                                    pin.Delete(); //If the pinned group could not be resolved, remove the faulty pin.
+                                }
+                                break;
+                            case PinType.Error:
+                                //Give the found error to javascript.
+                                Error error = _errorRepository.GetErrorById(pin.SavedId);
+                                if (error != null)
+                                {
+                                    pinnedErrors.Add(error);
+                                } else
+                                {
+                                    pin.Delete(); //If the pinned error could not be resolved, remove the faulty pin.
+                                }
+                                break;
+                            case PinType.Sensor:
+                                //Give the found sensor to javascript
+                                Sensor sensor = _sensorRepository.GetSensorById(pin.SavedId);
+                                if (sensor != null)
+                                {
+                                    pinnedSensors.Add(sensor);
+                                } else
+                                {
+                                    pin.Delete(); //If the pinned sensor could not be resolved, remove the faulty pin.
+                                }
+                                break;
+                            case PinType.Container:
+                                //Give the found container to javascript
+                                Container container = _containerRepository.GetContainerById(pin.SavedId);
+                                if (container != null)
+                                {
+                                    pinnedContainers.Add(container);
+                                } else
+                                {
+                                    pin.Delete(); //If the pinned container could not be resolved, remove the faulty pin.
+                                }
+                                break;
+                            default:
+                                pin.Delete(); //If the pin doesn't match any of the known types, remove the faulty pin.
+                                break;
+                        }
+
+                        if (!pin.IsDeleted)
+                        {
+                            tile.Pin = pin;
+                            pinnedTiles.Add(tile);
+                        }
                     }
                 }
             }
