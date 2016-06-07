@@ -32,12 +32,10 @@ namespace MyThings.Web.Controllers
         private readonly ErrorRepository _errorRepository = new ErrorRepository();
         private readonly PinRepository _pinRepository = new PinRepository();
 
-        //Site Pages Backend
+        #region Site Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            GenerateDummyData();
-
             //This will result in the user specific custom homepage
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
@@ -162,7 +160,9 @@ namespace MyThings.Web.Controllers
                 Errors = errors
             });
         }
+        #endregion
 
+        #region Site API Functionality
         [HttpPost]
         public HttpResponseMessage UpdateGridString(String gridsterJson)
         {
@@ -184,78 +184,6 @@ namespace MyThings.Web.Controllers
             message.Content = new StringContent("You must be logged in to perform this operation");
             return message;
         }
-
-        #region DummyDataGenerator
-        //TODO: Remove the 'generate dummy data' method
-        private void GenerateDummyData()
-        {
-            return;
-            //Make a new dummy sensor
-            Sensor dummySensor = new Sensor()
-            {
-                Name = "Lora Mc Loraface",
-                Company = "Telenet",
-                MACAddress = Guid.NewGuid().ToString(),
-                Location = "Hier",
-                CreationDate = DateTime.Now,
-                SensorEntries = 1,
-                BasestationLat = 50.8242477,
-                BasestationLng = 3.2497482
-            };
-            dummySensor.Save();
-
-            //Make a dummy containertype
-            ContainerType type = new ContainerType() { Name = "Drughs Container" };
-            type.Save();
-
-            //Make a dummy container
-            Container dummyContainer = new Container()
-            {
-                Name = "Frank",
-                MACAddress = dummySensor.MACAddress,
-                CreationTime = DateTime.Now,
-                ContainerType = type,
-                SensorId = dummySensor.Id
-            };
-            dummyContainer.Save();
-
-            //Make a dummy group
-            Group dummyGroup = new Group()
-            {
-                Name = "Plankton",
-                Sensors = new List<Sensor>()
-                {
-                    dummySensor
-                }
-            };
-            dummyGroup.Save();
-
-            //Make a dummy error
-            Error dummyWarning = Error.GenericWarning(dummySensor, dummyContainer);
-            Error dummyError = Error.GenericError(dummySensor, dummyContainer);
-            _errorRepository.Insert(dummyError);
-            _errorRepository.Insert(dummyWarning);
-            _errorRepository.SaveChanges();
-
-            //Make a dummy pin
-            Pin dummyPin = new Pin()
-            {
-                UserId = UserManager.FindByName(User.Identity.Name).Id,
-                SavedId = dummySensor.Id,
-                SavedType = PinType.Sensor
-            };
-            dummyPin.Save();
-
-            //Make a second dummy pin
-            Pin dummyPin2 = new Pin()
-            {
-                UserId = UserManager.FindByName(User.Identity.Name).Id,
-                SavedId = dummyGroup.Id,
-                SavedType = PinType.Sensor
-            };
-            dummyPin2.Save();
-        }
-
         #endregion
     }
 }
