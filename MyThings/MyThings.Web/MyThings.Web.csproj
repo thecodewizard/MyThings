@@ -290,10 +290,11 @@
     <Content Include="Styles\_colors.scss" />
     <Content Include="Styles\_homepage.scss" />
     <Content Include="Styles\_style.scss" />
+    <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Styles\_nav.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
