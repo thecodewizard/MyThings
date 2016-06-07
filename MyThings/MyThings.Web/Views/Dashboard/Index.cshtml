@@ -4,9 +4,109 @@
 
 @{
     ViewBag.Title = "Index";
+    ViewBag.Pageid = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h2>MyThings Dashboard</h2>
+
+<div class="mainhomepagediv">
+    <div class="clockdiv maindiv">
+        <div class="largesquaretile unhoverabletile">
+            <div class="clock customimg">
+                <div class="hours-container">
+                    <div class="hours"></div>
+                </div>
+                <div class="minutes-container">
+                    <div class="minutes"></div>
+                </div>
+                <div class="seconds-container">
+                    <div class="seconds"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="warningdiv maindiv">
+        <a href="@Url.Action("Warning", "Dashboard")">
+            <div class="largesquaretile">
+                <div class="textdiv"> Warnings</div>
+                <div class="warningvalue ciphervalue">2</div>
+                <img class="warningimg customimg" alt="warningicon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-icon.png"/>
+            </div>
+        </a>
+    </div>
+    <div class="errordiv maindiv">
+        <a href="@Url.Action("Error", "Dashboard")">
+            <div class="largesquaretile">
+                <div class="textdiv">Errors</div>
+                <div class="errorvalue ciphervalue">5</div>
+                <img class="errorimg customimg" alt="erroricon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/warning-icon.png"/>
+            </div>
+        </a>
+    </div>
+    @*logout*@
+    <div class="logoutdiv maindiv">
+        <a href="@Url.Action("About", "Dashboard")">
+            <div class="largesquaretile">
+                <img class="logoutimg customimg" alt="logouticon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/door-icon.png"/>
+            </div>
+        </a>
+    </div>
+    <div class="Sensormngmtdiv maindiv">
+        <a href="@Url.Action("Sensors", "Dashboard")">
+            <div class="smallsquaretile">
+                <div class="textdivsmallsquare">Sensor management</div>
+            </div>
+        </a>
+    </div>
+    <div class="containerdiv maindiv">
+        <a href="@Url.Action("Containers", "Dashboard")">
+            <div class="smallsquaretile">
+                <div class="textdivsmallsquare">Containers</div>
+            </div>
+        </a>
+    </div>
+    <div class="Invoicediv maindiv">
+        <a href="@Url.Action("Invoice", "Dashboard")">
+            <div class="horizontalrectangletile">
+                <div class="textdivsmallsquare">Invoice</div>
+            </div>
+        </a>
+    </div>
+    <div class="Supportdiv maindiv">
+        <a href="@Url.Action("Support", "Dashboard")">
+            <div class="smallsquaretile">
+                <div class="textdivsmallsquare">Support</div>
+            </div>
+        </a>
+    </div>
+    <div class="Mapdiv maindiv">
+        <a href="@Url.Action("Map", "Dashboard")">
+            <div class="smallsquaretile">
+                <div class="textdivsmallsquare">Geographic overview sensors</div>
+            </div>
+        </a>
+    </div>
+
+   @* <div class="Pinneddiv maindiv">
+        <a href="@Url.Action("Map", "Dashboard")">
+            <div class="verticalrectangletile">
+                <img class="pinimg customimg" alt="logouticon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/Pin-icon.png" />
+                <div class="textdivrectangle">Groupname</div>
+            </div>
+        </a>
+    </div>*@
+</div>
+@section scripts{
+    <script>
+        (function () {
+            initLocalClocks();
+            moveSecondHands();
+            setUpMinuteHands();
+        })();
+</script>
+}
+       
 <h2>Index</h2>
 
 @section scripts
