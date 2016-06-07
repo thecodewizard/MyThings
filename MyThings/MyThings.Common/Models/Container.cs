@@ -40,6 +40,7 @@ namespace MyThings.Common.Models
                 //The container does not have an ID -> Add this to the database
                 Container savedContainer = containerRepository.Insert(this);
                 containerRepository.SaveChanges();
+                this.Id = savedContainer.Id;
                 return savedContainer;
             } else
             {

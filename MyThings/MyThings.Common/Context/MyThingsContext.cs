@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
 using MyThings.Common.Models;
 
 namespace MyThings.Common.Context
 {
     public class MyThingsContext : ApplicationDbContext
     {
+        //Basic Models
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<Container> Container { get; set; }
         public DbSet<ContainerType> ContainerTypes { get; set; }
         public DbSet<Group> Group { get; set; }
         public DbSet<Error> Error { get; set; }
+
+        //Front-end Models
+        public DbSet<Pin> Pins { get; set; }
 
         public MyThingsContext()
         {
@@ -24,6 +23,8 @@ namespace MyThings.Common.Context
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //Tussentabellen
             modelBuilder.Entity<Sensor>()
                 .HasMany(r => r.Containers)
                 .WithMany()

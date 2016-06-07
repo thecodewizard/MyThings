@@ -41,6 +41,7 @@ namespace MyThings.Common.Models
                 //The error does not have an ID -> Add this to the database
                 Error savedError = errorRepository.Insert(this);
                 errorRepository.SaveChanges();
+                this.Id = savedError.Id;
                 return savedError;
             } else
             {

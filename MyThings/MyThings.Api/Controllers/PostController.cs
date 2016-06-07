@@ -15,6 +15,7 @@ namespace MyThings.Api.Controllers
         // Pin Sensor on Id;
         // Pin Group on Id;
         // Pin Container on Id;
+        // Pin Error on Id;
         // Save or Edit group (with one method)
     }
 }

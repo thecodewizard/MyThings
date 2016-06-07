@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\MyThingsContext.cs" />
+    <Compile Include="Helpers\GridsterHelper.cs" />
     <Compile Include="Migrations\201606051839593_RestoreDatabase.cs" />
     <Compile Include="Migrations\201606051839593_RestoreDatabase.Designer.cs">
       <DependentUpon>201606051839593_RestoreDatabase.cs</DependentUpon>
@@ -139,9 +140,19 @@
     <Compile Include="Migrations\201606061210235_Mergefix.Designer.cs">
       <DependentUpon>201606061210235_Mergefix.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606061503351_GridStructureToDb.cs" />
+    <Compile Include="Migrations\201606061503351_GridStructureToDb.Designer.cs">
+      <DependentUpon>201606061503351_GridStructureToDb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606071200594_GridStructureUpdate.cs" />
+    <Compile Include="Migrations\201606071200594_GridStructureUpdate.Designer.cs">
+      <DependentUpon>201606071200594_GridStructureUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\ContainerValue.cs" />
+    <Compile Include="Models\FrontEndModels\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
+    <Compile Include="Models\FrontEndModels\Pin.cs" />
+    <Compile Include="Models\FrontEndModels\Tile.cs" />
     <Compile Include="Models\LegacyModels\AccountViewModels.cs" />
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\Error.cs" />
@@ -152,13 +163,14 @@
     <Compile Include="Models\NoSQL Entities\ContainerEntity.cs" />
     <Compile Include="Models\Sensor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\ContainerRepository.cs" />
-    <Compile Include="Repositories\ContainerTypeRepository.cs" />
-    <Compile Include="Repositories\ErrorRepository.cs" />
+    <Compile Include="Repositories\BaseRepositories\ContainerRepository.cs" />
+    <Compile Include="Repositories\BaseRepositories\ContainerTypeRepository.cs" />
+    <Compile Include="Repositories\BaseRepositories\ErrorRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
-    <Compile Include="Repositories\GroupRepository.cs" />
+    <Compile Include="Repositories\BaseRepositories\GroupRepository.cs" />
     <Compile Include="Repositories\Interfaces\IGenericRepository.cs" />
-    <Compile Include="Repositories\SensorRepository.cs" />
+    <Compile Include="Repositories\BaseRepositories\PinRepository.cs" />
+    <Compile Include="Repositories\BaseRepositories\SensorRepository.cs" />
     <Compile Include="Repositories\TableStorageRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -172,7 +184,14 @@
     <EmbeddedResource Include="Migrations\201606061210235_Mergefix.resx">
       <DependentUpon>201606061210235_Mergefix.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606061503351_GridStructureToDb.resx">
+      <DependentUpon>201606061503351_GridStructureToDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606071200594_GridStructureUpdate.resx">
+      <DependentUpon>201606071200594_GridStructureUpdate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -34,6 +34,7 @@ namespace MyThings.Common.Models
                 //The sensor does not have an ID -> Add this to the database
                 Sensor savedSensor = sensorRepository.Insert(this);
                 sensorRepository.SaveChanges();
+                this.Id = savedSensor.Id;
                 return savedSensor;
             }
             else
