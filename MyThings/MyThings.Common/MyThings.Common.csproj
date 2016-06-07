@@ -162,7 +162,6 @@
     <Compile Include="Repositories\BaseRepositories\ContainerRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\ContainerTypeRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\ErrorRepository.cs" />
-    <Compile Include="Repositories\BaseRepositories\TileRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\GroupRepository.cs" />
     <Compile Include="Repositories\Interfaces\IGenericRepository.cs" />

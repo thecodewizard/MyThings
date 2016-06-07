@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MyThings.Common.Models;
 using Newtonsoft.Json;
 
@@ -13,17 +10,19 @@ namespace MyThings.Common.Helpers
     {
         public static String TileListToJson(List<Tile> tiles)
         {
-            List<RawGridsterTile> filteredGridsterTiles =
+            List<RawJsonTile> rawJsonTiles =
                 (from t in tiles
-                    orderby t.Col, t.Row
-                    select new RawGridsterTile()
+                    orderby t.Id
+                    select new RawJsonTile()
                     {
+                        Id = t.Id,
                         Col = t.Col,
-                        Row = t.Row,
+                        Row = t.Col,
                         Size_X = t.Size_X,
                         Size_Y = t.Size_Y
                     }).ToList();
-            String json = JsonConvert.SerializeObject(filteredGridsterTiles);
+
+            String json = JsonConvert.SerializeObject(rawJsonTiles);
 
             if (!String.IsNullOrEmpty(json)) return json;
             return null;
@@ -31,23 +30,19 @@ namespace MyThings.Common.Helpers
 
         public static List<Tile> JsonToTileList(String json)
         {
-            List<RawGridsterTile> rawTiles = JsonConvert.DeserializeObject<List<RawGridsterTile>>(json) ?? new List<RawGridsterTile>();
+            List<RawJsonTile> rawTiles = JsonConvert.DeserializeObject<List<RawJsonTile>>(json) ?? new List<RawJsonTile>();
 
             List<Tile> tiles = (from rt in rawTiles
                 select new Tile()
                 {
+                    Id = rt.Id,
                     Col = rt.Col,
                     Row = rt.Row,
                     Size_X = rt.Size_X,
                     Size_Y = rt.Size_Y,
                 }).ToList();
 
-            return tiles; //TODO: Recycle Already existing tiles?
-        }
-
-        public static List<Tile> RichJsonToTileList(String json)
-        {
-            return JsonConvert.DeserializeObject<List<Tile>>(json) ?? new List<Tile>();
+            return tiles;
         }
     }
 }

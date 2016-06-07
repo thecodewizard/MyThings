@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
 using MyThings.Common.Models;
 
 namespace MyThings.Common.Context
@@ -18,7 +13,6 @@ namespace MyThings.Common.Context
         public DbSet<Error> Error { get; set; }
 
         //Front-end Models
-        public DbSet<Tile> Tiles { get; set; }
         public DbSet<Pin> Pins { get; set; }
 
         public MyThingsContext()
@@ -48,15 +42,6 @@ namespace MyThings.Common.Context
                     m.MapLeftKey("GroupId");
                     m.MapRightKey("SensorId");
                     m.ToTable("GroupedSensors");
-                });
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(r => r.UserTilesHome)
-                .WithMany()
-                .Map(m =>
-                {
-                    m.MapLeftKey("UserId");
-                    m.MapRightKey("TileId");
-                    m.ToTable("UserTiles");
                 });
 
             //Remove any Circular References in Cascading

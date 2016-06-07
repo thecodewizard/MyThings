@@ -10,7 +10,7 @@ namespace MyThings.Web.ViewModels
     {
         //Gridster Json
         public String OriginalGridsterJson { get; set; }
-        public String FilteredGridsterJson { get; set; }
+        public String GridsterJson { get; set; }
 
         //Pinned Tile Lookup
         public List<Sensor> PinnedSensors { get; set; }

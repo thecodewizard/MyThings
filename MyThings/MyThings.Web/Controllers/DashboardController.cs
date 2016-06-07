@@ -5,13 +5,11 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using MyThings.Common.Helpers;
 using MyThings.Common.Models;
 using MyThings.Common.Repositories;
-using MyThings.Common.Repositories.BaseRepositories;
 using MyThings.Web.ViewModels;
 
 namespace MyThings.Web.Controllers
@@ -42,8 +40,8 @@ namespace MyThings.Web.Controllers
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
             //Fetch the tiles of the user & their location
-            String tileJson = user.RawGridsterJson;
-            List<Tile> tiles = user.UserTilesHome ?? new List<Tile>();
+            String originalGridsterJson = user.GridsterJson;
+            List<Tile> tiles = GridsterHelper.JsonToTileList(originalGridsterJson);
 
             //Define the possible objects to pin
             List<Sensor> pinnedSensors = new List<Sensor>();
@@ -123,11 +121,6 @@ namespace MyThings.Web.Controllers
                         tile.Pin = pin;
                         pinnedTiles.Add(tile);
                     }
-                    else tile.Delete(); //If the backing pin was deleted, the tile has no use and has to be removed.
-                }
-                else
-                {
-                    tile.Delete(); //If an tile was not set to a pin, remove the faulty tile.
                 }
             }
 
@@ -136,23 +129,27 @@ namespace MyThings.Web.Controllers
             {
                 Tile tile = new Tile();
                 tile.Pin = pin;
-                tile.Save();
                 pinnedTiles.Add(tile);
             }
 
             //Based on the validation checks in the logic above, re-generate a filtered gridster json
-            String filteredGridsterJson = GridsterHelper.TileListToJson(pinnedTiles);
+            String gridsterJson = GridsterHelper.TileListToJson(pinnedTiles);
 
             //Check the user's sensors for warnings and errors
             List<Error> errors = _errorRepository.GetErrors(); //TODO: Make this only the errors valid to this user.
 
+            //Make the viewbag variables
             ViewBag.CustomTileCount = pinnedTiles.Count;
             ViewBag.FixedTileCount = 9; //Clock, Warnings, Errors, Logout, 4x Nav, Map
             ViewBag.TotalTileCount = ViewBag.FixedTileCount + ViewBag.CustomTileCount;
+            ViewBag.ErrorCount = (from e in errors where e.Type == ErrorType.Error select e).Count();
+            ViewBag.WarningCount = (from e in errors where e.Type == ErrorType.Warning select e).Count();
+
+            //Return the view
             return View(new HomePageViewModel()
             {
-                OriginalGridsterJson = tileJson,
-                FilteredGridsterJson = filteredGridsterJson,
+                OriginalGridsterJson = originalGridsterJson,
+                GridsterJson = gridsterJson,
 
                 PinnedSensors = pinnedSensors,
                 PinnedContainers = pinnedContainers,
@@ -164,59 +161,25 @@ namespace MyThings.Web.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage UpdateGridString(String gridsterJson, String filteredGridsterJson)
+        public HttpResponseMessage UpdateGridString(String gridsterJson)
         {
             if (User.Identity.IsAuthenticated)
             {
                 //Fetch the user
                 ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
-                //Convert the json to a list of tiles.
-                List<Tile> tiles = new List<Tile>();
-                try
-                {
-                    //tiles = GridsterHelper.JsonToTileList(gridsterJson);
-                    tiles = GridsterHelper.RichJsonToTileList(filteredGridsterJson);
-                }
-                catch (Exception ex)
-                {
-                    //Throw an 'Bad Request Error'
-                    HttpResponseMessage message = new HttpResponseMessage();
-                    message.StatusCode = HttpStatusCode.BadRequest;
-                    message.Content = new StringContent("Something went wrong whilst parsing the received JSON.");
-                    return message;
-                }
-
-                //Load the origional tiles
-                List<Tile> newTiles = new List<Tile>();
-                List<Tile> oldTiles = user.UserTilesHome;
-
-                //Check to see which tiles have changed. Save those to the database
-                for (int i = 0; i < tiles.Count; i++)
-                {
-                    if (tiles[i].Equals(oldTiles[i])) newTiles.Add(tiles[i]);
-                    else
-                    {
-                        tiles[i].Save();
-                        newTiles.Add(tiles[i]);
-                    }
-                }
-
                 //Save the position and the tilelist.
-                user.RawGridsterJson = gridsterJson;
-                user.UserTilesHome = newTiles;
+                user.GridsterJson = gridsterJson;
 
                 //Acknowledge the save
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
-            else
-            {
-                //Throw a 'Not Allowed' Error
-                HttpResponseMessage message = new HttpResponseMessage();
-                message.StatusCode = HttpStatusCode.MethodNotAllowed;
-                message.Content = new StringContent("You must be logged in to perform this operation");
-                return message;
-            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
         }
     }
 }
