@@ -24,6 +24,8 @@ namespace MyThings.Common.Models
         //Marking Field
         [NotMapped]
         public bool IsDeleted { get; private set; }
+        [NotMapped]
+        public bool IsNew { get; set; }
 
         //Functionality
         public Tile Save()
@@ -35,10 +37,13 @@ namespace MyThings.Common.Models
                 //The tile does not have an ID -> Add this to the database
                 Tile tile = tileRepository.Insert(this);
                 tileRepository.SaveChanges();
+                this.Id = tile.Id;
+                this.IsNew = true;
                 return tile;
             } else
             {
                 //The tile has an ID -> Update the existing tile
+                this.IsNew = false;
                 tileRepository.Update(this);
             }
             return this;
@@ -51,6 +56,18 @@ namespace MyThings.Common.Models
             TileRepository tileRepository = new TileRepository();
             tileRepository.DeleteTile(this);
             this.IsDeleted = true;
+        }
+
+        //Overrides
+        public override bool Equals(object obj)
+        {
+            Tile tile = (Tile) obj;
+            bool sameId = this.Id.Equals(tile.Id);
+            bool sameRow = this.Row.Equals(tile.Row);
+            bool sameCol = this.Col.Equals(tile.Col);
+            bool sameX = this.Size_X.Equals(tile.Size_X);
+            bool sameY = this.Size_Y.Equals(tile.Size_Y);
+            return sameRow && sameCol && sameX && sameY && sameId;
         }
     }
 

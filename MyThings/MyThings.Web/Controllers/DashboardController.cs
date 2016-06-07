@@ -53,11 +53,15 @@ namespace MyThings.Web.Controllers
 
             //Fetch the content of the user tiles
             List<Tile> pinnedTiles = new List<Tile>();
+            List<Pin> allPins = _pinRepository.GetPinsForUser(user.Id);
             foreach (Tile tile in tiles)
             {
-                Pin pin = _pinRepository.GetPinForTile(user.Id, tile.Id);
+                Pin pin = (from p in allPins where p.TileId == tile.Id select p).FirstOrDefault();
                 if (pin != null)
                 {
+                    //Remove the pin from the list of all pins
+                    allPins.Remove(pin);
+
                     //Container & sensor values are fetched with ajax. Group and errors are fetched now
                     switch (pin.SavedType)
                     {
@@ -127,6 +131,15 @@ namespace MyThings.Web.Controllers
                 }
             }
 
+            //Inject new tiles for unassigned pins
+            foreach (Pin pin in allPins)
+            {
+                Tile tile = new Tile();
+                tile.Pin = pin;
+                tile.Save();
+                pinnedTiles.Add(tile);
+            }
+
             //Based on the validation checks in the logic above, re-generate a filtered gridster json
             String filteredGridsterJson = GridsterHelper.TileListToJson(pinnedTiles);
 
@@ -151,29 +164,47 @@ namespace MyThings.Web.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage UpdateGridString(String gridsterJson)
+        public HttpResponseMessage UpdateGridString(String gridsterJson, String filteredGridsterJson)
         {
             if (User.Identity.IsAuthenticated)
             {
+                //Fetch the user
+                ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
                 //Convert the json to a list of tiles.
                 List<Tile> tiles = new List<Tile>();
                 try
                 {
-                    tiles = GridsterHelper.JsonToTileList(gridsterJson);
+                    //tiles = GridsterHelper.JsonToTileList(gridsterJson);
+                    tiles = GridsterHelper.RichJsonToTileList(filteredGridsterJson);
                 }
                 catch (Exception ex)
                 {
-                    //Throw an 'Internal Server Error'
+                    //Throw an 'Bad Request Error'
                     HttpResponseMessage message = new HttpResponseMessage();
-                    message.StatusCode = HttpStatusCode.InternalServerError;
+                    message.StatusCode = HttpStatusCode.BadRequest;
                     message.Content = new StringContent("Something went wrong whilst parsing the received JSON.");
                     return message;
                 }
 
+                //Load the origional tiles
+                List<Tile> newTiles = new List<Tile>();
+                List<Tile> oldTiles = user.UserTilesHome;
+
+                //Check to see which tiles have changed. Save those to the database
+                for (int i = 0; i < tiles.Count; i++)
+                {
+                    if (tiles[i].Equals(oldTiles[i])) newTiles.Add(tiles[i]);
+                    else
+                    {
+                        tiles[i].Save();
+                        newTiles.Add(tiles[i]);
+                    }
+                }
+
                 //Save the position and the tilelist.
-                ApplicationUser user = UserManager.FindByName(User.Identity.Name);
                 user.RawGridsterJson = gridsterJson;
-                user.UserTilesHome = tiles; //TODO: Recycle Already existing tiles?
+                user.UserTilesHome = newTiles;
 
                 //Acknowledge the save
                 return new HttpResponseMessage(HttpStatusCode.OK);

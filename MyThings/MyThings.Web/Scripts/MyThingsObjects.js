@@ -13,10 +13,10 @@ function Sensor(id, name, company, macaddress, location, creationdate, sensorent
     this.company = company;
     this.macaddress = macaddress;
     this.location = location;
-    this.creationdate = creationdate;
-    this.sensorentries = sensorentries;
-    this.basestationlat = basestationlat;
-    this.basestationlng = basestationlng;
+    this.creationDate = creationdate;
+    this.sensorEntries = sensorentries;
+    this.basestationLat = basestationlat;
+    this.basestationLng = basestationlng;
     this.containers = containers;
 
     //Make an internally callable object
@@ -41,14 +41,18 @@ function Sensor(id, name, company, macaddress, location, creationdate, sensorent
     }
 }
 
-function Container(id, name, creationtime, sensor, value, valuetime) {
+function Container(id, name, creationtime, lastupdatedtime, containertype, sensorId, currentValue, History) {
     //Fields
     this.id = id;
     this.name = name;
-    this.creationtime = creationtime;
-    this.sensor = sensor;
-    this.value = value;
-    this.valuetime = valuetime;
+    this.creationTime = creationtime;
+    this.lastUpdatedTime = lastupdatedtime;
+
+    this.containerType = containertype;
+    this.sensorId = sensorId;
+
+    this.currentValue = currentValue;
+    this.history = history;
 
     //Make an interally callable object
     var that = this;
@@ -150,6 +154,72 @@ function Group(id, name, sensors) {
         //check in the that.sensors whether the given sensor is found.
         //return boolean
     }
+}
+
+function Error(id, errorcode, type, category, title, description, advice, time, read, sensor, container) {
+    this.id = id;
+    this.errorCode = errorcode;
+    this.type = type;
+    this.category = category;
+    this.title = title;
+    this.description = description;
+    this.advice = advice;
+    this.time = time;
+    this.read = read;
+    this.sensor = sensor;
+    this.container = container;
+
+    //Make an internally callable object
+    var that = this;
+    
+    this.update = function (onErrorUpdated) {
+        //send to url in api/get/getError/id
+        //onErrorUpdated is a function which expects a errorobject as argument
+
+        if ($.isFunction(onErrorUpdated)) {
+            onErrorUpdated(that);
+        }
+    }
+    this.pin = function (onErrorPinned) {
+        //send to url in api/post/pinError/id
+        //onErrorPinned is a function which expects a errorObject as argument
+
+        if ($.isFunction(onErrorPinned)) {
+            onErrorPinned(that);
+        }
+    }
+}
+
+function ContainerType(id, name) {
+    //Fields
+    this.id = id;
+    this.name = name;
+}
+
+function ContainerValue(value, timestamp) {
+    //Fields
+    this.value = value;
+    this.timestamp = timestamp;
+}
+
+function Tile(id, col, row, sizeX, sizeY, pin, isDeleted, isNew) {
+    this.id = id;
+    this.col = col;
+    this.row = row;
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
+    this.pin = pin;
+    this.isDeleted = isDeleted;
+    this.isNew = isNew;
+}
+
+function Pin(id, userid, tileid, savedId, savedType, isDeleted) {
+    this.id = id;
+    this.userId = userid;
+    this.tileId = tileid;
+    this.savedId = savedId;
+    this.savedType = savedType;
+    this.isDeleted = isDeleted;
 }
 
 //STATIC CREATORS

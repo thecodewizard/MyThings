@@ -26,6 +26,7 @@ namespace MyThings.Common.Models
                 //The group does not have an ID -> Add this to the database
                 Group savedGroup = groupRepository.Insert(this);
                 groupRepository.SaveChanges();
+                this.Id = savedGroup.Id;
                 return savedGroup;
             } else
             {

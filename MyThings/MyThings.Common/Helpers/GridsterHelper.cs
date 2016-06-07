@@ -44,5 +44,10 @@ namespace MyThings.Common.Helpers
 
             return tiles; //TODO: Recycle Already existing tiles?
         }
+
+        public static List<Tile> RichJsonToTileList(String json)
+        {
+            return JsonConvert.DeserializeObject<List<Tile>>(json) ?? new List<Tile>();
+        }
     }
 }

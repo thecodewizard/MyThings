@@ -20,6 +20,7 @@ namespace MyThings.Api.Controllers
         // Load Sensor details on ID,
         // Load Container details on ID
         // Load Group details on ID
+        // Load Error details on ID
         // Get last value from container on ID. (return json with value and valueid)
 
         //TODO: Delete The Testmethods

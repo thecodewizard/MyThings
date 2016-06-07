@@ -1,4 +1,6 @@
-﻿
+﻿@using MyThings.Common.Models
+@model MyThings.Web.ViewModels.HomePageViewModel
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,3 +8,17 @@
 
 <h2>Index</h2>
 
+<script>
+    var originalGridsterJson = @Model.OriginalGridsterJson;
+    var filteredGridsterJson = @Model.FilteredGridsterJson;
+
+    var pinnedSensors = [];
+    var pinnedContainers = [];
+    var pinnedGroups = [];
+    var pinnedErrors = [];
+
+    @foreach (Error error in Model.Errors)
+    {
+        var error = new Error();
+    }
+</script>

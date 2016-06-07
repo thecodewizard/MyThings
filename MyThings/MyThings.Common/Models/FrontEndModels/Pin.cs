@@ -35,6 +35,7 @@ namespace MyThings.Common.Models
                 //The pin does not have an ID -> Add this to the database
                 Pin pin = pinRepository.Insert(this);
                 pinRepository.SaveChanges();
+                this.Id = pin.Id;
                 return pin;
             } else
             {
