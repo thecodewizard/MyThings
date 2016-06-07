@@ -9,9 +9,11 @@
 
 <h2>Index</h2>
 
-<script>
-    var originalGridsterJson = @Model.OriginalGridsterJson;
-    var GridsterJson = @Model.GridsterJson;
+@section scripts
+{
+    <script>
+    var originalGridsterJson = "@Model.OriginalGridsterJson";
+    var gridsterJson = "@Model.GridsterJson";
 
     var pinnedSensors = [];
     var pinnedContainers = [];
@@ -19,43 +21,55 @@
     var pinnedErrors = [];
     var errors = [];
 
-    var errorCount = @ViewBag.ErrorCount;
-    var warningCount = @ViewBag.WarningCount;
+    var errorCount = @ViewBag.ErrorCount.ToString();
+    var warningCount = @ViewBag.WarningCount.ToString();
 
-    var fixedTileCount = @ViewBag.FixedTileCount;
-    var customTileCount = @ViewBag.CustomTileCount;
-    var totalTileCount = @ViewBag.TotalTileCount;
+    var fixedTileCount = @ViewBag.FixedTileCount.ToString();
+    var customTileCount = @ViewBag.CustomTileCount.ToString();
+    var totalTileCount = @ViewBag.TotalTileCount.ToString();
 
     @foreach (Sensor sensor in Model.PinnedSensors)
     {
-        @: var sensor = Sensor.loadFromJson(@JsonConvert.SerializeObject(sensor));
-            @: pinnedSensors.push(sensor);
-            }
+        @: var sensor = Sensor.loadFromJson("@JsonConvert.SerializeObject(sensor)");
+        @: pinnedSensors.push(sensor);
+    }
 
     @foreach (Container container in Model.PinnedContainers)
     {
-        @: var container = new Container(@container.Id, @container.Name,  @container.MACAddress,  @container.CreationTime, @container.LastUpdatedTime,
-        @: @container.ContainerType, @container.SensorId, @container.CurrentValue, @container.History);
-            @: pinnedContainers.push(container);
-            }
+        @: var container = new Container("@container.Id.ToString()", "@container.Name",  "@container.MACAddress",  "@container.CreationTime.ToShortDateString()", "@container.LastUpdatedTime.ToShortDateString()",
+        @: "@container.ContainerType.ToString()", "@container.SensorId.ToString()", "@container.CurrentValue", "@container.History");
+        @: pinnedContainers.push(container);
+    }
 
     @foreach (Group group in Model.PinnedGroups)
     {
-        @: var group = new Group(@group.Id, @group.Name, @group.Sensors);
-            @: pinnedGroups.push(group);
-            }
+        @: var group = new Group("@group.Id", "@group.Name", "@group.Sensors");
+        @: pinnedGroups.push(group);
+    }
 
     @foreach (Error error in Model.PinnedErrors)
     {
-        @: var error = new Error(@error.Id, @error.ErrorCode, @error.Type, @error.Category, @error.Title, @error.Description, @error.Advice,
-        @: @error.Time, @error.Read, @error.Sensor, @error.Container);
-            @: pinnedErrors.push(error);
-            }
+        @: var error = new Error("@error.Id", "@error.ErrorCode", "@error.Type", "@error.Category", "@error.Title", "@error.Description", "@error.Advice",
+        @: "@error.Time", "@error.Read", "@error.Sensor", "@error.Container");
+        @: pinnedErrors.push(error);
+    }
 
     @foreach (Error error in Model.Errors)
     {
-        @: var error = new Error(@error.Id, @error.ErrorCode, @error.Type, @error.Category, @error.Title, @error.Description, @error.Advice,
-        @: @error.Time, @error.Read, @error.Sensor, @error.Container);
-            @: errors.push(error);
-            }
+        @: var error = new Error("@error.Id", "@error.ErrorCode", "@error.Type", "@error.Category", "@error.Title", "@error.Description", "@error.Advice",
+        @: "@error.Time", "@error.Read", "@error.Sensor", "@error.Container");
+        @: errors.push(error);
+    }
+
+    console.log(gridsterJson);
+
+    console.log(pinnedSensors);
+    console.log(pinnedContainers);
+    console.log(pinnedGroups);
+    console.log(pinnedErrors);
+
+    console.log(errors);
+
+    console.log(totalTileCount);
 </script>
+}

@@ -36,57 +36,13 @@ namespace MyThings.Web.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            //Make a new dummy sensor
-            Sensor dummySensor = new Sensor()
-            {
-                Name = "Lora Mc Loraface",
-                Company = "Telenet",
-                MACAddress = Guid.NewGuid().ToString(),
-                Location = "Hier",
-                CreationDate = DateTime.Now,
-                SensorEntries = 1,
-                BasestationLat = 50.8242477,
-                BasestationLng = 3.2497482
-            };
-            dummySensor.Save();
-
-            //Make a dummy container
-            Container dummyContainer = new Container()
-            {
-                Name = "Frank",
-                MACAddress = dummySensor.MACAddress,
-                CreationTime = DateTime.Now,
-                ContainerType = new ContainerType()
-                {
-                    Name = "Money Counter"
-                },
-                SensorId = dummySensor.Id
-            };
-            dummyContainer.Save();
-
-            //Make a dummy group
-            Group dummyGroup = new Group()
-            {
-                Name = "Plankton",
-                Sensors = new List<Sensor>()
-                {
-                    dummySensor
-                }
-            };
-            dummyGroup.Save();
-
-            //Make a dummy error
-            Error dummyWarning = Error.GenericWarning(dummySensor, dummyContainer);
-            Error dummyError = Error.GenericError(dummySensor, dummyContainer);
-            _errorRepository.Insert(dummyError);
-            _errorRepository.Insert(dummyWarning);
-            _errorRepository.SaveChanges();
+            GenerateDummyData();
 
             //This will result in the user specific custom homepage
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
             //Fetch the tiles of the user & their location
-            String originalGridsterJson = user.GridsterJson;
+            String originalGridsterJson = user.GridsterJson ?? "";
 
             //Define the possible objects to pin
             List<Sensor> pinnedSensors = new List<Sensor>();
@@ -99,7 +55,7 @@ namespace MyThings.Web.Controllers
             List<Pin> allPins = _pinRepository.GetPinsForUser(user.Id);
 
             //Fetch the content of the user tiles
-            if (originalGridsterJson != null)
+            if (String.IsNullOrWhiteSpace(originalGridsterJson))
             {
                 List<Tile> tiles = GridsterHelper.JsonToTileList(originalGridsterJson);
                 foreach (Tile tile in tiles)
@@ -180,7 +136,7 @@ namespace MyThings.Web.Controllers
             }
 
             //Based on the validation checks in the logic above, re-generate a filtered gridster json
-            String gridsterJson = GridsterHelper.TileListToJson(pinnedTiles);
+            String gridsterJson = GridsterHelper.TileListToJson(pinnedTiles) ?? "";
 
             //Check the user's sensors for warnings and errors
             List<Error> errors = _errorRepository.GetErrors(); //TODO: Make this only the errors valid to this user.
@@ -228,5 +184,78 @@ namespace MyThings.Web.Controllers
             message.Content = new StringContent("You must be logged in to perform this operation");
             return message;
         }
+
+        #region DummyDataGenerator
+        //TODO: Remove the 'generate dummy data' method
+        private void GenerateDummyData()
+        {
+            return;
+            //Make a new dummy sensor
+            Sensor dummySensor = new Sensor()
+            {
+                Name = "Lora Mc Loraface",
+                Company = "Telenet",
+                MACAddress = Guid.NewGuid().ToString(),
+                Location = "Hier",
+                CreationDate = DateTime.Now,
+                SensorEntries = 1,
+                BasestationLat = 50.8242477,
+                BasestationLng = 3.2497482
+            };
+            dummySensor.Save();
+
+            //Make a dummy containertype
+            ContainerType type = new ContainerType() { Name = "Drughs Container" };
+            type.Save();
+
+            //Make a dummy container
+            Container dummyContainer = new Container()
+            {
+                Name = "Frank",
+                MACAddress = dummySensor.MACAddress,
+                CreationTime = DateTime.Now,
+                ContainerType = type,
+                SensorId = dummySensor.Id
+            };
+            dummyContainer.Save();
+
+            //Make a dummy group
+            Group dummyGroup = new Group()
+            {
+                Name = "Plankton",
+                Sensors = new List<Sensor>()
+                {
+                    dummySensor
+                }
+            };
+            dummyGroup.Save();
+
+            //Make a dummy error
+            Error dummyWarning = Error.GenericWarning(dummySensor, dummyContainer);
+            Error dummyError = Error.GenericError(dummySensor, dummyContainer);
+            _errorRepository.Insert(dummyError);
+            _errorRepository.Insert(dummyWarning);
+            _errorRepository.SaveChanges();
+
+            //Make a dummy pin
+            Pin dummyPin = new Pin()
+            {
+                UserId = UserManager.FindByName(User.Identity.Name).Id,
+                SavedId = dummySensor.Id,
+                SavedType = PinType.Sensor
+            };
+            dummyPin.Save();
+
+            //Make a second dummy pin
+            Pin dummyPin2 = new Pin()
+            {
+                UserId = UserManager.FindByName(User.Identity.Name).Id,
+                SavedId = dummyGroup.Id,
+                SavedType = PinType.Sensor
+            };
+            dummyPin2.Save();
+        }
+
+        #endregion
     }
 }
