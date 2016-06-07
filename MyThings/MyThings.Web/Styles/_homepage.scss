@@ -8,6 +8,7 @@ $fontsizemedium: 2em;
 $fontsizesmall: 1.2em;
 $fontsizestiny: 0.85em;
 
+
 .mainhomepagediv {
     display: flex;
     flex-wrap: wrap;
@@ -15,101 +16,147 @@ $fontsizestiny: 0.85em;
     overflow-y:hidden; 
     max-height: 1080px;
 }
-.horizontalrectangletile{
- font-family: $proximusregularfont;
+
+.horizontalrectangletile,
+.verticalrectangletile,
+.smallsquaretile,
+.largesquaretile
+{
     display:table-cell;
     overflow:hidden;
-    font-size:$fontsizestiny;
-    background-color: $proximussecpurple; 
-    color: #fff;
+    color: $proximuswhite;
+    vertical-align:middle;
+    align-content:center;
+    justify-content:center;
+    text-decoration:none;
+    &.horizontalrectangletile
+    {
+    
+    font-size: $fontsizestiny;
+    background-color: $proximussecpurple;
     width: $largeblock; 
     height: $smallblock;
-    vertical-align:middle;
-    align-content:center;
-    justify-content:center;
-}
-.verticalrectangletile{
- font-family: $proximusregularfont;
-    display:table-cell;
-    overflow:hidden;
+    }
+
+    &.verticalrectangletile
+    {
     font-size:$fontsizestiny;
     background-color: $proximussecpurple; 
-    color: #fff;
-    width: $smallblock; 
+    width: $smallblock;
     height: $largeblock;
-    vertical-align:middle;
-    align-content:center;
-    justify-content:center;
-}
-.smallsquaretile {
-    font-family: $proximusregularfont;
-    display:table-cell;
-    overflow:hidden;
+    }
+    &.smallsquaretile 
+    {
     font-size:$fontsizestiny;
     background-color: $proximussecpurple; 
-    color: #fff;
     width: $smallblock; 
     height: $smallblock;
-    vertical-align:middle;
-    align-content:center;
-    justify-content:center;
-}
-.largesquaretile {
-    font-family: $proximusregularfont;
-    overflow:hidden;
+    }
+    &.largesquaretile 
+    {
     background-color: $proximussecpurple;
-    color: #fff;
     width: $largeblock; 
     height: $largeblock;
     display: inline-block;
     margin: 0 10px 5px 5px;
-    
-}
-.largesquaretile:hover{
-    font-family: $proximusterdarkpurple;
-    
-}
+    }
 
-.textdiv {
+}
+ a .smallsquaretile
+ { 
+    width: $smallblock; 
+    height: $smallblock;
+ }
+  a .largesquaretile
+  { 
+    width: $largeblock; 
+    height: $largeblock;
+  }
+
+.textdiv 
+{
     font-size:$fontsizemedium;
     text-align:center;
     vertical-align:bottom;
 }
-.textdivsmallsquare {
+.textdivsmallsquare 
+{
     font-size:$fontsizesmall;
     text-align:center;
 }
-.ciphervalue{
+.ciphervalue
+{
     margin:0 10px;
     font-size:$fontsizelarge;
     text-align:left;
 }
-.errorimg {
+.customimg
+{
     position:relative;
-    width:128px;
-    height:128px;
-    float: right;
     display:table-cell;
+    width:auto;
+    height:auto;
     vertical-align: bottom;
-    bottom: 80px;
-    right: -40px;
-    margin: auto;
-}
-.warningimg {
-    position:relative;
-    width:128px;
-height:128px;
-    float: right;
-    display:table-cell;
-    vertical-align: bottom;
-    bottom: 80px;
-    right: -40px;
     margin: auto;
 
+    &.errorimg 
+    {
+    max-height:75%;
+    max-width:75%;
+    float: right;
+    bottom: 40%;
+    right: -20%;
+    }
+
+    &.warningimg 
+    {
+    max-height:65%;
+    max-width:65%;
+    float: right;
+    bottom: 35%;
+    right: -20%;
+    }
+
+    &.logoutimg
+    {
+    max-height:95%;
+    max-width:95%;
+    bottom:-2%;
+    }
+
 }
-.maindiv {
+
+.maindiv 
+{
+    font-family: $proximusregularfont,$basicfonts;
     display:flex;
     align-content:center;
     justify-content:center;
     border-spacing:5px;
+    overflow:hidden;
+    & .smallsquaretile:hover
+    {
+                 background-color: $proximusterdarkpurple;
+    }
+    & .largesquaretile:hover
+    {
+                 background-color: $proximusterdarkpurple;
+    }
+    & .horizontalrectangletile:hover
+    {
+         background-color: $proximusterdarkpurple;
+    }
+    
+    & .verticalrectangletile:hover
+    {
+         background-color: $proximusterdarkpurple;
+    }
+    & .unhoverabletile:hover
+    {
+         background-color:$proximussecpurple;
+    }
+    & a:hover
+    {
+         text-decoration:none;
+    }
 }

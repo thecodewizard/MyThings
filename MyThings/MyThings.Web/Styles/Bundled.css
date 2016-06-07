@@ -27,9 +27,6 @@
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
 body {
-  font-family: Proximus-Regular, Helvetica, sans-serif; }
-
-body {
   color: #000000; }
 
 h2 {
@@ -75,9 +72,6 @@ h3 {
   font-family: Proximus-ExtraBold;
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
-body {
-  font-family: Proximus-Regular, Helvetica, sans-serif; }
-
 .mainhomepagediv {
   display: flex;
   flex-wrap: wrap;
@@ -85,57 +79,58 @@ body {
   overflow-y: hidden;
   max-height: 1080px; }
 
-.horizontalrectangletile {
-  font-family: Proximus-Regular;
-  display: table-cell;
-  overflow: hidden;
-  font-size: 0.85em;
-  background-color: #9C5FB5;
-  color: #fff;
-  width: 200px;
-  height: 100px;
-  vertical-align: middle;
-  align-content: center;
-  justify-content: center; }
-
-.verticalrectangletile {
-  font-family: Proximus-Regular;
-  display: table-cell;
-  overflow: hidden;
-  font-size: 0.85em;
-  background-color: #9C5FB5;
-  color: #fff;
-  width: 100px;
-  height: 200px;
-  vertical-align: middle;
-  align-content: center;
-  justify-content: center; }
-
-.smallsquaretile {
-  font-family: Proximus-Regular;
-  display: table-cell;
-  overflow: hidden;
-  font-size: 0.85em;
-  background-color: #9C5FB5;
-  color: #fff;
-  width: 100px;
-  height: 100px;
-  vertical-align: middle;
-  align-content: center;
-  justify-content: center; }
-
+.horizontalrectangletile,
+.verticalrectangletile,
+.smallsquaretile,
 .largesquaretile {
-  font-family: Proximus-Regular;
+  display: table-cell;
   overflow: hidden;
-  background-color: #9C5FB5;
-  color: #fff;
-  width: 200px;
-  height: 200px;
-  display: inline-block;
-  margin: 0 10px 5px 5px; }
+  color: #FFFFFF;
+  vertical-align: middle;
+  align-content: center;
+  justify-content: center;
+  text-decoration: none; }
+  .horizontalrectangletile.horizontalrectangletile,
+  .verticalrectangletile.horizontalrectangletile,
+  .smallsquaretile.horizontalrectangletile,
+  .largesquaretile.horizontalrectangletile {
+    font-size: 0.85em;
+    background-color: #9C5FB5;
+    width: 200px;
+    height: 100px; }
+  .horizontalrectangletile.verticalrectangletile,
+  .verticalrectangletile.verticalrectangletile,
+  .smallsquaretile.verticalrectangletile,
+  .largesquaretile.verticalrectangletile {
+    font-size: 0.85em;
+    background-color: #9C5FB5;
+    width: 100px;
+    height: 200px; }
+  .horizontalrectangletile.smallsquaretile,
+  .verticalrectangletile.smallsquaretile,
+  .smallsquaretile.smallsquaretile,
+  .largesquaretile.smallsquaretile {
+    font-size: 0.85em;
+    background-color: #9C5FB5;
+    width: 100px;
+    height: 100px; }
+  .horizontalrectangletile.largesquaretile,
+  .verticalrectangletile.largesquaretile,
+  .smallsquaretile.largesquaretile,
+  .largesquaretile.largesquaretile {
+    background-color: #9C5FB5;
+    width: 200px;
+    height: 200px;
+    display: inline-block;
+    margin: 0 10px 5px 5px; }
 
-.largesquaretile:hover {
-  font-family: #D1BBDA; }
+a .smallsquaretile {
+  width: 100px;
+  height: 100px; }
+
+a .largesquaretile {
+  width: 200px;
+  height: 200px; }
 
 .textdiv {
   font-size: 2em;
@@ -151,33 +146,49 @@ body {
   font-size: 6em;
   text-align: left; }
 
-.errorimg {
+.customimg {
   position: relative;
-  width: 128px;
-  height: 128px;
-  float: right;
   display: table-cell;
+  width: auto;
+  height: auto;
   vertical-align: bottom;
-  bottom: 80px;
-  right: -40px;
   margin: auto; }
-
-.warningimg {
-  position: relative;
-  width: 128px;
-  height: 128px;
-  float: right;
-  display: table-cell;
-  vertical-align: bottom;
-  bottom: 80px;
-  right: -40px;
-  margin: auto; }
+  .customimg.errorimg {
+    max-height: 75%;
+    max-width: 75%;
+    float: right;
+    bottom: 40%;
+    right: -20%; }
+  .customimg.warningimg {
+    max-height: 65%;
+    max-width: 65%;
+    float: right;
+    bottom: 35%;
+    right: -20%; }
+  .customimg.logoutimg {
+    max-height: 95%;
+    max-width: 95%;
+    bottom: -2%; }
 
 .maindiv {
+  font-family: Proximus-Regular, Helvetica, sans-serif;
   display: flex;
   align-content: center;
   justify-content: center;
-  border-spacing: 5px; }
+  border-spacing: 5px;
+  overflow: hidden; }
+  .maindiv .smallsquaretile:hover {
+    background-color: #D1BBDA; }
+  .maindiv .largesquaretile:hover {
+    background-color: #D1BBDA; }
+  .maindiv .horizontalrectangletile:hover {
+    background-color: #D1BBDA; }
+  .maindiv .verticalrectangletile:hover {
+    background-color: #D1BBDA; }
+  .maindiv .unhoverabletile:hover {
+    background-color: #9C5FB5; }
+  .maindiv a:hover {
+    text-decoration: none; }
 
 body {
   color: #000000; }
