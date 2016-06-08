@@ -27,9 +27,35 @@ function Sensor(id, name, company, macaddress, location, creationdate, sensorent
         //send to url in api/get/getSensor/id
         //onSensorUpdated is a function which expects a sensorobject as argument.
 
-        if ($.isFunction(onSensorUpdated)) {
-            onSensorUpdated(that);
+        if (that.id != null && that.name != null) {
+            $.ajax({
+                    url: apiBaseUrl + "get/getSensor?sensorId=" + that.sensor.id,
+                    method: "GET"
+            }).done(function(json) {
+                if (json != null) {
+                    var dataUpdate = JSON.parse(json);
+                    that.containers = dataUpdate.Containers;
+                    that.basestationLat = dataUpdate.BasestationLat;
+                    that.basestationLng = dataUpdate.BasestationLng;
+                    that.company = dataUpdate.Company;
+                    that.location = dataUpdate.Location;
+                    that.name = dataUpdate.Name;
+                    that.sensorEntries = dataUpdate.SensorEntries;
+                    if ($.isFunction(onSensorUpdated)) {
+                        onSensorUpdated(that);
+                    }
+                }
+            }).fail(function(json) {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("The sensor" +
+                        that.sensor.id +
+                        " could not be loaded.");
+                }
+            });
         }
+
+
+
     };
     this.pin = function(onSensorPinned) {
         //send to url in api/post/pinSensor/id
@@ -95,6 +121,29 @@ function Container(id, name, macaddress, creationtime, lastupdatedtime, containe
         //send to url in api/get/getContainer/id
         //onContainerUpdated is a function which expects a containerobject as argument.
 
+        if (that.id != null && that.name != null) {
+            $.ajax({
+                url: apiBaseUrl + "get/getContainer?containerId=" + that.container.id,
+                method: "GET"
+            }).done(function (json) {
+                if (json != null) {
+                    var dataUpdate = JSON.parse(json);
+                    that.name = dataUpdate.Name;
+                    that.history = dataUpdate.History;
+                    if ($.isFunction(onContainerUpdated)) {
+                        onContainerUpdated(that);
+                    }
+                }
+            }).fail(function (json) {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("The container" +
+                        that.container.id +
+                        " could not be loaded.");
+                }
+            });
+        }
+
+
         if ($.isFunction(onContainerUpdated)) {
             onContainerUpdated(that);
         }
@@ -132,8 +181,26 @@ function Group(id, name, sensors) {
         //send to url in api/get/getGroup/id
         //onGroupUpdated is a function which expects a groupobject as argument
 
-        if ($.isFunction(onGroupUpdated)) {
-            onGroupUpdated(that);
+        if (that.id != null && that.name != null) {
+            $.ajax({
+                url: apiBaseUrl + "get/getGroup?groupId=" + that.group.id,
+                method: "GET"
+            }).done(function (json) {
+                if (json != null) {
+                    var dataUpdate = JSON.parse(json);
+                    that.name = dataUpdate.Name;
+                    that.sensors = dataUpdate.Sensors;
+                    if ($.isFunction(onGroupUpdated)) {
+                        onGroupUpdated(that);
+                    }
+                }
+            }).fail(function (json) {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("The group" +
+                        that.group.id +
+                        " could not be loaded.");
+                }
+            });
         }
     };
     this.pin = function(onGroupPinned) {
@@ -182,9 +249,28 @@ function Error(id, errorcode, type, category, title, description, advice, time, 
         //send to url in api/get/getError/id
         //onErrorUpdated is a function which expects a errorobject as argument
 
-        if ($.isFunction(onErrorUpdated)) {
-            onErrorUpdated(that);
+        if (that.id != null && that.name != null) {
+            $.ajax({
+                url: apiBaseUrl + "get/getError?errorId=" + that.error.id,
+                method: "GET"
+            }).done(function (json) {
+                if (json != null) {
+                    var dataUpdate = JSON.parse(json);
+                    that.description = dataUpdate.Description;
+                    that.advice = dataUpdate.Advice;
+                    if ($.isFunction(onErrorUpdated)) {
+                        onErrorUpdated(that);
+                    }
+                }
+            }).fail(function (json) {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("The error" +
+                        that.error.id +
+                        " could not be loaded.");
+                }
+            });
         }
+
     };
     this.pin = function(onErrorPinned) {
         //send to url in api/post/pinError/id
@@ -227,6 +313,35 @@ function Pin(id, userid, tileid, savedId, savedType, isDeleted) {
 }
 
 //STATIC CREATORS
+Container.loadFromJson = function (json) {
+    if (json != null) {
+        var data = JSON.parse(json);
+
+        //make containerobject
+      /*  var container = new Container(data["id"], data["name"], data["macaddress"], data["creationtime"], data["lastupdatedtime"], data["containertype"],
+            data["sensorId"], data["currentValue"], data["history"]);*/
+
+        var containers = [];
+        if (data.hasOwnProperty("Containers") && data["Containers"] != null) {
+            for (var i = 0; i < data["Containers"].length; i++) {
+                var obj = data["Containers"][i];
+                if (obj.hasOwnProperty("Id") && obj.hasOwnProperty("Name")) {
+                    //Make containerobject
+                    var container = new Container(data["id"], data["name"], data["macaddress"], data["creationtime"], data["lastupdatedtime"], data["containertype"],
+                                    data["sensorId"], data["currentValue"], data["history"]);
+
+                    //Add to sensor
+                    containers.push(container);
+                }
+            }
+        }
+
+        return containers;
+
+    }
+    return null;
+}
+
 Sensor.load = function (sensorId, onSensorLoaded, loadContainerValues, onContainerValueLoaded) {
     if ($.isFunction(onSensorLoaded)) {
         if (sensorId != null) {
