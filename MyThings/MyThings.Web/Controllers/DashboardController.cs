@@ -332,7 +332,8 @@ namespace MyThings.Web.Controllers
                         pin.SavedId = sensorId.Value;
                         pin.SavedType = PinType.Sensor;
                         pin.UserId = UserManager.FindByName(User.Identity.Name).Id;
-                        pin.Save();
+                        _pinRepository.Insert(pin);
+                        _pinRepository.SaveChanges();
 
                         return new HttpResponseMessage(HttpStatusCode.OK);
                     }
@@ -355,13 +356,14 @@ namespace MyThings.Web.Controllers
             {
                 if (containerId.HasValue)
                 {
-                    if (!_pinRepository.IsSensorPinned(containerId.Value))
+                    if (!_pinRepository.IsContainerPinned(containerId.Value))
                     {
                         Pin pin = new Pin();
                         pin.SavedId = containerId.Value;
                         pin.SavedType = PinType.Container;
                         pin.UserId = UserManager.FindByName(User.Identity.Name).Id;
-                        pin.Save();
+                        _pinRepository.Insert(pin);
+                        _pinRepository.SaveChanges();
 
                         return new HttpResponseMessage(HttpStatusCode.OK);
                     }
@@ -385,13 +387,14 @@ namespace MyThings.Web.Controllers
             {
                 if (groupId.HasValue)
                 {
-                    if (!_pinRepository.IsSensorPinned(groupId.Value))
+                    if (!_pinRepository.IsGroupPinned(groupId.Value))
                     {
                         Pin pin = new Pin();
                         pin.SavedId = groupId.Value;
                         pin.SavedType = PinType.Group;
                         pin.UserId = UserManager.FindByName(User.Identity.Name).Id;
-                        pin.Save();
+                        _pinRepository.Insert(pin);
+                        _pinRepository.SaveChanges();
 
                         return new HttpResponseMessage(HttpStatusCode.OK);
                     }
@@ -415,13 +418,14 @@ namespace MyThings.Web.Controllers
             {
                 if (errorId.HasValue)
                 {
-                    if (!_pinRepository.IsSensorPinned(errorId.Value))
+                    if (!_pinRepository.IsErrorPinned(errorId.Value))
                     {
                         Pin pin = new Pin();
                         pin.SavedId = errorId.Value;
                         pin.SavedType = PinType.Error;
                         pin.UserId = UserManager.FindByName(User.Identity.Name).Id;
-                        pin.Save();
+                        _pinRepository.Insert(pin);
+                        _pinRepository.SaveChanges();
 
                         return new HttpResponseMessage(HttpStatusCode.OK);
                     }
@@ -452,7 +456,8 @@ namespace MyThings.Web.Controllers
                     {
                         int pinId = _pinRepository.GetPinId(sensorId.Value, PinType.Sensor);
                         Pin pin = _pinRepository.GetPinById(pinId);
-                        pin.Delete();
+                        _pinRepository.DeletePin(pin);
+                        _pinRepository.SaveChanges();
 
                         return new HttpResponseMessage(HttpStatusCode.OK);
                     }
@@ -476,11 +481,12 @@ namespace MyThings.Web.Controllers
             {
                 if (containerId.HasValue)
                 {
-                    if (_pinRepository.IsSensorPinned(containerId.Value))
+                    if (_pinRepository.IsContainerPinned(containerId.Value))
                     {
                         int pinId = _pinRepository.GetPinId(containerId.Value, PinType.Container);
                         Pin pin = _pinRepository.GetPinById(pinId);
-                        pin.Delete();
+                        _pinRepository.DeletePin(pin);
+                        _pinRepository.SaveChanges();
 
                         return new HttpResponseMessage(HttpStatusCode.OK);
                     }
@@ -504,11 +510,12 @@ namespace MyThings.Web.Controllers
             {
                 if (groupId.HasValue)
                 {
-                    if (_pinRepository.IsSensorPinned(groupId.Value))
+                    if (_pinRepository.IsGroupPinned(groupId.Value))
                     {
                         int pinId = _pinRepository.GetPinId(groupId.Value, PinType.Group);
                         Pin pin = _pinRepository.GetPinById(pinId);
-                        pin.Delete();
+                        _pinRepository.DeletePin(pin);
+                        _pinRepository.SaveChanges();
 
                         return new HttpResponseMessage(HttpStatusCode.OK);
                     }
@@ -532,11 +539,12 @@ namespace MyThings.Web.Controllers
             {
                 if (errorId.HasValue)
                 {
-                    if (_pinRepository.IsSensorPinned(errorId.Value))
+                    if (_pinRepository.IsErrorPinned(errorId.Value))
                     {
                         int pinId = _pinRepository.GetPinId(errorId.Value, PinType.Error);
                         Pin pin = _pinRepository.GetPinById(pinId);
-                        pin.Delete();
+                        _pinRepository.DeletePin(pin);
+                        _pinRepository.SaveChanges();
 
                         return new HttpResponseMessage(HttpStatusCode.OK);
                     }
