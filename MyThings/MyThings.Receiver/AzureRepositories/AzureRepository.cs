@@ -106,7 +106,7 @@ namespace Proximus_Webservice.Repositories
         {
             public ErrorEntity(Exception ex)
             {
-                this.PartitionKey = ex.Message + " - " +  ex.StackTrace.Substring(0, 50)  + "...";
+                this.PartitionKey = ex.Message + " - " +  ex.StackTrace.Substring(0, 150)  + "...";
                 this.RowKey = DateTime.Now.Ticks.ToString();
                 this.Timestamp = DateTime.Now;
             }
