@@ -351,19 +351,91 @@ namespace MyThings.Web.Controllers
         [HttpPost]
         public HttpResponseMessage PinContainer(int? containerId = null)
         {
-            //TODO: Same as PinSensor
+            if (User.Identity.IsAuthenticated)
+            {
+                if (containerId.HasValue)
+                {
+                    if (!_pinRepository.IsSensorPinned(containerId.Value))
+                    {
+                        Pin pin = new Pin();
+                        pin.SavedId = containerId.Value;
+                        pin.SavedType = PinType.Container;
+                        pin.UserId = UserManager.FindByName(User.Identity.Name).Id;
+                        pin.Save();
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+
         }
 
         [HttpPost]
         public HttpResponseMessage PinGroup(int? groupId = null)
         {
-            //TODO: Same as PinSensor
+            if (User.Identity.IsAuthenticated)
+            {
+                if (groupId.HasValue)
+                {
+                    if (!_pinRepository.IsSensorPinned(groupId.Value))
+                    {
+                        Pin pin = new Pin();
+                        pin.SavedId = groupId.Value;
+                        pin.SavedType = PinType.Group;
+                        pin.UserId = UserManager.FindByName(User.Identity.Name).Id;
+                        pin.Save();
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+
         }
 
         [HttpPost]
         public HttpResponseMessage PinError(int? errorId = null)
         {
-            //TODO: Same as PinError
+            if (User.Identity.IsAuthenticated)
+            {
+                if (errorId.HasValue)
+                {
+                    if (!_pinRepository.IsSensorPinned(errorId.Value))
+                    {
+                        Pin pin = new Pin();
+                        pin.SavedId = errorId.Value;
+                        pin.SavedType = PinType.Error;
+                        pin.UserId = UserManager.FindByName(User.Identity.Name).Id;
+                        pin.Save();
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+
         }
         #endregion
 
@@ -400,19 +472,85 @@ namespace MyThings.Web.Controllers
         [HttpPost]
         public HttpResponseMessage UnpinContainer(int? containerId = null)
         {
-            //TODO: Same as UnpinSensor
+            if (User.Identity.IsAuthenticated)
+            {
+                if (containerId.HasValue)
+                {
+                    if (_pinRepository.IsSensorPinned(containerId.Value))
+                    {
+                        int pinId = _pinRepository.GetPinId(containerId.Value, PinType.Container);
+                        Pin pin = _pinRepository.GetPinById(pinId);
+                        pin.Delete();
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
         }
 
         [HttpPost]
         public HttpResponseMessage UnpinGroup(int? groupId = null)
         {
-            //TODO: Same as UnpinGroup
+            if (User.Identity.IsAuthenticated)
+            {
+                if (groupId.HasValue)
+                {
+                    if (_pinRepository.IsSensorPinned(groupId.Value))
+                    {
+                        int pinId = _pinRepository.GetPinId(groupId.Value, PinType.Group);
+                        Pin pin = _pinRepository.GetPinById(pinId);
+                        pin.Delete();
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
         }
 
         [HttpPost]
         public HttpResponseMessage UnpinError(int? errorId = null)
         {
-            //TODO: Same as UnpinError
+            if (User.Identity.IsAuthenticated)
+            {
+                if (errorId.HasValue)
+                {
+                    if (_pinRepository.IsSensorPinned(errorId.Value))
+                    {
+                        int pinId = _pinRepository.GetPinId(errorId.Value, PinType.Error);
+                        Pin pin = _pinRepository.GetPinById(pinId);
+                        pin.Delete();
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
         }
         #endregion
 

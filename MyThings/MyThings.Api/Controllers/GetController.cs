@@ -237,11 +237,29 @@ namespace MyThings.Api.Controllers
 
         #region Group Management Methods
 
-        //[HttpGet]
-        //public HttpResponseMessage GroupHasSensor(int? groupId, int? sensorId)
-        //{
-        //    //TODO: via GroupRepo -> SensorInGroup()
-        //}
+
+        [HttpGet]
+        public HttpResponseMessage GroupHasSensor(int? groupId = null, int? sensorId = null)
+        {
+            if (groupId.HasValue && sensorId.HasValue)
+            {
+                int groupID = groupId.Value;
+                int sensorID = sensorId.Value;
+                Group group = _groupRepository.GetGroupById(groupID);
+                Sensor sensor = _sensorRepository.GetSensorById(sensorID);
+                bool sensorInGroup = _groupRepository.SensorInGroup(groupID, sensorID);
+                if (group != null && sensor != null)
+                {
+                    if (sensorInGroup)
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    else
+                        return new HttpResponseMessage(HttpStatusCode.NotFound);
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
 
         #endregion
     }
