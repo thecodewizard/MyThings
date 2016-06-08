@@ -11,31 +11,6 @@ MyThings = {
     }
 };
 
-Test = {
-    getSensor: function(id) {
-        Sensor.load(id,
-            function(sensor) {
-                console.log(sensor);
-            });
-    },
-
-    getSensorWithContainers: function(id) {
-        Sensor.load(id,
-            function(sensor) {
-                console.log(sensor);
-            }, true, function(container) {
-                console.log(container);
-            });
-    },
-
-    getSensors: function() {
-        Sensor.loadMany(50,
-            function(sensor) {
-                console.log(sensor);
-            });
-    }
-}
-
 //OBJECTS API - MANUAL //TODO: Remove these comment lines.
 
 //This block of comment will explain how to work with the MyThings Objects API. 

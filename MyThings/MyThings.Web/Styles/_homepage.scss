@@ -22,13 +22,13 @@ $fontsizestiny: 0.85em;
 .smallsquaretile,
 .largesquaretile
 {
-    display:table-cell;
-    overflow:hidden;
+    //display:table-cell;
+    //overflow:hidden;
     color: $proximuswhite;
-    vertical-align:middle;
-    align-content:center;
-    justify-content:center;
-    text-decoration:none;
+    //vertical-align:middle;
+    //align-content:center;
+    //justify-content:center;
+    //text-decoration:none;
     &.horizontalrectangletile
     {
     
@@ -49,8 +49,8 @@ $fontsizestiny: 0.85em;
     {
     font-size:$fontsizestiny;
     background-color: $proximussecpurple; 
-    width: $smallblock; 
-    height: $smallblock;
+    //width: $smallblock; 
+    //height: $smallblock;
     }
     &.largesquaretile 
     {
@@ -64,8 +64,8 @@ $fontsizestiny: 0.85em;
 }
  a .smallsquaretile
  { 
-    width: $smallblock; 
-    height: $smallblock;
+    //width: $smallblock; 
+    //height: $smallblock;
  }
   a .largesquaretile
   { 
@@ -168,7 +168,11 @@ $fontsizestiny: 0.85em;
     }
 }
 
-
+.test
+    {
+    list-style: none;
+                 background-color: $proximusterdarkpurple;
+    }
 
 
 .clock {
