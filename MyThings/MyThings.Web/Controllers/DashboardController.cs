@@ -32,12 +32,10 @@ namespace MyThings.Web.Controllers
         private readonly ErrorRepository _errorRepository = new ErrorRepository();
         private readonly PinRepository _pinRepository = new PinRepository();
 
-        //Site Pages Backend
+        #region Site Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            GenerateDummyData();
-
             //This will result in the user specific custom homepage
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
@@ -162,7 +160,11 @@ namespace MyThings.Web.Controllers
                 Errors = errors
             });
         }
+        #endregion
 
+        #region Site API Functionality
+
+        #region Gridster API
         [HttpPost]
         public HttpResponseMessage UpdateGridString(String gridsterJson)
         {
@@ -184,77 +186,128 @@ namespace MyThings.Web.Controllers
             message.Content = new StringContent("You must be logged in to perform this operation");
             return message;
         }
+        #endregion
 
-        #region DummyDataGenerator
-        //TODO: Remove the 'generate dummy data' method
-        private void GenerateDummyData()
+        #region Pin Objects Methods
+
+        [HttpPost]
+        public HttpResponseMessage PinSensor(int? sensorId = null)
         {
-            return;
-            //Make a new dummy sensor
-            Sensor dummySensor = new Sensor()
+            if (User.Identity.IsAuthenticated)
             {
-                Name = "Lora Mc Loraface",
-                Company = "Telenet",
-                MACAddress = Guid.NewGuid().ToString(),
-                Location = "Hier",
-                CreationDate = DateTime.Now,
-                SensorEntries = 1,
-                BasestationLat = 50.8242477,
-                BasestationLng = 3.2497482
-            };
-            dummySensor.Save();
-
-            //Make a dummy containertype
-            ContainerType type = new ContainerType() { Name = "Drughs Container" };
-            type.Save();
-
-            //Make a dummy container
-            Container dummyContainer = new Container()
-            {
-                Name = "Frank",
-                MACAddress = dummySensor.MACAddress,
-                CreationTime = DateTime.Now,
-                ContainerType = type,
-                SensorId = dummySensor.Id
-            };
-            dummyContainer.Save();
-
-            //Make a dummy group
-            Group dummyGroup = new Group()
-            {
-                Name = "Plankton",
-                Sensors = new List<Sensor>()
+                if (sensorId.HasValue)
                 {
-                    dummySensor
+                    if (!_pinRepository.IsSensorPinned(sensorId.Value))
+                    {
+                        Pin pin = new Pin();
+                        pin.SavedId = sensorId.Value;
+                        pin.SavedType = PinType.Sensor;
+                        pin.UserId = UserManager.FindByName(User.Identity.Name).Id;
+                        pin.Save();
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
                 }
-            };
-            dummyGroup.Save();
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
 
-            //Make a dummy error
-            Error dummyWarning = Error.GenericWarning(dummySensor, dummyContainer);
-            Error dummyError = Error.GenericError(dummySensor, dummyContainer);
-            _errorRepository.Insert(dummyError);
-            _errorRepository.Insert(dummyWarning);
-            _errorRepository.SaveChanges();
-
-            //Make a dummy pin
-            Pin dummyPin = new Pin()
-            {
-                UserId = UserManager.FindByName(User.Identity.Name).Id,
-                SavedId = dummySensor.Id,
-                SavedType = PinType.Sensor
-            };
-            dummyPin.Save();
-
-            //Make a second dummy pin
-            Pin dummyPin2 = new Pin()
-            {
-                UserId = UserManager.FindByName(User.Identity.Name).Id,
-                SavedId = dummyGroup.Id,
-                SavedType = PinType.Sensor
-            };
-            dummyPin2.Save();
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
         }
+
+        [HttpPost]
+        public HttpResponseMessage PinContainer(int? containerId = null)
+        {
+            //TODO: Same as PinSensor
+        }
+
+        [HttpPost]
+        public HttpResponseMessage PinGroup(int? groupId = null)
+        {
+            //TODO: Same as PinSensor
+        }
+
+        [HttpPost]
+        public HttpResponseMessage PinError(int? errorId = null)
+        {
+            //TODO: Same as PinError
+        }
+        #endregion
+
+        #region Unpin Objects Methods
+
+        [HttpPost]
+        public HttpResponseMessage UnpinSensor(int? sensorId = null)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (sensorId.HasValue)
+                {
+                    if (_pinRepository.IsSensorPinned(sensorId.Value))
+                    {
+                        int pinId = _pinRepository.GetPinId(sensorId.Value, PinType.Sensor);
+                        Pin pin = _pinRepository.GetPinById(pinId);
+                        pin.Delete();
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
+        [HttpPost]
+        public HttpResponseMessage UnpinContainer(int? containerId = null)
+        {
+            //TODO: Same as UnpinSensor
+        }
+
+        [HttpPost]
+        public HttpResponseMessage UnpinGroup(int? groupId = null)
+        {
+            //TODO: Same as UnpinGroup
+        }
+
+        [HttpPost]
+        public HttpResponseMessage UnpinError(int? errorId = null)
+        {
+            //TODO: Same as UnpinError
+        }
+        #endregion
+
+        #region Group Management Methods
+
+        //[HttpPost]
+        //public HttpResponseMessage SaveGroup([FromBody] Group group)
+        //{
+        //    //Insert & Update in 1 method
+        //}
+
+        //[HttpPost]
+        //public HttpResponseMessage AddSensor(int? groupId, int? sensorId)
+        //{
+
+        //}
+
+        //[HttpPost]
+        //public HttpResponseMessage RemoveSensor(int? groupId, int? sensorId)
+        //{
+
+        //}
+
+        #endregion
 
         #endregion
     }
