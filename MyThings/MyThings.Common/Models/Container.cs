@@ -29,25 +29,5 @@ namespace MyThings.Common.Models
         public ContainerValue CurrentValue { get; set; }
         [NotMapped]
         public List<ContainerValue> History { get; set; }
-
-        //Functionality
-        public Container Save()
-        {
-            //Only use this method to create a single container. With multiple container, working with the repository directly is more efficient.
-            ContainerRepository containerRepository = new ContainerRepository();
-            if (this.Id == 0)
-            {
-                //The container does not have an ID -> Add this to the database
-                Container savedContainer = containerRepository.Insert(this);
-                containerRepository.SaveChanges();
-                this.Id = savedContainer.Id;
-                return savedContainer;
-            } else
-            {
-                //The containecontainerrType has an ID -> Update the existing container
-                containerRepository.Update(this);
-            }
-            return this;
-        }
     }
 }
