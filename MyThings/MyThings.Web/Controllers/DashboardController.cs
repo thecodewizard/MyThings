@@ -206,6 +206,10 @@ namespace MyThings.Web.Controllers
             return allPins;
         }
 
+        public ActionResult Sensormanagement()
+        {
+            return View();
+        }
         #endregion
 
         #region DummyDataGenerator

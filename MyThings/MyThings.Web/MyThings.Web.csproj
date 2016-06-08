@@ -295,6 +295,8 @@
     <Content Include="Styles\_style.scss" />
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Styles\_nav.scss" />
+    <Content Include="Views\Dashboard\Sensormanagement.cshtml" />
+    <Content Include="Styles\_sensormanagement.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "Sensormanagement";
+    ViewBag.PageId = "list";
+}
+    <ul>
+        <li class="breadcrumb">@Html.ActionLink("Home", "Index", "Dashboard") > @Html.ActionLink("Sensor management", "Sensormanagement", "Dashboard")</li>
+    </ul>
+
+    <ul class="sensorul">
+        <li class="editgroup">
+            <h2>Groups</h2>
+        </li>
+        <li class="editgroup">
+            @Html.ActionLink("Edit", "Editgroups", "Dashboard")
+        </li>
+    </ul>
+
+    <div class="groupdiv">
+        <div class="grouprectangletile">
+            <div class="textdivgroup">Groupname</div>
+            <div class="ciphervaluegroup">75</div>
+            <div class="sensors">sensors</div>
+        </div>
+    </div>

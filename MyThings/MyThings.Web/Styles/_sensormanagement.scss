@@ -1,0 +1,49 @@
+﻿@import "_colors.scss";
+@import "_fonts.scss";
+@import "_style.scss";
+h2{
+      display:inline;
+}
+.sensorul{
+    white-space:nowrap;
+    width:100%;
+}
+.editgroup{
+     display:inline;
+         padding:2%;
+         margin:auto;
+     & a{
+         font-family:$proximusregularfont;
+         font-size:$fontsizesmall;
+         color:$proximuswhite;
+         padding:1% 2%;
+         bottom:10%;
+     background-color:$proximussecpurple;
+     }
+}
+.grouprectangletile{
+    position:relative;
+    width:$largeblock;
+    height:$smallblock;
+    color: $proximuswhite;
+    background-color: $proximusmainblue;
+    margin:2%;
+}
+.textdivgroup{
+    margin:1%;
+    font-family:$proximusregularfont;
+    font-size:$fontsizemedium;
+}
+.ciphervaluegroup{
+    
+    display:inline-block;
+    font-family:$proximusregularfont;
+    font-size:$fontsizelarge;
+}
+.sensors{
+    
+    display:inline-block;
+    float:right;
+    font-family:$proximusregularfont;
+    font-size:$fontsizemedium;
+}

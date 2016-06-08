@@ -1,12 +1,6 @@
 ﻿@import "_colors.scss";
 @import "_fonts.scss";
-
-$largeblock: 200px;
-$smallblock: 100px;
-$fontsizelarge: 6em;
-$fontsizemedium: 2em;
-$fontsizesmall: 1.2em;
-$fontsizestiny: 0.85em;
+@import "_style.scss";
 
 
 .mainhomepagediv {
@@ -87,7 +81,7 @@ $fontsizestiny: 0.85em;
 .ciphervalue
 {
     margin:0 10px;
-    font-size:$fontsizelarge;
+    font-size:$fontsizehuge;
     text-align:left;
 }
 .customimg
