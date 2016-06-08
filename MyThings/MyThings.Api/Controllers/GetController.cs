@@ -32,10 +32,6 @@ namespace MyThings.Api.Controllers
                 int id = sensorId.Value;
                 Sensor sensor = _sensorRepository.GetSensorById(id);
 
-                List<Container> containers = _containerRepository.GetContainers();
-                sensor.Containers = containers;
-                sensor.Save();
-
                 if (sensor != null)
                 {
                     String json = JsonConvert.SerializeObject(sensor);
@@ -45,6 +41,7 @@ namespace MyThings.Api.Controllers
                     message.Headers.Add("Access-Control-Allow-Origin", "*");
                     return message;
                 }
+
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
 

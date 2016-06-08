@@ -163,6 +163,8 @@ namespace MyThings.Web.Controllers
         #endregion
 
         #region Site API Functionality
+
+        #region Gridster API
         [HttpPost]
         public HttpResponseMessage UpdateGridString(String gridsterJson)
         {
@@ -184,6 +186,129 @@ namespace MyThings.Web.Controllers
             message.Content = new StringContent("You must be logged in to perform this operation");
             return message;
         }
+        #endregion
+
+        #region Pin Objects Methods
+
+        [HttpPost]
+        public HttpResponseMessage PinSensor(int? sensorId = null)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (sensorId.HasValue)
+                {
+                    if (!_pinRepository.IsSensorPinned(sensorId.Value))
+                    {
+                        Pin pin = new Pin();
+                        pin.SavedId = sensorId.Value;
+                        pin.SavedType = PinType.Sensor;
+                        pin.UserId = UserManager.FindByName(User.Identity.Name).Id;
+                        pin.Save();
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
+        [HttpPost]
+        public HttpResponseMessage PinContainer(int? containerId = null)
+        {
+            //TODO: Same as PinSensor
+        }
+
+        [HttpPost]
+        public HttpResponseMessage PinGroup(int? groupId = null)
+        {
+            //TODO: Same as PinSensor
+        }
+
+        [HttpPost]
+        public HttpResponseMessage PinError(int? errorId = null)
+        {
+            //TODO: Same as PinError
+        }
+        #endregion
+
+        #region Unpin Objects Methods
+
+        [HttpPost]
+        public HttpResponseMessage UnpinSensor(int? sensorId = null)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (sensorId.HasValue)
+                {
+                    if (_pinRepository.IsSensorPinned(sensorId.Value))
+                    {
+                        int pinId = _pinRepository.GetPinId(sensorId.Value, PinType.Sensor);
+                        Pin pin = _pinRepository.GetPinById(pinId);
+                        pin.Delete();
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
+        [HttpPost]
+        public HttpResponseMessage UnpinContainer(int? containerId = null)
+        {
+            //TODO: Same as UnpinSensor
+        }
+
+        [HttpPost]
+        public HttpResponseMessage UnpinGroup(int? groupId = null)
+        {
+            //TODO: Same as UnpinGroup
+        }
+
+        [HttpPost]
+        public HttpResponseMessage UnpinError(int? errorId = null)
+        {
+            //TODO: Same as UnpinError
+        }
+        #endregion
+
+        #region Group Management Methods
+
+        //[HttpPost]
+        //public HttpResponseMessage SaveGroup([FromBody] Group group)
+        //{
+        //    //Insert & Update in 1 method
+        //}
+
+        //[HttpPost]
+        //public HttpResponseMessage AddSensor(int? groupId, int? sensorId)
+        //{
+
+        //}
+
+        //[HttpPost]
+        //public HttpResponseMessage RemoveSensor(int? groupId, int? sensorId)
+        //{
+
+        //}
+
+        #endregion
+
         #endregion
     }
 }
