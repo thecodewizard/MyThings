@@ -10,19 +10,7 @@ namespace MyThings.Common.Helpers
     {
         public static String TileListToJson(List<Tile> tiles)
         {
-            List<RawJsonTile> rawJsonTiles =
-                (from t in tiles
-                    orderby t.Id
-                    select new RawJsonTile()
-                    {
-                        Id = t.Id,
-                        Col = t.Col,
-                        Row = t.Col,
-                        Size_X = t.Size_X,
-                        Size_Y = t.Size_Y
-                    }).ToList();
-
-            String json = JsonConvert.SerializeObject(rawJsonTiles);
+            String json = JsonConvert.SerializeObject(tiles);
 
             if (!String.IsNullOrEmpty(json)) return json;
             return null;
@@ -30,19 +18,7 @@ namespace MyThings.Common.Helpers
 
         public static List<Tile> JsonToTileList(String json)
         {
-            List<RawJsonTile> rawTiles = JsonConvert.DeserializeObject<List<RawJsonTile>>(json) ?? new List<RawJsonTile>();
-
-            List<Tile> tiles = (from rt in rawTiles
-                select new Tile()
-                {
-                    Id = rt.Id,
-                    Col = rt.Col,
-                    Row = rt.Row,
-                    Size_X = rt.Size_X,
-                    Size_Y = rt.Size_Y,
-                }).ToList();
-
-            return tiles;
+            return JsonConvert.DeserializeObject<List<Tile>>(json) ?? new List<Tile>();
         }
     }
 }

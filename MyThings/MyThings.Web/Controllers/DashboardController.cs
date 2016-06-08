@@ -54,6 +54,9 @@ namespace MyThings.Web.Controllers
             List<Tile> pinnedTiles = new List<Tile>();
             List<Pin> allPins = _pinRepository.GetPinsForUser(user.Id);
 
+            //Check the default tiles for the user
+            allPins = CheckDefaultTilesForUser(user, allPins);
+
             //Fetch the content of the user tiles
             if (String.IsNullOrWhiteSpace(originalGridsterJson))
             {
@@ -127,9 +130,6 @@ namespace MyThings.Web.Controllers
                 }
             }
 
-            //Check the default tiles for the user
-            CheckDefaultTilesForUser(user, allPins);
-
             //Inject new tiles for unassigned pins
             foreach (Pin pin in allPins)
             {
@@ -166,13 +166,13 @@ namespace MyThings.Web.Controllers
             });
         }
 
-        private void CheckDefaultTilesForUser(ApplicationUser user, List<Pin> allPins)
+        private List<Pin> CheckDefaultTilesForUser(ApplicationUser user, List<Pin> allPins)
         {
             //Check if the user's pin already include the static pins. If not, add them
             //Check clock
             if (!(from p in allPins where p.SavedType == PinType.FixedClock select p).Any())
             {
-                _pinRepository.Insert(PinRepository.RenderClockPinForUser(user.Id));
+                allPins.Add(_pinRepository.Insert(PinRepository.RenderClockPinForUser(user.Id)));
             }
             //Check navigation
             List<Pin> navPins = (from p in allPins where p.SavedType == PinType.FixedNavigation select p).ToList();
@@ -180,11 +180,12 @@ namespace MyThings.Web.Controllers
             {
                 foreach (Pin navPin in navPins) _pinRepository.Delete(navPin);
                 _pinRepository.SaveChanges();
+                allPins = _pinRepository.GetPinsForUser(user.Id);
             }
             if (!(from p in allPins where p.SavedType == PinType.FixedNavigation select p).Any())
             {
                 foreach (Pin navPin in PinRepository.RenderNavigationPinsForUser(user.Id)) //If no tile is found, regenerate
-                    _pinRepository.Insert(navPin);
+                    allPins.Add(_pinRepository.Insert(navPin));
             }
             //Check errorpins
             List<Pin> errorPins = (from p in allPins where p.SavedType == PinType.FixedError select p).ToList();
@@ -192,15 +193,17 @@ namespace MyThings.Web.Controllers
             {
                 foreach (Pin errorPin in errorPins) _pinRepository.Delete(errorPin);
                 _pinRepository.SaveChanges();
+                allPins = _pinRepository.GetPinsForUser(user.Id);
             }
             if (!(from p in allPins where p.SavedType == PinType.FixedError select p).Any())
             {
                 foreach (Pin errorPin in PinRepository.RenderErrorPinsForUser(user.Id))
-                    _pinRepository.Insert(errorPin);
+                    allPins.Add(_pinRepository.Insert(errorPin));
             }
 
             //Save the new pins
             _pinRepository.SaveChanges();
+            return allPins;
         }
 
         [HttpPost]
