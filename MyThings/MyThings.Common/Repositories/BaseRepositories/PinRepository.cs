@@ -77,5 +77,39 @@ namespace MyThings.Common.Repositories
         }
 
         #endregion
+
+        #region Smart Methods
+        public int GetPinId(int valueId, PinType type)
+        {
+            return
+                (from p in Context.Pins where p.SavedId == valueId && p.SavedType == type select p.Id).FirstOrDefault();
+        }
+
+        public List<PinType> GetFoundPinTypesById(int valueId)
+        {
+            return (from p in Context.Pins where p.SavedId == valueId select p.SavedType).ToList();
+        }
+
+        public bool IsSensorPinned(int sensorId)
+        {
+            return GetFoundPinTypesById(sensorId).Contains(PinType.Sensor);
+        }
+
+        public bool IsContainerPinned(int containerId)
+        {
+            return GetFoundPinTypesById(containerId).Contains(PinType.Container);
+        }
+
+        public bool IsGroupPinned(int groupId)
+        {
+            return GetFoundPinTypesById(groupId).Contains(PinType.Group);
+        }
+
+        public bool IsErrorPinned(int errorId)
+        {
+            return GetFoundPinTypesById(errorId).Contains(PinType.Error);
+        }
+
+        #endregion
     }
 }

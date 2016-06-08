@@ -49,27 +49,35 @@ namespace MyThings.Common.Repositories
             return GetByID(groupId);
         }
 
+        public bool SensorInGroup(int groupId, int sensorId)
+        {
+            return
+                (from g in Context.Group
+                    where g.Id == groupId && (from s in g.Sensors select s.Id).ToList<int>().Contains(sensorId)
+                    select g).Any();
+        }
+
         public void DeleteGroup(Group group)
         {
             Delete(group);
             SaveChanges();
         }
 
-        //public Group SaveOrUpdateGroup(Group group)
-        //{
-        //    if (DbSet.Find(group.Id) != null)
-        //    {
-        //        //The group already exists -> Update the group
-        //        Update(group);
-        //    } else
-        //    {
-        //        //The group doesn't exist -> Insert the group
-        //        Insert(group);
-        //    }
+        public Group SaveOrUpdateGroup(Group group)
+        {
+            if (DbSet.Find(group.Id) != null)
+            {
+                //The group already exists -> Update the group
+                Update(group);
+            } else
+            {
+                //The group doesn't exist -> Insert the group
+                Insert(group);
+            }
 
-        //    SaveChanges();
-        //    return group;
-        //}
+            SaveChanges();
+            return group;
+        }
 
         #endregion
     }

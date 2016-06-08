@@ -16,288 +16,233 @@ namespace MyThings.Api.Controllers
     {
         //This controller will manage all the API's GET requests.
 
-        // TODO: Methods to create to backup Javascript's functionality:
-        // Load Sensor details on ID,
-        // Load Container details on ID
-        // Load Group details on ID
-        // Load Error details on ID
-        // Get last value from container on ID. (return json with value and valueid)
+        //Initialise the needed Repositories
+        private readonly SensorRepository _sensorRepository = new SensorRepository();
+        private readonly ContainerRepository _containerRepository = new ContainerRepository();
+        private readonly GroupRepository _groupRepository = new GroupRepository();
+        private readonly ErrorRepository _errorRepository = new ErrorRepository();
 
-        //TODO: Delete The Testmethods
-        #region TestMethods javascript Objects
+        #region GetSingleObject Methods
         [HttpGet]
-        public HttpResponseMessage GetSensor(int? sensorId)
+        public HttpResponseMessage GetSensor(int? sensorId = null)
         {
             if (sensorId.HasValue)
             {
+                //Fetch the sensor
                 int id = sensorId.Value;
-                Sensor sensor = new Sensor();
-                sensor.Name = "test";
-                sensor.Containers = new List<Container>()
+                Sensor sensor = _sensorRepository.GetSensorById(id);
+
+                if (sensor != null)
                 {
-                    new Container() { Id= 1, Name = "TestContainer", SensorId =  sensor.Id},
-                    new Container() { Id= 2, Name = "TestContainer2", SensorId =  sensor.Id},
-                    new Container() { Id= 3, Name = "TestContainer3", SensorId =  sensor.Id}
-                };
+                    String json = JsonConvert.SerializeObject(sensor);
 
-                String json = JsonConvert.SerializeObject(sensor);
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                }
 
-                HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
-                message.Content = new StringContent(json);
-                message.Headers.Add("Access-Control-Allow-Origin", "*");
-                return message;
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
 
-            return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
 
         [HttpGet]
-        public HttpResponseMessage GetSensors(int? count)
+        public HttpResponseMessage GetContainer(int? containerId = null)
+        {
+            if (containerId.HasValue)
+            {
+                //Fetch the container
+                int id = containerId.Value;
+                Container container = _containerRepository.GetContainerById(id);
+
+                if (container != null)
+                {
+                    String json = JsonConvert.SerializeObject(container);
+
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                }
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetGroup(int? groupId = null)
+        {
+            if (groupId.HasValue)
+            {
+                //Fetch the Group
+                int id = groupId.Value;
+                Group group = _groupRepository.GetGroupById(id);
+
+                if (group != null)
+                {
+                    String json = JsonConvert.SerializeObject(group);
+
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                }
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetError(int? errorId = null)
+        {
+            if (errorId.HasValue)
+            {
+                //Fetch the Error
+                int id = errorId.Value;
+                Error error = _errorRepository.GetErrorById(id);
+
+                if (error != null)
+                {
+                    String json = JsonConvert.SerializeObject(error);
+
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                }
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+        #endregion
+
+        #region GetMultiObject Methods
+
+        [HttpGet]
+        public HttpResponseMessage GetSensors(int? count = null)
         {
             if (count.HasValue)
             {
-                List<Sensor> sensors = new List<Sensor>();
-                sensors.Add(new Sensor() { Name = "test1"});
-                sensors.Add(new Sensor() { Name = "test2"});
-                sensors.Add(new Sensor() { Name = "test3"});
-                sensors.Add(new Sensor() { Name = "test4"});
+                List<Sensor> sensors = _sensorRepository.GetSensors(count);
 
-                String json = JsonConvert.SerializeObject(sensors);
-
-                HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
-                message.Content = new StringContent(json);
-                message.Headers.Add("Access-Control-Allow-Origin", "*");
-                return message;
-            }
-
-            return new HttpResponseMessage(HttpStatusCode.InternalServerError);
-        }
-
-        [HttpGet]
-        public HttpResponseMessage GetValue(int? sensorId, int? containerId)
-        {
-            if (sensorId.HasValue && containerId.HasValue)
-            {
-                Container container = new Container();
-                container.Name = "testContainer69";
-                container.CurrentValue = new ContainerValue(13, DateTime.Now);
-
-                String json = JsonConvert.SerializeObject(container);
-
-                HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
-                message.Content = new StringContent(json);
-                message.Headers.Add("Access-Control-Allow-Origin", "*");
-                return message;
-            }
-
-            return new HttpResponseMessage(HttpStatusCode.InternalServerError);
-        }
-        #endregion
-
-        #region TestMethods ErrorHandling
-        [HttpGet]
-        public HttpResponseMessage GetRandomError()
-        {
-            Sensor sensor = new Sensor();
-            sensor.Name = "test";
-            sensor.Containers = new List<Container>()
+                if (sensors != null && sensors.Count > 0)
                 {
-                    new Container() { Id= 1, Name = "TestContainer", SensorId =  sensor.Id},
-                    new Container() { Id= 2, Name = "TestContainer2", SensorId =  sensor.Id},
-                    new Container() { Id= 3, Name = "TestContainer3", SensorId =  sensor.Id}
-                };
+                    String json = JsonConvert.SerializeObject(sensors);
 
-            Error randomError = Error.GenericError(sensor, sensor.Containers.FirstOrDefault());
-
-            String json = JsonConvert.SerializeObject(randomError);
-
-            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
-            message.Content = new StringContent(json);
-            message.Headers.Add("Access-Control-Allow-Origin", "*");
-            return message;
-        }
-        #endregion
-
-        #region TestMethods SQL Database
-
-        [HttpGet]
-        public HttpResponseMessage GetSensorsDb()
-        {
-            SensorRepository sensorRepository = new SensorRepository();
-            List<Sensor> sensors = sensorRepository.GetSensors();
-
-            //Send back
-            String json = JsonConvert.SerializeObject(sensors);
-            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
-            message.Content = new StringContent(json);
-            message.Headers.Add("Access-Control-Allow-Origin", "*");
-            return message;
-        }
-
-        [HttpGet]
-        public HttpResponseMessage GetSensorsFromDb()
-        {
-            SensorRepository sensorRepository = new SensorRepository();
-            ErrorRepository errorRepository = new ErrorRepository();
-            List<Sensor> sensors = sensorRepository.GetSensors(); //TEST: 'GetSensors'
-
-            //TODO: TEST: 'GetSensorById'
-
-            //TOO SLOW - DELETED
-            ////TEST1: 'Stress Test - SaveOrUpdateSensor'
-            //foreach (Sensor sensor in sensors)
-            //{
-            //    sensorRepository.SaveOrUpdateSensor(sensor);
-            //}
-
-            //TEST2: 'Stress Test - UpdateSensor'
-            foreach (Sensor sensor in sensors)
-            {
-                sensorRepository.Update(sensor);
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                } 
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
-            sensorRepository.SaveChanges();
 
-            //Generate Errors
-            if (errorRepository.GetErrors().Count == 0) //Test: 'GetErrors'
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetErrors(int? count = null)
+        {
+            if (count.HasValue)
             {
-                foreach (Sensor sensor in sensors)
-                {
-                    Container container = sensor.Containers.FirstOrDefault();
-                    if (container != null)
-                    {
-                        Error error = Error.BatteryCriticalError(sensor, container);
-                        errorRepository.Insert(error); //TEST: 'SaveOrUpdateError' - Insert
-                        errorRepository.SaveChanges();
+                List<Error> errors = _errorRepository.GetErrors(count);
 
-                        Error fetchedError = errorRepository.GetByID(error.Id); //TEST: 'GetErrorById'
-                        error.Time = DateTime.Now;
-                        errorRepository.Update(error); //TEST: 'SaveOrUpdateError' - Update
-                        errorRepository.SaveChanges();
-                    }
+                if (errors != null && errors.Count > 0)
+                {
+                    String json = JsonConvert.SerializeObject(errors);
+
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
                 }
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
 
-            //Send back
-            String json = JsonConvert.SerializeObject(sensors);
-            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
-            message.Content = new StringContent(json);
-            message.Headers.Add("Access-Control-Allow-Origin", "*");
-            return message;
-        }
-
-        [HttpGet]
-        public HttpResponseMessage GetErrors()
-        {
-            ErrorRepository errorRepository = new ErrorRepository();
-            List<Error> errors = errorRepository.GetErrors(); //TEST: 'GetErrors'
-
-            //TEST: 'SaveOrUpdateError' - Stress test update
-            foreach (Error error in errors)
-                errorRepository.Update(error);
-            errorRepository.SaveChanges();
-
-            //Send back
-            String json = JsonConvert.SerializeObject(errors);
-            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
-            message.Content = new StringContent(json);
-            message.Headers.Add("Access-Control-Allow-Origin", "*");
-            return message;
-        }
-
-        [HttpGet]
-        public HttpResponseMessage GetGroups()
-        {
-            GroupRepository groupRepository = new GroupRepository();
-            List<Group> groups = groupRepository.GetGroups();   //TEST: 'GetGroups'
-
-            //Send back
-            String json = JsonConvert.SerializeObject(groups);
-            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
-            message.Content = new StringContent(json);
-            message.Headers.Add("Access-Control-Allow-Origin", "*");
-            return message;
-        }
-
-        [HttpGet]
-        public HttpResponseMessage SaveSensorsInGroup()
-        {
-            SensorRepository sensorRepository = new SensorRepository();
-            GroupRepository groupRepository = new GroupRepository();
-
-            Group group = new Group();
-            group.Name = "Oost-Vlaanderen";
-            group = groupRepository.Insert(group); //TEST: 'SaveOrUpdateGroup' - Insert
-            groupRepository.SaveChanges();
-
-            group = groupRepository.GetByID(group.Id);
-            Sensor sensor = sensorRepository.GetSensors().FirstOrDefault();
-            group.Sensors.Add(sensor);
-            groupRepository.Update(group); //TEST: 'SaveOrUpdateGroup' - Update
-            groupRepository.SaveChanges();
-            
-            //Send back
-            String json = JsonConvert.SerializeObject(group);
-            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
-            message.Content = new StringContent(json);
-            message.Headers.Add("Access-Control-Allow-Origin", "*");
-            return message;
-        }
-
-        [HttpGet]
-        public HttpResponseMessage MakeRandomData()
-        {
-            SensorRepository sensorRepository = new SensorRepository();
-            ContainerRepository containerRepository = new ContainerRepository();
-            ContainerTypeRepository containerTypeRepository = new ContainerTypeRepository();
-
-            Sensor sensor = new Sensor();
-            sensor.Name = "Sensor 7";
-            sensor.Company = "Proximus";
-            sensor.MACAddress = "11:22:33:44:AA:BB";
-            sensor.Location = "Brussel";
-            sensor.CreationDate = DateTime.Now;
-            sensor.SensorEntries = 3;
-            sensor.BasestationLat = 100.2;
-            sensor.BasestationLng = 53.36;
-            sensor = sensorRepository.Insert(sensor); //TEST: 'SaveOrUpdateSensor' - insert
-            sensorRepository.SaveChanges();
-
-            ContainerType batteryType = new ContainerType() {Name = "Battery"};
-            ContainerType humidityType = new ContainerType() { Name = "Humidity" };
-            batteryType = containerTypeRepository.SaveOrUpdateContainerType(batteryType); //TEST: 'SaveOrUpdateContainerType'
-            humidityType = containerTypeRepository.SaveOrUpdateContainerType(humidityType);
-                
-            Container batteryContainer = new Container();
-            batteryContainer.Name = "BatteryContainer";
-            batteryContainer.CreationTime = DateTime.Now;
-            batteryContainer.ContainerType = batteryType;
-            batteryContainer.SensorId = sensor.Id;
-            batteryContainer = containerRepository.Insert(batteryContainer);
-
-            Container humidityContainer = new Container();
-            humidityContainer.Name = "HumidityContainer";
-            humidityContainer.CreationTime = DateTime.Now;
-            humidityContainer.ContainerType = humidityType;
-            humidityContainer.SensorId = sensor.Id;
-            humidityContainer = containerRepository.Insert(humidityContainer);
-            containerRepository.SaveChanges();
-
-            sensor.Containers = new List<Container>()
-            {
-                batteryContainer, humidityContainer
-            };
-            sensorRepository.Update(sensor); //TEST: 'SaveOrUpdateSensor' - update
-            sensorRepository.SaveChanges();
-
-            //Send back
-            String json = JsonConvert.SerializeObject(sensor);
-            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
-            message.Content = new StringContent(json);
-            message.Headers.Add("Access-Control-Allow-Origin", "*");
-            return message;
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
 
         #endregion
 
+        #region GetNoSqlValue Methods
+
+        [HttpGet]
+        public HttpResponseMessage GetMostRecentValue(int? containerId = null)
+        {
+            if (containerId.HasValue)
+            {
+                int id = containerId.Value;
+                Container container = _containerRepository.GetByID(id);
+                if (container != null)
+                {
+                    if(container.MACAddress == null || container.ContainerType == null)
+                        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+                    //Update the values of the container
+                    container = TableStorageRepository.UpdateValue(container);
+
+                    //Return the json of the updated container
+                    String json = JsonConvert.SerializeObject(container);
+
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetHistory(int? containerId = null, int? historyTimeInHours = null)
+        {
+            if (containerId.HasValue && historyTimeInHours.HasValue)
+            {
+                int id = containerId.Value;
+                int timeInHours = historyTimeInHours.Value;
+                Container container = _containerRepository.GetByID(id);
+                if (container != null)
+                {
+                    if (container.MACAddress == null || container.ContainerType == null)
+                        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+                    //Update the values of the container
+                    TimeSpan span = TimeSpan.FromHours(timeInHours);
+                    container = TableStorageRepository.GetHistory(container, span);
+
+                    //Return the json of the updated container
+                    String json = JsonConvert.SerializeObject(container);
+
+                    HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+                    message.Content = new StringContent(json);
+                    message.Headers.Add("Access-Control-Allow-Origin", "*");
+                    return message;
+                }
+
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+        }
+
+        #endregion
+
+        #region Group Management Methods
+
+        //[HttpGet]
+        //public HttpResponseMessage GroupHasSensor(int? groupId, int? sensorId)
+        //{
+        //    //TODO: via GroupRepo -> SensorInGroup()
+        //}
+
+        #endregion
     }
 }
