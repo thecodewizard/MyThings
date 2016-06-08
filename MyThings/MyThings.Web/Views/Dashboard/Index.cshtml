@@ -146,7 +146,7 @@
 
         //GRIDSTER DEMO JAVASCRIPT //TODO: Remodel this javascript
         var originalGridsterJson = "@Model.OriginalGridsterJson";
-        var gridsterJson = "@Model.GridsterJson";
+        var gridsterJson = @Html.Raw(@Model.GridsterJson);
 
         var pinnedSensors = [];
         var pinnedContainers = [];
