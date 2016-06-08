@@ -15,25 +15,5 @@ namespace MyThings.Common.Models
 
         //References
         public List<Sensor> Sensors { get; set; }
-
-        //Functionality
-        public Group Save()
-        {
-            //Only use this method to create a single group. With multiple groups, working with the repository directly is more efficient.
-            GroupRepository groupRepository = new GroupRepository();
-            if (this.Id == 0)
-            {
-                //The group does not have an ID -> Add this to the database
-                Group savedGroup = groupRepository.Insert(this);
-                groupRepository.SaveChanges();
-                this.Id = savedGroup.Id;
-                return savedGroup;
-            } else
-            {
-                //The group has an ID -> Update the existing group
-                groupRepository.Update(this);
-            }
-            return this;
-        }
     }
 }

@@ -31,26 +31,6 @@ namespace MyThings.Common.Models
         public int? ContainerId { get; set; }
         public Container Container { get; set; }
 
-        //Functionality
-        public Error Save()
-        {
-            //Only use this method to create a single error. With multiple errors, working with the repository directly is more efficient.
-            ErrorRepository errorRepository = new ErrorRepository();
-            if (this.Id == 0)
-            {
-                //The error does not have an ID -> Add this to the database
-                Error savedError = errorRepository.Insert(this);
-                errorRepository.SaveChanges();
-                this.Id = savedError.Id;
-                return savedError;
-            } else
-            {
-                //The error has an ID -> Update the existing error
-                errorRepository.Update(this);
-            }
-            return this;
-        }
-
         //Constructor
         public Error()
         {
