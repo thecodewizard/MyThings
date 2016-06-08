@@ -165,7 +165,6 @@ namespace MyThings.Web.Controllers
                 Errors = errors
             });
         }
-        #endregion
 
         private List<Pin> CheckDefaultTilesForUser(ApplicationUser user, List<Pin> allPins)
         {
@@ -201,11 +200,13 @@ namespace MyThings.Web.Controllers
                 foreach (Pin errorPin in PinRepository.RenderErrorPinsForUser(user.Id))
                     allPins.Add(_pinRepository.Insert(errorPin));
             }
-       
+
             //Save the new pins
             _pinRepository.SaveChanges();
             return allPins;
         }
+
+        #endregion
 
         #region DummyDataGenerator
         //TODO: Remove the 'generate dummy data' method
@@ -288,8 +289,6 @@ namespace MyThings.Web.Controllers
         }
 
         #endregion
-
-#endregion
 
         #region Site API Functionality
 
