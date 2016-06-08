@@ -252,5 +252,10 @@ namespace Proximus_Webservice.Repositories
             table.Execute(insertOperation);
         }
         #endregion
+        #region service bus queue
+
+
+
+        #endregion
     }
 }
