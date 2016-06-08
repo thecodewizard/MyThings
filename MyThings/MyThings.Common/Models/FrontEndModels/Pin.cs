@@ -52,6 +52,6 @@ namespace MyThings.Common.Models
 
     public enum PinType
     {
-        Container, Sensor, Error, Group
+        Container, Sensor, Error, Group, FixedClock, FixedNavigation, FixedError
     }
 }
