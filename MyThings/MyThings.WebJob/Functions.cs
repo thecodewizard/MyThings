@@ -12,8 +12,18 @@ namespace MyThings.WebJob
     {
         // This function will get triggered/executed when a new message is written 
         // on an Azure Queue called queue.
-        public static void ProcessQueueMessage([QueueTrigger("queue")] string message, TextWriter log)
+        public static void ProcessQueueMessage([QueueTrigger("mythingsdecodedqueue")] string message, TextWriter log)
         {
+            //Thresholds controleren
+
+            //Virtuele Sensors Berekenen
+
+            //Tabel met time (op einde van de webjob updaten)
+
+            //Nieuwe sensors (en containers) toevoegen aan sql
+
+            //Count entries update
+
             log.WriteLine(message);
         }
     }

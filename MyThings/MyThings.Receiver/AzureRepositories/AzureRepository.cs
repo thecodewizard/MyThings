@@ -10,6 +10,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Azure;
+using Microsoft.ServiceBus;
+using Microsoft.ServiceBus.Messaging;
 
 
 namespace Proximus_Webservice.Repositories
@@ -94,6 +97,7 @@ namespace Proximus_Webservice.Repositories
             TableOperation insertOperation = TableOperation.Insert(entity);
             // Execute the insert operation.
             table.Execute(insertOperation);
+            PutOnStorageQueue(entity.PartitionKey, entity.RowKey);
         }
         #endregion
         #region entities
@@ -254,7 +258,38 @@ namespace Proximus_Webservice.Repositories
         #endregion
         #region service bus queue
 
+        public static void PutOnStorageQueue(String partitionkey, String rowkey)
+        {
+            // Make the object that will carry the queuemessage
+            QueueObject qo = new QueueObject(partitionkey, rowkey);
+            String json = JsonConvert.SerializeObject(qo);
 
+            // Create the queue if it does not exist already.
+            string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+            var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
+
+            if (!namespaceManager.QueueExists("mythingsdecodedqueue"))
+            {
+                namespaceManager.CreateQueue("mythingsdecodedqueue");
+            }
+
+            //Send The Queue Message
+            QueueClient Client = QueueClient.CreateFromConnectionString(connectionString, "mythingsdecodedqueue");
+            BrokeredMessage message = new BrokeredMessage(json);
+            Client.Send(message);
+        }
+
+        public class QueueObject
+        {
+            public String PartitionKey { get; set; }
+            public String RowKey { get; set; }
+
+            public QueueObject(string partitionKey, string rowKey)
+            {
+                PartitionKey = partitionKey;
+                RowKey = rowKey;
+            }
+        }
 
         #endregion
     }
