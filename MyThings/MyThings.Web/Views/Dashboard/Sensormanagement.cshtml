@@ -1,10 +1,11 @@
-﻿
+﻿@using System.Web.UI.WebControls
+
 @{
     ViewBag.Title = "Sensormanagement";
     ViewBag.PageId = "list";
 }
     <ul>
-        <li class="breadcrumb">@Html.ActionLink("Home", "Index", "Dashboard") > @Html.ActionLink("Sensor management", "Sensormanagement", "Dashboard")</li>
+        <li class="breadcrumbs">@Html.ActionLink("Home", "Index", "Dashboard") > @Html.ActionLink("Sensor management", "Sensormanagement", "Dashboard")</li>
     </ul>
 
     <ul class="sensorul">
@@ -16,10 +17,42 @@
         </li>
     </ul>
 
-    <div class="groupdiv">
-        <div class="grouprectangletile">
-            <div class="textdivgroup">Groupname</div>
-            <div class="ciphervaluegroup">75</div>
-            <div class="sensors">sensors</div>
-        </div>
+<div class="groupdiv">
+    <div class="grouprectangletile">
+        <div class="textdivgroup">Groupname</div>
+        <div class="ciphervaluegroup">75</div>
+        <div class="sensors">sensors</div>
     </div>
+</div>
+
+<div class="groupdiv">
+    <div class="grouprectangletile">
+        <div class="textdivgroup">Groupname</div>
+        <div class="ciphervaluegroup">5000</div>
+        <div class="sensors">sensors</div>
+    </div>
+</div>
+
+<div class="groupdiv">
+    <div class="grouprectangletile">
+        <a href="@Url.Action("Editgroups", "Dashboard")">
+            <div class="addgroup">+</div>
+        </a>
+    </div>
+</div>
+
+<hr class="purpleHr"/>
+
+<ul class="sensorul">
+    <li class="editgroup">
+        <h2>Sensors</h2>
+    </li>
+</ul>
+
+@using (Html.BeginForm("Sensormanagement","Dashboard",FormMethod.Get))
+{
+    <input type="search" name="searchsensor"/>
+    <input class="inputimg" type="image" value="submit" src="http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x.png" name="ok"/>
+}
+
+<br />

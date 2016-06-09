@@ -1,12 +1,13 @@
 ﻿@import "_colors.scss";
 @import "_fonts.scss";
-@import "_style.scss";
 h2{
       display:inline;
 }
 .sensorul{
+    
     white-space:nowrap;
     width:100%;
+    margin-bottom:10%;
 }
 .editgroup{
      display:inline;
@@ -21,29 +22,57 @@ h2{
      background-color:$proximussecpurple;
      }
 }
+.groupdiv{
+    display:inline-block;
+}
 .grouprectangletile{
-    position:relative;
+    float:left;
     width:$largeblock;
     height:$smallblock;
     color: $proximuswhite;
     background-color: $proximusmainblue;
     margin:2%;
+    & a{
+    color: $proximuswhite;
+    }
 }
 .textdivgroup{
+    
+    display:inline-block;
     margin:1%;
     font-family:$proximusregularfont;
     font-size:$fontsizemedium;
 }
 .ciphervaluegroup{
     
-    display:inline-block;
+    display:inline;
+    margin:2%;
     font-family:$proximusregularfont;
-    font-size:$fontsizelarge;
+    font-size:$fontsizemedium;
 }
 .sensors{
-    
-    display:inline-block;
+    display:inline;
     float:right;
     font-family:$proximusregularfont;
     font-size:$fontsizemedium;
+    margin-top:8%;
+    overflow:hidden;
+}
+.addgroup{
+     display:inline-block;
+    font-family:$proximusregularfont;
+    font-size:$fontsizelarge;
+}
+.addgroup{
+    width:$largeblock;
+    height:$smallblock;
+    margin: 0 auto;
+    padding: 10%;
+    position: relative;
+    text-align:center;
+
+}
+.inputimg{
+    width:25px;
+    height:25px;
 }

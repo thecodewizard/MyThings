@@ -1,8 +1,6 @@
 ﻿@import "_colors.scss";
 @import "_fonts.scss";
 
-body{
-}
 li{
     list-style-type:none;
 }
@@ -10,6 +8,10 @@ footer{
     bottom:unset;
     color:$proximusmainpurple;
    float:right;
+}
+
+a{
+    text-decoration-line:none;
 }
 
 h1{
@@ -22,7 +24,7 @@ h3{
      font-size:$fontsizesmall;
 }
 
-.breadcrumb{
+.breadcrumbs{
     font-family:$proximuslightfont;
     font-size: $fontsizesmall;
     & a{
