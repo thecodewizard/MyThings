@@ -11,6 +11,7 @@ namespace MyThings.Common.Context
         public DbSet<ContainerType> ContainerTypes { get; set; }
         public DbSet<Group> Group { get; set; }
         public DbSet<Error> Error { get; set; }
+        public DbSet<Timeholder> Timeholder { get; set; }
 
         //Front-end Models
         public DbSet<Pin> Pins { get; set; }

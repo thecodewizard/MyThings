@@ -14,7 +14,5 @@ namespace MyThings.Api.Controllers
     public class PostController : ApiController
     {
         //This controller will manage all the API's POST requests.
-
-
     }
 }
