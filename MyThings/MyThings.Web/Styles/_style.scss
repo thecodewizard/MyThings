@@ -10,8 +10,8 @@ footer{
    float:right;
 }
 
-a{
-    text-decoration-line:none;
+a:hover{
+    text-decoration:none;
 }
 
 h1{
@@ -24,6 +24,9 @@ h3{
      font-size:$fontsizesmall;
 }
 
+ul{
+    padding-left:4%;
+}
 .breadcrumbs{
     font-family:$proximuslightfont;
     font-size: $fontsizesmall;
@@ -31,7 +34,6 @@ h3{
     color:$proximusmainpurple;
         &:hover{
         color:$proximusmainblue;
-        text-decoration:none;
                }
        }
     

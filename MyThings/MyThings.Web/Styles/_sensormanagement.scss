@@ -4,10 +4,10 @@ h2{
       display:inline;
 }
 .sensorul{
-    
     white-space:nowrap;
     width:100%;
-    margin-bottom:10%;
+    margin-bottom:5%;
+    padding:3% 0 0 2.4%;
 }
 .editgroup{
      display:inline;
@@ -20,10 +20,15 @@ h2{
          padding:1% 2%;
          bottom:10%;
      background-color:$proximussecpurple;
+     &:hover{
+         color:$proximusblack;
+         background-color:$proximusterdarkpurple;
+     }
      }
 }
 .groupdiv{
-    display:inline-block;
+    display:flex;
+    padding:0 0 5% 2%;
 }
 .grouprectangletile{
     float:left;
@@ -34,6 +39,12 @@ h2{
     margin:2%;
     & a{
     color: $proximuswhite;
+    }
+}
+.addgrouptile:hover{
+    background-color: $proximusterdarkblue;
+    & a{
+    color: initial;
     }
 }
 .textdivgroup{
@@ -55,7 +66,7 @@ h2{
     float:right;
     font-family:$proximusregularfont;
     font-size:$fontsizemedium;
-    margin-top:8%;
+    margin:8% 2% 0;
     overflow:hidden;
 }
 .addgroup{
@@ -70,9 +81,38 @@ h2{
     padding: 10%;
     position: relative;
     text-align:center;
-
+}
+.searchdiv
+{
+    max-height:30px;
+    max-height:30px;
 }
 .inputimg{
-    width:25px;
-    height:25px;
+    width:30px;
+    height:30px;
+    padding:5px;
+    margin-bottom:-5%;
+    background-color:$proximusmainpurple;
+}
+.searchbardiv{
+    height:30px;
+}
+.dropdowntest{
+    display:inline;
+    margin-left:10px;
+}
+form{
+    display:inline-block;
+    padding: 0 10% 5% 5%;
+}
+.sensorlist{
+    width:100%;
+    border-spacing:10px;
+    table-layout:auto;
+}
+.sensorsheadrow{
+    background-color:$proximusterdarkblue;
+}
+.sensorsrows{
+    background-color:$proximusterlightblue;
 }
