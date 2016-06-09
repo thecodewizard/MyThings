@@ -20,17 +20,18 @@
 
 @section scripts{
 <script type="text/javascript">
-    
+
     gridsterJson = @Html.Raw(@Model.GridsterJson);
+    gridster = null;
+    highestId = 0;
 
     $(window).load(function () {
-        var gridster;
 
         @if(Model.OriginalGridsterJson == null || Model.OriginalGridsterJson == "")
         {
             @:var originalGridsterJson = [];
         }else{
-            @:var originalGridsterJson = @Model.OriginalGridsterJson;
+            @:var originalGridsterJson = @Html.Raw(@Model.GridsterJson);
         }
 
         var pinnedSensors = [];
@@ -51,6 +52,11 @@
             widget_base_dimensions: [120, 120],
             max_rows: 5,
             widget_margins: [10, 10],
+            draggable:{
+                stop: function(event, ui){
+                    UpdateLayout();
+                }
+            },
             shift_widgets_up: false,
             shift_larger_widgets_down: false,
             collision: {
@@ -58,8 +64,6 @@
             }
         }).data('gridster');
 
-        
-        var highestId = 0;
         $.each(gridsterJson, function (index, value) {
             if (value.Id == 0) {
                 gridster.add_widget('<li class="tile">id is 0</li>');
@@ -69,10 +73,14 @@
                 if (value.Size_Y == 0) value.Size_Y = 1;
                 gridster.add_widget('<li class="tile">id heeft waarde</li>', value.Size_X, value.Size_Y, value.Row, value.Col);
             }
-           
+
             if(highestId < gridsterJson[index].Id) highestId = gridsterJson[index].Id;
         });
 
+        UpdateLayout();
+    })
+
+    function UpdateLayout(){
         var newPos = gridster.serialize();
         $.each(newPos, function (index, value) {
             newPos[index].Pin = gridsterJson[index].Pin;
@@ -83,10 +91,6 @@
             newPos[index].Id = newPos[index].Pin.TileId;
         });
         gridsterJson = newPos;
-        UpdateLayout();
-    })
-
-    function UpdateLayout(){
         $.ajax({
             method: 'POST',
             dataType: "json",

@@ -1,12 +1,37 @@
 ﻿@import "_colors.scss";
 @import "_fonts.scss";
 
+.colorWrapper{
+    background-color: rgba(255, 255, 255, .7);
+    margin: auto;
+}
+@media (min-width: 768px){
+    .colorWrapper {
+    width: 750px;
+}
+}
+@media (min-width: 992px){
+.colorWrapper {
+    width: 970px;
+}
+}
+@media (min-width: 1200px){
+    .colorWrapper{
+    width: 1170px;
+}
+}
+
+
+
+
+
+
 li{
     list-style-type:none;
 }
 footer{
     bottom:unset;
-    color:$proximusmainpurple;
+    color:$proximuswhite;
    float:right;
 }
 
