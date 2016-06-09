@@ -13,119 +13,44 @@
 <div class="gridsterContainer">
     <div class="gridster">
         <ul>
-            @*<li class="smallsquaretile" data-row="1" data-col="1" data-sizex="1" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="2" data-col="1" data-sizex="1" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="3" data-col="1" data-sizex="1" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="1" data-col="2" data-sizex="1" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="2" data-col="2" data-sizex="2" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="1" data-col="4" data-sizex="1" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="2" data-col="4" data-sizex="1" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="3" data-col="4" data-sizex="1" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="1" data-col="5" data-sizex="1" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="3" data-col="5" data-sizex="1" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="1" data-col="6" data-sizex="1" data-sizey="1"></li>
-            <li class="smallsquaretile" data-row="2" data-col="6" data-sizex="1" data-sizey="2"></li>*@
-
-            <li class="test" data-row="1" data-col="1" data-sizex="1" data-sizey="1"></li>
-            <li class="test" data-row="2" data-col="1" data-sizex="1" data-sizey="1"></li>
         </ul>
     </div>
 </div>
 
-@*BRUNO*@
-
-
-<div class="mainhomepagediv">
-    <div class="clockdiv maindiv">
-        <div class="largesquaretile unhoverabletile">
-            <div class="clock customimg">
-                <div class="hours-container">
-                    <div class="hours"></div>
-                </div>
-                <div class="minutes-container">
-                    <div class="minutes"></div>
-                </div>
-                <div class="seconds-container">
-                    <div class="seconds"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="warningdiv maindiv">
-        <a href="@Url.Action("Warning", "Dashboard")">
-            <div class="largesquaretile">
-                <div class="textdiv"> Warnings</div>
-                <div class="warningvalue ciphervalue">2</div>
-                <img class="warningimg customimg" alt="warningicon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-icon.png" />
-            </div>
-        </a>
-    </div>
-    <div class="errordiv maindiv">
-        <a href="@Url.Action("Error", "Dashboard")">
-            <div class="largesquaretile">
-                <div class="textdiv">Errors</div>
-                <div class="errorvalue ciphervalue">5</div>
-                <img class="errorimg customimg" alt="erroricon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/warning-icon.png" />
-            </div>
-        </a>
-    </div>
-    @*logout*@
-    <div class="logoutdiv maindiv">
-        <a href="@Url.Action("About", "Dashboard")">
-            <div class="largesquaretile">
-                <img class="logoutimg customimg" alt="logouticon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/door-icon.png" />
-            </div>
-        </a>
-    </div>
-    <div class="Sensormngmtdiv maindiv">
-        <a href="@Url.Action("Sensors", "Dashboard")">
-            <div class="smallsquaretile">
-                <div class="textdivsmallsquare">Sensor management</div>
-            </div>
-        </a>
-    </div>
-    <div class="containerdiv maindiv">
-        <a href="@Url.Action("Containers", "Dashboard")">
-            <div class="smallsquaretile">
-                <div class="textdivsmallsquare">Containers</div>
-            </div>
-        </a>
-    </div>
-    <div class="Invoicediv maindiv">
-        <a href="@Url.Action("Invoice", "Dashboard")">
-            <div class="horizontalrectangletile">
-                <div class="textdivsmallsquare">Invoice</div>
-            </div>
-        </a>
-    </div>
-    <div class="Supportdiv maindiv">
-        <a href="@Url.Action("Support", "Dashboard")">
-            <div class="smallsquaretile">
-                <div class="textdivsmallsquare">Support</div>
-            </div>
-        </a>
-    </div>
-    <div class="Mapdiv maindiv">
-        <a href="@Url.Action("Map", "Dashboard")">
-            <div class="smallsquaretile">
-                <div class="textdivsmallsquare">Geographic overview sensors</div>
-            </div>
-        </a>
-    </div>
-
-    @* <div class="Pinneddiv maindiv">
-            <a href="@Url.Action("Map", "Dashboard")">
-                <div class="verticalrectangletile">
-                    <img class="pinimg customimg" alt="logouticon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/Pin-icon.png" />
-                    <div class="textdivrectangle">Groupname</div>
-                </div>
-            </a>
-        </div>*@
-</div>
 
 @section scripts{
-    <script>
-        //Clock Javascript
+<script type="text/javascript">
+    var gridster;
+
+    var gridsterJson = [{ "Id": 1, "Col": 5, "Row": 3, "Size_X": 0, "Size_Y": 0, "Pin": { "Id": 1, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 3, "SavedType": 1, "IsDeleted": false } }, { "Id": 2, "Col": 7, "Row": 3, "Size_X": 2, "Size_Y": 2, "Pin": { "Id": 2, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 2, "SavedType": 1, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 3, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 4, "SavedType": 1, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 4, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 3, "SavedType": 1, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 5, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 5, "SavedType": 1, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 6, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 4, "SavedType": 1, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 7, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 6, "SavedType": 1, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 8, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 5, "SavedType": 1, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 9, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 7, "SavedType": 1, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 10, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 6, "SavedType": 1, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 11, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 0, "SavedType": 4, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 12, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 0, "SavedType": 5, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 13, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 1, "SavedType": 5, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 14, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 2, "SavedType": 5, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 15, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 3, "SavedType": 5, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 16, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 4, "SavedType": 5, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 17, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 5, "SavedType": 5, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 18, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 0, "SavedType": 6, "IsDeleted": false } }, { "Id": 0, "Col": 0, "Row": 0, "Size_X": 0.0, "Size_Y": 0.0, "Pin": { "Id": 19, "UserId": "206e2b68-e01f-4ccf-907f-7f7becd12012", "TileId": 0, "SavedId": 1, "SavedType": 6, "IsDeleted": false } }];
+
+    gridster = $(".gridster ul").gridster({
+        widget_base_dimensions: [120, 120],
+        max_rows: 5,
+        widget_margins: [10, 10],
+        shift_widgets_up: false,
+        shift_larger_widgets_down: false,
+        collision: {
+            wait_for_mouseup: true
+        }
+    }).data('gridster');
+
+    $.each(gridsterJson, function (index, value) {
+        if (value.Id == 0) {
+            gridster.add_widget('<li>id is 0</li>');
+        } else {
+            if (value.Size_X == 0) value.Size_X = 1;
+            if (value.Size_Y == 0) value.Size_Y = 1;
+            gridster.add_widget('<li>id heeft waarde</li>', value.Size_X, value.Size_Y, value.Row, value.Col);
+        }
+    });
+</script>
+}
+
+
+
+        @*
+                //Clock Javascript
         (function() {
             initLocalClocks();
             moveSecondHands();
@@ -205,13 +130,98 @@
 
         console.log(totalTileCount);
     </script>
-}
+        *@
 
 
+        @*BRUNO*@
 
 
+        @*<div class="mainhomepagediv">
+        <div class="clockdiv maindiv">
+            <div class="largesquaretile unhoverabletile">
+                <div class="clock customimg">
+                    <div class="hours-container">
+                        <div class="hours"></div>
+                    </div>
+                    <div class="minutes-container">
+                        <div class="minutes"></div>
+                    </div>
+                    <div class="seconds-container">
+                        <div class="seconds"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="warningdiv maindiv">
+            <a href="@Url.Action("Warning", "Dashboard")">
+                <div class="largesquaretile">
+                    <div class="textdiv"> Warnings</div>
+                    <div class="warningvalue ciphervalue">2</div>
+                    <img class="warningimg customimg" alt="warningicon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-icon.png" />
+                </div>
+            </a>
+        </div>
+        <div class="errordiv maindiv">
+            <a href="@Url.Action("Error", "Dashboard")">
+                <div class="largesquaretile">
+                    <div class="textdiv">Errors</div>
+                    <div class="errorvalue ciphervalue">5</div>
+                    <img class="errorimg customimg" alt="erroricon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/warning-icon.png" />
+                </div>
+            </a>
+        </div>
+        logout
+        <div class="logoutdiv maindiv">
+            <a href="@Url.Action("About", "Dashboard")">
+                <div class="largesquaretile">
+                    <img class="logoutimg customimg" alt="logouticon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/door-icon.png" />
+                </div>
+            </a>
+        </div>
+        <div class="Sensormngmtdiv maindiv">
+            <a href="@Url.Action("Sensors", "Dashboard")">
+                <div class="smallsquaretile">
+                    <div class="textdivsmallsquare">Sensor management</div>
+                </div>
+            </a>
+        </div>
+        <div class="containerdiv maindiv">
+            <a href="@Url.Action("Containers", "Dashboard")">
+                <div class="smallsquaretile">
+                    <div class="textdivsmallsquare">Containers</div>
+                </div>
+            </a>
+        </div>
+        <div class="Invoicediv maindiv">
+            <a href="@Url.Action("Invoice", "Dashboard")">
+                <div class="horizontalrectangletile">
+                    <div class="textdivsmallsquare">Invoice</div>
+                </div>
+            </a>
+        </div>
+        <div class="Supportdiv maindiv">
+            <a href="@Url.Action("Support", "Dashboard")">
+                <div class="smallsquaretile">
+                    <div class="textdivsmallsquare">Support</div>
+                </div>
+            </a>
+        </div>
+        <div class="Mapdiv maindiv">
+            <a href="@Url.Action("Map", "Dashboard")">
+                <div class="smallsquaretile">
+                    <div class="textdivsmallsquare">Geographic overview sensors</div>
+                </div>
+            </a>
+        </div>
 
-
-
+        @* <div class="Pinneddiv maindiv">
+                <a href="@Url.Action("Map", "Dashboard")">
+                    <div class="verticalrectangletile">
+                        <img class="pinimg customimg" alt="logouticon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/Pin-icon.png" />
+                        <div class="textdivrectangle">Groupname</div>
+                    </div>
+                </a>
+            </div>
+    </div>*@
 
 
