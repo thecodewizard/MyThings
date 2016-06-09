@@ -1,7 +1,37 @@
 ﻿@import "_colors.scss";
 @import "_fonts.scss";
 
-$largeblock: 200px;
+li{
+    background-color: #5c2d91;
+    list-style: none
+}
+* {
+    margin: 0;
+}
+
+html, body {
+    overflow-x: auto;
+    height: 100vh;
+}
+
+body{
+    background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png");
+    overflow-y: hidden;
+}
+
+.container {
+    padding: 30px 50px 50px 50px ;
+    min-height: 100%;
+    height: 100%;
+    margin: 0 auto -20px;
+}
+
+.homeTitle{
+    color: #fff;
+    margin: 25px 0 0 25px;
+}
+
+/*$largeblock: 200px;
 $smallblock: 100px;
 $fontsizelarge: 6em;
 $fontsizemedium: 2em;
@@ -245,4 +275,4 @@ $fontsizestiny: 0.85em;
 }
 .seconds-container {  
   transition: transform 0.2s cubic-bezier(.4,2.08,.55,.44);
-}
+}*/

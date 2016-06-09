@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-favicon.ico" type="image/x-icon" />
     <title>@ViewBag.Title - MyThings Dashboard</title>
-    @Styles.Render("~/Content/css")
+    @if(ViewBag.PageId != "Home")
+    {
+        @Styles.Render("~/Content/css")
+    }
     @Styles.Render("~/Styles/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 
 <body>
-    @if (ViewBag.Pageid != "Home")
+    @if (ViewBag.PageId != "Home")
     {
         <nav class="navbar navbar-inverse container navoverride">
             <div class="navbar">
@@ -45,9 +48,11 @@
                             <li>
                                 <a class="headerMargin" href="">
                                     <div class="imghelper">
-                                        @if (ViewBag.PageId == "list") {
+                                        @if (ViewBag.PageId == "list")
+                                        {
                         <img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/sensor-list-icon-active.png" alt="List Sensors" title="List Sensors">
-                        }else{<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/sensor-list-icon.png" alt="List Sensors" title="List Sensors">}
+                                        }
+                                        else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/sensor-list-icon.png" alt="List Sensors" title="List Sensors">}
                                     </div><p class="navtext">Proximus Home</p>
                                 </a>
                             </li>
@@ -56,8 +61,9 @@
                                 <a class="headerMargin" href="">
                                     <div class="imghelper">
                                         @if (ViewBag.PageId == "error")
-                        {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-list-icon-active.png" alt="Error List" title="Error List">
-                        }else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-list-icon.png" alt="Error List" title="Error List">}
+                                        {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-list-icon-active.png" alt="Error List" title="Error List">
+                                        }
+                                        else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-list-icon.png" alt="Error List" title="Error List">}
                                 </div><p class="navtext">Proximus Home</p>
                             </a>
                         </li>
@@ -66,8 +72,9 @@
                             <a class="headerMargin" href="">
                                 <div class="imghelper">
                                     @if (ViewBag.PageId == "support")
-                    {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/support-icon-active.png" alt="Support" title="Support">
-                    }else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/support-icon.png" alt="Support" title="Support">}
+                                    {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/support-icon-active.png" alt="Support" title="Support">
+                                    }
+                                    else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/support-icon.png" alt="Support" title="Support">}
                             </div><p class="navtext">Proximus Home</p>
                         </a>
                     </li>
@@ -76,8 +83,9 @@
                         <a class="headerMargin" href="">
                             <div class="imghelper">
                                 @if (ViewBag.PageId == "invoice")
-                    {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/invoice-icon-active.png" alt="Invoice" title="Invoice">
-                    } else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/invoice-icon.png" alt="Invoice" title="Invoice">}
+                                {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/invoice-icon-active.png" alt="Invoice" title="Invoice">
+                                }
+                                else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/invoice-icon.png" alt="Invoice" title="Invoice">}
                         </div><p class="navtext">Proximus Home</p>
                     </a>
                 </li>
@@ -109,17 +117,34 @@
 </div>
 <hr class="purpleHr">
 </nav>
+    if (ViewBag.PageId != "Home")
+    {
+        <div>
+            @RenderBody()
+            <hr class="purpleHr">
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Mythings Dashboard</p>
+            </footer>
+        </div>
     }
-    <div class="container body-content">
-        @RenderBody()
-        <hr class="purpleHr">
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Mythings Dashboard</p>
-        </footer>
-    </div>
+    else
+    {
+        <div class="container body-content">
+            @RenderBody()
+            <hr class="purpleHr">
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Mythings Dashboard</p>
+            </footer>
+        </div>
+    }
+    }
+
 
 @Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
+@if (ViewBag.PageId != "Home")
+{
+    @Scripts.Render("~/bundles/bootstrap")
+}
 @Scripts.Render("~/Scripts/gridster")
 @Scripts.Render("~/Scripts/mythings")
 @RenderSection("scripts", required: false)
