@@ -72,120 +72,204 @@ h3 {
   font-family: Proximus-ExtraBold;
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
+li {
+  background-color: #5c2d91;
+  list-style: none; }
+
+* {
+  margin: 0; }
+
+html, body {
+  overflow-x: auto;
+  height: 100vh; }
+
+body {
+  background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png");
+  overflow-y: hidden; }
+
+.container {
+  padding: 30px 50px 50px 50px;
+  min-height: 100%;
+  height: 100%;
+  margin: 0 auto -20px; }
+
+.homeTitle {
+  color: #fff;
+  margin: 25px 0 0 25px; }
+
+/*$largeblock: 200px;
+$smallblock: 100px;
+$fontsizelarge: 6em;
+$fontsizemedium: 2em;
+$fontsizesmall: 1.2em;
+$fontsizestiny: 0.85em;
+
+
 .mainhomepagediv {
-  display: flex;
-  flex-wrap: wrap;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  max-height: 1080px; }
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: scroll; 
+    overflow-y:hidden; 
+    max-height: 1080px;
+}
 
 .horizontalrectangletile,
 .verticalrectangletile,
 .smallsquaretile,
-.largesquaretile {
-  color: #FFFFFF; }
-  .horizontalrectangletile.horizontalrectangletile,
-  .verticalrectangletile.horizontalrectangletile,
-  .smallsquaretile.horizontalrectangletile,
-  .largesquaretile.horizontalrectangletile {
-    font-size: 0.85em;
-    background-color: #9C5FB5;
-    width: 200px;
-    height: 100px; }
-  .horizontalrectangletile.verticalrectangletile,
-  .verticalrectangletile.verticalrectangletile,
-  .smallsquaretile.verticalrectangletile,
-  .largesquaretile.verticalrectangletile {
-    font-size: 1.2em;
-    background-color: #9C5FB5;
-    width: 100px;
-    height: 200px; }
-  .horizontalrectangletile.smallsquaretile,
-  .verticalrectangletile.smallsquaretile,
-  .smallsquaretile.smallsquaretile,
-  .largesquaretile.smallsquaretile {
-    font-size: 0.85em;
-    background-color: #9C5FB5; }
-  .horizontalrectangletile.largesquaretile,
-  .verticalrectangletile.largesquaretile,
-  .smallsquaretile.largesquaretile,
-  .largesquaretile.largesquaretile {
-    background-color: #9C5FB5;
-    width: 200px;
-    height: 200px;
+.largesquaretile
+{
+    //display:table-cell;
+    //overflow:hidden;
+    color: $proximuswhite;
+    //vertical-align:middle;
+    //align-content:center;
+    //justify-content:center;
+    //text-decoration:none;
+    &.horizontalrectangletile
+    {
+    
+    font-size: $fontsizestiny;
+    background-color: $proximussecpurple;
+    width: $largeblock; 
+    height: $smallblock;
+    }
+
+    &.verticalrectangletile
+    {
+    font-size:$fontsizesmall;
+    background-color: $proximussecpurple; 
+    width: $smallblock;
+    height: $largeblock;
+    }
+    &.smallsquaretile 
+    {
+    font-size:$fontsizestiny;
+    background-color: $proximussecpurple; 
+    //width: $smallblock; 
+    //height: $smallblock;
+    }
+    &.largesquaretile 
+    {
+    background-color: $proximussecpurple;
+    width: $largeblock; 
+    height: $largeblock;
     display: inline-block;
-    margin: 0 10px 5px 5px; }
+    margin: 0 10px 5px 5px;
+    }
 
-a .largesquaretile {
-  width: 200px;
-  height: 200px; }
+}
+ a .smallsquaretile
+ { 
+    //width: $smallblock; 
+    //height: $smallblock;
+ }
+  a .largesquaretile
+  { 
+    width: $largeblock; 
+    height: $largeblock;
+  }
 
-.textdiv {
-  font-size: 2em;
-  text-align: center;
-  vertical-align: bottom; }
+.textdiv 
+{
+    font-size:$fontsizemedium;
+    text-align:center;
+    vertical-align:bottom;
+}
+.textdivsmallsquare 
+{
+    font-size:$fontsizesmall;
+    text-align:center;
+}
+.ciphervalue
+{
+    margin:0 10px;
+    font-size:$fontsizelarge;
+    text-align:left;
+}
+.customimg
+{
+    position:relative;
+    display:table-cell;
+    width:auto;
+    height:auto;
+    vertical-align: bottom;
+    margin: auto;
 
-.textdivsmallsquare {
-  font-size: 1.2em;
-  text-align: center; }
-
-.ciphervalue {
-  margin: 0 10px;
-  font-size: 6em;
-  text-align: left; }
-
-.customimg {
-  position: relative;
-  display: table-cell;
-  width: auto;
-  height: auto;
-  vertical-align: bottom;
-  margin: auto; }
-  .customimg.errorimg {
-    max-height: 75%;
-    max-width: 75%;
+    &.errorimg 
+    {
+    max-height:75%;
+    max-width:75%;
     float: right;
     bottom: 40%;
-    right: -20%; }
-  .customimg.warningimg {
-    max-height: 65%;
-    max-width: 65%;
+    right: -20%;
+    }
+
+    &.warningimg 
+    {
+    max-height:65%;
+    max-width:65%;
     float: right;
     bottom: 35%;
-    right: -20%; }
-  .customimg.logoutimg {
-    max-height: 95%;
-    max-width: 95%;
-    bottom: -2%; }
-  .customimg.pinimg {
-    max-height: 25%;
-    max-width: 25%;
+    right: -20%;
+    }
+
+    &.logoutimg
+    {
+    max-height:95%;
+    max-width:95%;
+    bottom:-2%;
+    }
+        &.pinimg
+    {
+    max-height:25%;
+    max-width:25%;
     float: right;
-    top: -30%; }
+    top:-30%;
+    }
 
-.maindiv {
-  font-family: Proximus-Regular, Helvetica, sans-serif;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  border-spacing: 5px;
-  overflow: hidden; }
-  .maindiv .smallsquaretile:hover {
-    background-color: #D1BBDA; }
-  .maindiv .largesquaretile:hover {
-    background-color: #D1BBDA; }
-  .maindiv .horizontalrectangletile:hover {
-    background-color: #D1BBDA; }
-  .maindiv .verticalrectangletile:hover {
-    background-color: #D1BBDA; }
-  .maindiv .unhoverabletile:hover {
-    background-color: #9C5FB5; }
-  .maindiv a:hover {
-    text-decoration: none; }
+}
 
-.test {
-  list-style: none;
-  background-color: #D1BBDA; }
+.maindiv 
+{
+    font-family: $proximusregularfont,$basicfonts;
+    display:flex;
+    align-content:center;
+    justify-content:center;
+    border-spacing:5px;
+    overflow:hidden;
+    & .smallsquaretile:hover
+    {
+                 background-color: $proximusterdarkpurple;
+    }
+    & .largesquaretile:hover
+    {
+                 background-color: $proximusterdarkpurple;
+    }
+    & .horizontalrectangletile:hover
+    {
+         background-color: $proximusterdarkpurple;
+    }
+    
+    & .verticalrectangletile:hover
+    {
+         background-color: $proximusterdarkpurple;
+    }
+    & .unhoverabletile:hover
+    {
+         background-color:$proximussecpurple;
+    }
+    & a:hover
+    {
+         text-decoration:none;
+    }
+}
+
+.test
+    {
+    list-style: none;
+                 background-color: $proximusterdarkpurple;
+    }
+
 
 .clock {
   border-radius: 50%;
@@ -194,7 +278,8 @@ a .largesquaretile {
   height: 13.5em;
   padding-bottom: 31%;
   position: relative;
-  width: 13.5em; }
+  width: 13.5em;
+}
 
 .clock.simple:after {
   background: #000;
@@ -206,15 +291,15 @@ a .largesquaretile {
   transform: translate(-50%, -50%);
   width: 5%;
   height: 5%;
-  z-index: 10; }
-
+  z-index: 10;
+}
 .minutes-container, .hours-container, .seconds-container {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
-  left: 0; }
-
+  left: 0;
+}
 .hours {
   background: #000;
   height: 20%;
@@ -222,8 +307,8 @@ a .largesquaretile {
   position: absolute;
   top: 30%;
   transform-origin: 50% 100%;
-  width: 2.5%; }
-
+  width: 2.5%;
+}
 .minutes {
   background: #000;
   height: 40%;
@@ -231,8 +316,8 @@ a .largesquaretile {
   position: absolute;
   top: 10%;
   transform-origin: 50% 100%;
-  width: 2%; }
-
+  width: 2%;
+}
 .seconds {
   background: #000;
   height: 45%;
@@ -241,21 +326,22 @@ a .largesquaretile {
   top: 14%;
   transform-origin: 50% 80%;
   width: 1%;
-  z-index: 8; }
-
+  z-index: 8;
+}
 @keyframes rotate {
   100% {
-    transform: rotateZ(360deg); } }
-
+    transform: rotateZ(360deg);
+  }
+}
 .hours-container {
-  animation: rotate 43200s infinite linear; }
-
+  animation: rotate 43200s infinite linear;
+}
 .minutes-container {
-  transition: transform 0.3s cubic-bezier(0.4, 2.08, 0.55, 0.44); }
-
-.seconds-container {
-  transition: transform 0.2s cubic-bezier(0.4, 2.08, 0.55, 0.44); }
-
+  transition: transform 0.3s cubic-bezier(.4,2.08,.55,.44);
+}
+.seconds-container {  
+  transition: transform 0.2s cubic-bezier(.4,2.08,.55,.44);
+}*/
 body {
   color: #000000; }
 

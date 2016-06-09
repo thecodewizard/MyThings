@@ -30,15 +30,15 @@ namespace MyThings.Web
             //Own Bundles
             bundles.Add(new StyleBundle("~/Styles/css").Include(
                        "~/Styles/Bundled.min.css",
-                       "~/Styles/jquery.gridster.min.css"));
+                       "~/Content/jquery.gridster.min.css"));
+
             bundles.Add(new ScriptBundle("~/Scripts/mythings").Include(
                     "~/Scripts/MyThingsObjects.js",
                     "~/Scripts/MyThings.js",
                     "~/Scripts/MyThingsClock.js"));
 
             bundles.Add(new ScriptBundle("~/Scripts/gridster").Include(
-                    "~/Scripts/jquery.gridster.min.js",
-                    "~/Scripts/jquery.gridster.with-extras.min.js"));
+                    "~/Scripts/jquery.gridster.min.js"));
         }
     }
 }
