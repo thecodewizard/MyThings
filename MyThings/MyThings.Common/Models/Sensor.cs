@@ -18,8 +18,10 @@ namespace MyThings.Common.Models
         public DateTime CreationDate { get; set; }
         public long SensorEntries { get; set; }
 
-        public Double BasestationLat { get; set; }
-        public Double BasestationLng { get; set; }
+        //Location
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+        public int Accuracy { get; set; }
 
         //References
         public List<Container> Containers { get; set; }

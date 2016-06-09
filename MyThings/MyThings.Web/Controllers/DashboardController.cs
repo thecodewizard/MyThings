@@ -11,6 +11,7 @@ using MyThings.Common.Helpers;
 using MyThings.Common.Models;
 using MyThings.Common.Repositories;
 using MyThings.Web.ViewModels;
+using Newtonsoft.Json;
 
 namespace MyThings.Web.Controllers
 {
@@ -63,52 +64,56 @@ namespace MyThings.Web.Controllers
                 switch (pin.SavedType)
                 {
                     case PinType.Group:
-                        //Give the found group to javascript.
-                        Group group = _groupRepository.GetGroupById(pin.SavedId);
-                        if (group != null)
-                        {
-                            pinnedGroups.Add(group);
-                        } else
-                        {
-                            _pinRepository.DeletePin(pin); //If the pinned group could not be resolved, remove the faulty pin.
-                        }
-                        break;
+                    //Give the found group to javascript.
+                    Group group = _groupRepository.GetGroupById(pin.SavedId);
+                    if (group != null)
+                    {
+                        pinnedGroups.Add(group);
+                    }
+                    else
+                    {
+                        _pinRepository.DeletePin(pin); //If the pinned group could not be resolved, remove the faulty pin.
+                    }
+                    break;
                     case PinType.Error:
-                        //Give the found error to javascript.
-                        Error error = _errorRepository.GetErrorById(pin.SavedId);
-                        if (error != null)
-                        {
-                            pinnedErrors.Add(error);
-                        } else
-                        {
-                            _pinRepository.DeletePin(pin); //If the pinned error could not be resolved, remove the faulty pin.
-                        }
-                        break;
+                    //Give the found error to javascript.
+                    Error error = _errorRepository.GetErrorById(pin.SavedId);
+                    if (error != null)
+                    {
+                        pinnedErrors.Add(error);
+                    }
+                    else
+                    {
+                        _pinRepository.DeletePin(pin); //If the pinned error could not be resolved, remove the faulty pin.
+                    }
+                    break;
                     case PinType.Sensor:
-                        //Give the found sensor to javascript
-                        Sensor sensor = _sensorRepository.GetSensorById(pin.SavedId);
-                        if (sensor != null)
-                        {
-                            pinnedSensors.Add(sensor);
-                        } else
-                        {
-                            _pinRepository.DeletePin(pin); //If the pinned sensor could not be resolved, remove the faulty pin.
-                        }
-                        break;
+                    //Give the found sensor to javascript
+                    Sensor sensor = _sensorRepository.GetSensorById(pin.SavedId);
+                    if (sensor != null)
+                    {
+                        pinnedSensors.Add(sensor);
+                    }
+                    else
+                    {
+                        _pinRepository.DeletePin(pin); //If the pinned sensor could not be resolved, remove the faulty pin.
+                    }
+                    break;
                     case PinType.Container:
-                        //Give the found container to javascript
-                        Container container = _containerRepository.GetContainerById(pin.SavedId);
-                        if (container != null)
-                        {
-                            pinnedContainers.Add(container);
-                        } else
-                        {
-                            _pinRepository.DeletePin(pin); //If the pinned container could not be resolved, remove the faulty pin.
-                        }
-                        break;
+                    //Give the found container to javascript
+                    Container container = _containerRepository.GetContainerById(pin.SavedId);
+                    if (container != null)
+                    {
+                        pinnedContainers.Add(container);
+                    }
+                    else
+                    {
+                        _pinRepository.DeletePin(pin); //If the pinned container could not be resolved, remove the faulty pin.
+                    }
+                    break;
                     default:
-                        _pinRepository.DeletePin(pin);//If the pin doesn't match any of the known types, remove the faulty pin.
-                        break;
+                    _pinRepository.DeletePin(pin);//If the pin doesn't match any of the known types, remove the faulty pin.
+                    break;
                 }
 
                 _pinRepository.SaveChanges();
@@ -221,8 +226,9 @@ namespace MyThings.Web.Controllers
                 Location = "Hier",
                 CreationDate = DateTime.Now,
                 SensorEntries = 1,
-                BasestationLat = 50.8242477,
-                BasestationLng = 3.2497482
+                Lat = 50.8245485,
+                Lng = 3.2500197,
+                Accuracy = 1
             };
             _sensorRepository.Insert(dummySensor);
             _sensorRepository.SaveChanges();
@@ -295,7 +301,7 @@ namespace MyThings.Web.Controllers
         #region Gridster API
 
         [HttpPost]
-        public HttpResponseMessage UpdateGridString(String gridsterJson)
+        public HttpResponseMessage UpdateGridString(List<Tile> gridsterJson)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -303,7 +309,12 @@ namespace MyThings.Web.Controllers
                 ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
                 //Save the position and the tilelist.
-                user.GridsterJson = gridsterJson;
+                user.GridsterJson = JsonConvert.SerializeObject(gridsterJson);
+
+                //update pins
+                //List<Tile> tiles = GridsterHelper.JsonToTileList(gridsterJson);
+                foreach(Tile t in gridsterJson) _pinRepository.Update(t.Pin);
+                _pinRepository.SaveChanges();
 
                 //Acknowledge the save
                 return new HttpResponseMessage(HttpStatusCode.OK);
