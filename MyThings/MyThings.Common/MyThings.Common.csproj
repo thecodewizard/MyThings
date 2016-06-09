@@ -161,6 +161,7 @@
     <Compile Include="Models\LegacyModels\IdentityModels.cs" />
     <Compile Include="Models\LegacyModels\ManageViewModels.cs" />
     <Compile Include="Models\NoSQL Entities\ContainerEntity.cs" />
+    <Compile Include="Models\NoSQL Entities\QueueMessageHolder.cs" />
     <Compile Include="Models\Sensor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BaseRepositories\ContainerRepository.cs" />

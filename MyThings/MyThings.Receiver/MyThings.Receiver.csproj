@@ -164,6 +164,12 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyThings.Common\MyThings.Common.csproj">
+      <Project>{502c6f08-2a2e-487a-92d0-d97c0d571713}</Project>
+      <Name>MyThings.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

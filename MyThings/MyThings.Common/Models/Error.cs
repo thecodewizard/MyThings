@@ -96,12 +96,20 @@ namespace MyThings.Common.Models
                 sensor, container);
         }
 
-        public static Error InactiveWarning(Sensor sensor, Container container)
+        public static Error InactiveContainerWarning(Sensor sensor, Container container)
         {
             return new Error(204, ErrorType.Warning, ErrorCategory.Connectivity, "Inactive Value Detected",
                 "Sensor " + sensor.Name + " has send networkdata but is inactive for the " + container.Name + " value",
                 "Check for a malfunctioning " + container.Name + " module, or verify whether it is normal for this value to be idle.",
                 sensor, container);
+        }
+
+        public static Error InactiveSensorWarning(Sensor sensor)
+        {
+            return new Error(205, ErrorType.Warning, ErrorCategory.Connectivity, "Inactive Sensor Detected",
+                "Sensor " + sensor.Name + " has been inactive for more than a week.",
+                "Check for connectivity issues on sensor " + sensor.Name + " or verify whether it is normal for this sensor to be idle.",
+                sensor, null);
         }
 
         public static Error GenericError(Sensor sensor, Container container)
