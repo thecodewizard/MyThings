@@ -1,25 +1,29 @@
 ﻿@import "_colors.scss";
 @import "_fonts.scss";
 
-li{
+.tile{
     background-color: #5c2d91;
-    list-style: none
-}
-* {
-    margin: 0;
+    list-style: none;
+    color: white;
 }
 
 html, body {
     overflow-x: auto;
+    overflow-y: hidden;
     height: 100vh;
+}
+
+*{
+    font-family: $proximusregularfont;
 }
 
 body{
     background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png");
     overflow-y: hidden;
+    background-size:cover;
 }
 
-.container {
+.gridsterContainer {
     padding: 30px 50px 50px 50px ;
     min-height: 100%;
     height: 100%;
@@ -28,7 +32,7 @@ body{
 
 .homeTitle{
     color: #fff;
-    margin: 25px 0 0 25px;
+    margin: 20px 0 0 50px;
 }
 
 /*$largeblock: 200px;

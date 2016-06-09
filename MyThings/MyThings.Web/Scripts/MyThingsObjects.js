@@ -3,7 +3,7 @@
 
 //Serverlocations
 var apiBaseUrl = "http://localhost:22056/api/";
-var siteBaseUrl = "http://http://localhost:16964/Dashboard/";
+var siteBaseUrl = "http://localhost:16964/Dashboard/";
 
 //OBJECTS
 function Sensor(id, name, company, macaddress, location, creationdate, sensorentries, basestationlat, basestationlng, containers) {
