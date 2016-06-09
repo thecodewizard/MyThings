@@ -4,6 +4,8 @@
     ViewBag.Title = "Sensormanagement";
     ViewBag.PageId = "list";
 }
+
+<div class="sensormanagementhtml">
     <ul>
         <li class="breadcrumbs">@Html.ActionLink("Home", "Index", "Dashboard") > @Html.ActionLink("Sensor management", "Sensormanagement", "Dashboard")</li>
     </ul>
@@ -17,49 +19,49 @@
         </li>
     </ul>
 
-<div class="groupdiv">
-    <div class="grouprectangletile">
-        <div class="textdivgroup">Groupname</div>
-        <div class="ciphervaluegroup">75</div>
-        <div class="sensors">sensors</div>
+    <div class="groupdiv">
+        <div class="grouprectangletile">
+            <div class="textdivgroup">Groupname</div>
+            <div class="ciphervaluegroup">75</div>
+            <div class="sensors">sensors</div>
+        </div>
+
+        <div class="grouprectangletile">
+            <div class="textdivgroup">Groupname</div>
+            <div class="ciphervaluegroup">5000</div>
+            <div class="sensors">sensors</div>
+        </div>
+
+        <div class="grouprectangletile addgrouptile">
+            <a href="@Url.Action("Editgroups", "Dashboard")">
+                <div class="addgroup">+</div>
+            </a>
+        </div>
     </div>
 
-    <div class="grouprectangletile">
-        <div class="textdivgroup">Groupname</div>
-        <div class="ciphervaluegroup">5000</div>
-        <div class="sensors">sensors</div>
-    </div>
+    <hr class="purpleHr" />
 
-    <div class="grouprectangletile addgrouptile">
-        <a href="@Url.Action("Editgroups", "Dashboard")">
-            <div class="addgroup">+</div>
-        </a>
-    </div>
-</div>
+    <ul class="sensorul">
+        <li class="editgroup">
+            <h2>Sensors</h2>
+        </li>
+    </ul>
 
-<hr class="purpleHr"/>
+    @using (Html.BeginForm("Sensormanagement", "Dashboard", FormMethod.Get, new {@class="searchsensorform"}))
+    {
+        <div class="searchdiv">
+            <input class="searchbardiv" type="search" name="searchsensor" />
+            <input class="inputimg" type="image" value="submit" src="http://loradatagroep9.blob.core.windows.net/proximusimages/search-icon.svg" />
+        </div>
+    }
 
-<ul class="sensorul">
-    <li class="editgroup">
-        <h2>Sensors</h2>
-    </li>
-</ul>
+    @*@Html.DropDownListFor(model => model.iets, null, "Pick a sorting method")*@
 
-@using (Html.BeginForm("Sensormanagement", "Dashboard", FormMethod.Get))
-{
-    <div class="searchdiv">
-        <input class="searchbardiv" type="search" name="searchsensor" />
-        <input class="inputimg" type="image" value="submit" src="http://loradatagroep9.blob.core.windows.net/proximusimages/search-icon.svg" />
-    </div>
-}
-
-@*@Html.DropDownListFor(model => model.iets, null, "Pick a sorting method")*@
-
-<select id="dropdowntest">
-    <option value="select">Pick a sorting method</option>
-    <option value="Exemplo2">Exemplo2</option>
-    <option value="Exemplo3">Exemplo3</option>
-</select>
+    <select id="dropdowntest">
+        <option value="select">Pick a sorting method</option>
+        <option value="Exemplo2">Exemplo2</option>
+        <option value="Exemplo3">Exemplo3</option>
+    </select>
     <table class="sensorlist">
         <tr class="sensorsheadrow">
             <th>ID</th>
@@ -68,18 +70,21 @@
             <th>Location</th>
         </tr>
 
-        <tr class="sensorsrows">
-            <td class="idsensordiv">1B81111DA35AEG</td>
-            <td>1B81111DA35AEG</td>
-            <td class="numbercontainerdiv">35</td>
-            <td class="sensorlocationdiv">West Flanders, Belgium</td>
-        </tr>
-        <tr class="sensorsrows">
+            <tr class="sensorrows">
+                <td><a href="@Url.Action("SensorDetail", "Dashboard", "5")> </a> </td>
+                <td class="idsensordiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")>1B81111DA35AEG</a> </td>
+                <td><a href="@Url.Action("SensorDetail", "Dashboard", "5")>1B81111DA35AEG</a> </td>
+                <td class="numbercontainerdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")>35</a> </td>
+                <td class="sensorlocationdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")>West Flanders, Belgium</a> </td>
+
+            </tr>
+        <tr class="sensorrows">
             <td class="idsensordiv">1B811GHDA35AG</td>
             <td>Proxsensor20</td>
             <td class="numbercontainerdiv">7</td>
             <td class="sensorlocationdiv">Antwerp, Belgium</td>
         </tr>
 
-</table>
-<br />
+    </table>
+    <br />
+</div>

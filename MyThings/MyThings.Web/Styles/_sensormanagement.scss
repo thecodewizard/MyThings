@@ -101,18 +101,25 @@ h2{
     display:inline;
     margin-left:10px;
 }
-form{
+.searchsensorform{
     display:inline-block;
     padding: 0 10% 5% 5%;
 }
 .sensorlist{
     width:100%;
-    border-spacing:10px;
+    border-spacing:0 5px;
     table-layout:auto;
+    margin-bottom:5%;
+    border-collapse:separate;
 }
 .sensorsheadrow{
+    padding-bottom:2%;
     background-color:$proximusterdarkblue;
 }
-.sensorsrows{
+.sensorrows{
     background-color:$proximusterlightblue;
+    margin-bottom:10px;
+}
+.sensormanagementhtml{
+    background-color:white;
 }
