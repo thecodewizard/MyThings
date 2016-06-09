@@ -26,23 +26,23 @@
   font-family: Proximus-ExtraBold;
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
-body {
-  color: #000000; }
-
-h2 {
+h1 {
   color: #5C2D91; }
 
-h3 {
+h2 {
   color: #9C5FB5; }
 
-body {
-  color: #000000; }
+h3 {
+  color: #D1BBDA; }
 
-h2 {
+h1 {
   color: #5C2D91; }
 
-h3 {
+h2 {
   color: #9C5FB5; }
+
+h3 {
+  color: #D1BBDA; }
 
 @font-face {
   font-family: Proximus-Regular;
@@ -186,7 +186,7 @@ $fontsizestiny: 0.85em;
 .ciphervalue
 {
     margin:0 10px;
-    font-size:$fontsizelarge;
+    font-size:$fontsizehuge;
     text-align:left;
 }
 .customimg
@@ -345,27 +345,82 @@ $fontsizestiny: 0.85em;
 .seconds-container {  
   transition: transform 0.2s cubic-bezier(.4,2.08,.55,.44);
 }*/
-body {
-  color: #000000; }
-
-h2 {
+h1 {
   color: #5C2D91; }
 
-h3 {
+h2 {
   color: #9C5FB5; }
 
+h3 {
+  color: #D1BBDA; }
+
+@font-face {
+  font-family: Proximus-Regular;
+  src: url("../fonts/Proximus-Regular.ttf") format("truetype"), url("../fonts/Proximus-Regular.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Light;
+  src: url("../fonts/Proximus-Light.ttf") format("truetype"), url("../fonts/Proximus-Light.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-LightItalic;
+  src: url("../fonts/Proximus-LightItalic.ttf") format("truetype"), url("../fonts/Proximus-LightItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-RegularItalic;
+  src: url("../fonts/Proximus-RegularItalic.ttf") format("truetype"), url("../fonts/Proximus-RegularItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Bold;
+  src: url("../fonts/Proximus-Bold.ttf") format("truetype"), url("../fonts/Proximus-Bold.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-BoldItalic;
+  src: url("../fonts/Proximus-BoldItalic.ttf") format("truetype"), url("../fonts/Proximus-BoldItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-ExtraBold;
+  src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
+
+li {
+  list-style-type: none; }
+
 footer {
+  bottom: unset;
   color: #5C2D91;
   float: right; }
 
-body {
-  color: #000000; }
+a:hover {
+  text-decoration: none; }
+
+h1 {
+  font-size: 2.75em; }
 
 h2 {
-  color: #5C2D91; }
+  font-size: 2em; }
 
 h3 {
+  font-size: 1.2em; }
+
+ul {
+  padding-left: 4%; }
+
+.breadcrumbs {
+  font-family: Proximus-Light;
+  font-size: 1.2em; }
+  .breadcrumbs a {
+    color: #5C2D91; }
+    .breadcrumbs a:hover {
+      color: #00bCEe; }
+
+h1 {
+  color: #5C2D91; }
+
+h2 {
   color: #9C5FB5; }
+
+h3 {
+  color: #D1BBDA; }
 
 .purpleHr {
   border: 0;
@@ -456,4 +511,150 @@ h1 {
   .headerMargin {
     display: flex !important;
     align-items: center !important; } }
+
+h1 {
+  color: #5C2D91; }
+
+h2 {
+  color: #9C5FB5; }
+
+h3 {
+  color: #D1BBDA; }
+
+@font-face {
+  font-family: Proximus-Regular;
+  src: url("../fonts/Proximus-Regular.ttf") format("truetype"), url("../fonts/Proximus-Regular.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Light;
+  src: url("../fonts/Proximus-Light.ttf") format("truetype"), url("../fonts/Proximus-Light.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-LightItalic;
+  src: url("../fonts/Proximus-LightItalic.ttf") format("truetype"), url("../fonts/Proximus-LightItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-RegularItalic;
+  src: url("../fonts/Proximus-RegularItalic.ttf") format("truetype"), url("../fonts/Proximus-RegularItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Bold;
+  src: url("../fonts/Proximus-Bold.ttf") format("truetype"), url("../fonts/Proximus-Bold.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-BoldItalic;
+  src: url("../fonts/Proximus-BoldItalic.ttf") format("truetype"), url("../fonts/Proximus-BoldItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-ExtraBold;
+  src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
+
+h2 {
+  display: inline; }
+
+.sensorul {
+  white-space: nowrap;
+  width: 100%;
+  margin-bottom: 5%;
+  padding: 3% 0 0 2.4%; }
+
+.editgroup {
+  display: inline;
+  padding: 2%;
+  margin: auto; }
+  .editgroup a {
+    font-family: Proximus-Regular;
+    font-size: 1.2em;
+    color: #FFFFFF;
+    padding: 1% 2%;
+    bottom: 10%;
+    background-color: #9C5FB5; }
+    .editgroup a:hover {
+      color: #000000;
+      background-color: #D1BBDA; }
+
+.groupdiv {
+  display: flex;
+  padding: 0 0 5% 2%; }
+
+.grouprectangletile {
+  float: left;
+  width: 200px;
+  height: 100px;
+  color: #FFFFFF;
+  background-color: #00bCEe;
+  margin: 2%; }
+  .grouprectangletile a {
+    color: #FFFFFF; }
+
+.addgrouptile:hover {
+  background-color: #c2d3de; }
+  .addgrouptile:hover a {
+    color: initial; }
+
+.textdivgroup {
+  display: inline-block;
+  margin: 1%;
+  font-family: Proximus-Regular;
+  font-size: 2em; }
+
+.ciphervaluegroup {
+  display: inline;
+  margin: 2%;
+  font-family: Proximus-Regular;
+  font-size: 2em; }
+
+.sensors {
+  display: inline;
+  float: right;
+  font-family: Proximus-Regular;
+  font-size: 2em;
+  margin: 8% 2% 0;
+  overflow: hidden; }
+
+.addgroup {
+  display: inline-block;
+  font-family: Proximus-Regular;
+  font-size: 2.75em; }
+
+.addgroup {
+  width: 200px;
+  height: 100px;
+  margin: 0 auto;
+  padding: 10%;
+  position: relative;
+  text-align: center; }
+
+.searchdiv {
+  max-height: 30px;
+  max-height: 30px; }
+
+.inputimg {
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  margin-bottom: -5%;
+  background-color: #5C2D91; }
+
+.searchbardiv {
+  height: 30px; }
+
+.dropdowntest {
+  display: inline;
+  margin-left: 10px; }
+
+form {
+  display: inline-block;
+  padding: 0 10% 5% 5%; }
+
+.sensorlist {
+  width: 100%;
+  border-spacing: 10px;
+  table-layout: auto; }
+
+.sensorsheadrow {
+  background-color: #c2d3de; }
+
+.sensorsrows {
+  background-color: #E5F1F9; }
 
