@@ -80,18 +80,18 @@ namespace MyThings.Common.Models
                 sensor, null);
         }
 
-        public static Error BatteryCriticalError(Sensor sensor, Container container)
+        public static Error BatteryCriticalError(Sensor sensor, Container container, TimeSpan timeToLive)
         {
             return new Error(102, ErrorType.Error, ErrorCategory.Power, "Battery Power Critical",
-                "The battery level on sensor " + sensor.Name + " is at " + container.CurrentValue.Value + "%!",
+                "The battery level on sensor " + sensor.Name + " is at " + container.CurrentValue.Value + "%! At this rate, the sensor will be unresponsive in " + timeToLive.TotalHours + " hours",
                 "Change or charge the battery at this sensor. Not doing this could evoke a NetworkConnectivityError in the near future",
                 sensor, container);
         }
 
-        public static Error BatteryWarning(Sensor sensor, Container container)
+        public static Error BatteryWarning(Sensor sensor, Container container, TimeSpan timeToLive)
         {
             return new Error(203, ErrorType.Warning, ErrorCategory.Power, "Battery Power Low",
-                "The battery level on sensor " + sensor.Name + " is at " + container.CurrentValue.Value + "%.",
+                "The battery level on sensor " + sensor.Name + " is at " + container.CurrentValue.Value + "%. Our System expects this sensor to last for at least " + timeToLive.Days + " days.",
                 "Change or charge the battery at this sensor.",
                 sensor, container);
         }

@@ -21,7 +21,7 @@ namespace MyThings.Common.Repositories
                         ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
             // Create the table client.
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-            // Create the CloudTable object that represents the "people" table.
+            // Create the CloudTable object.
             CloudTable table = tableClient.GetTableReference("proximusdecodedtable");
             // Create the table query.
             TableQuery<ContainerEntity> rangeQuery = new TableQuery<ContainerEntity>().Where(TableQuery.CombineFilters(
@@ -44,7 +44,7 @@ namespace MyThings.Common.Repositories
                         ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
             // Create the table client.
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-            // Create the CloudTable object that represents the "people" table.
+            // Create the CloudTable object.
             CloudTable table = tableClient.GetTableReference("proximusdecodedtable");
             // Create the table query.
 
@@ -69,6 +69,27 @@ namespace MyThings.Common.Repositories
                 container.LastUpdatedTime = DateTime.Now;
             }
             return container;
+        }
+
+        public static ContainerEntity GetContainerFromTableStorage(String partitionkey, String rowkey)
+        {
+            // Retrieve the storage account from the connection string.
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+                        ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
+            // Create the table client.
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            // Create the CloudTable object.
+            CloudTable table = tableClient.GetTableReference("proximusdecodedtable");
+            // Create the table query.
+            TableQuery<ContainerEntity> rangeQuery = new TableQuery<ContainerEntity>().Where(TableQuery.CombineFilters(
+                            TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionkey), TableOperators.And,
+                            TableQuery.GenerateFilterCondition("container", QueryComparisons.Equal, rowkey))
+                            ).Take(1);
+
+            // Loop through the results, displaying information about the entity.
+            ContainerEntity entity = table.ExecuteQuery(rangeQuery).First<ContainerEntity>();
+
+            return entity;
         }
     }
 }

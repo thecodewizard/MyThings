@@ -258,7 +258,7 @@ namespace Proximus_Webservice.Repositories
             table.Execute(insertOperation);
         }
         #endregion
-        #region service bus queue
+        #region Storage queue
 
         public static void PutOnStorageQueue(String partitionkey, String rowkey)
         {

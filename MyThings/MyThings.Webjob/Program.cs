@@ -1,19 +1,71 @@
-﻿using Microsoft.Azure;
+﻿using System;
+using System.Linq;
+using Microsoft.Azure;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
+using MyThings.Common.Models;
+using MyThings.Common.Models.NoSQL_Entities;
+using MyThings.Common.Repositories;
 using Newtonsoft.Json;
 
-namespace MyThings.WebjobSample
+namespace DataStorageQueue
 {
-    using Microsoft.WindowsAzure;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Queue;
-    using System;
-    using System.Threading.Tasks;
-
     public class Program
     {
+        //Repository Declarations
+        private static readonly ContainerTypeRepository _containerTypeRepository = new ContainerTypeRepository();
+        private static readonly SensorRepository _sensorRepository = new SensorRepository();
+        private static readonly ContainerRepository _containerRepository = new ContainerRepository();
+        private static readonly ErrorRepository _errorRepository = new ErrorRepository();
+
+        //Static Caches
+        
+
         public static void Main(string[] args)
         {
-            //Get the Queue
+            // Get the Queue
+            CloudQueue queue = ConnectToQueue();
+
+            // Prefetch the static caches
+            FillCaches();
+
+            if (queue.Exists())
+            {
+                int cachedMessageCount = 0;
+                do
+                {
+                    // Peek at the next message
+                    CloudQueueMessage peekedMessage = queue.PeekMessage();
+                    if (peekedMessage != null)
+                    {
+                        // Get the next message
+                        CloudQueueMessage retrievedMessage = queue.GetMessage();
+
+                        // Process the message
+                        RunPerSensor(retrievedMessage.AsString);
+
+                        // Process the message in less than 30 seconds, and then delete the message
+                        queue.DeleteMessage(retrievedMessage);
+                    }
+
+                    // Get and Display number of messages.
+                    queue.FetchAttributes();
+                    cachedMessageCount = queue.ApproximateMessageCount ?? 0;
+                    Console.WriteLine("Number of messages in queue: " + cachedMessageCount);
+
+                } while (cachedMessageCount > 0);
+            }
+
+            // Do the onCompletedWork
+            RunOnceInWebjob();
+
+            // Standard Console Logic
+            Console.WriteLine("Press any key to exit");
+            Console.Read();
+        }
+
+        static CloudQueue ConnectToQueue()
+        {
             // Retrieve storage account from connection string.
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
                 CloudConfigurationManager.GetSetting("StorageConnectionString"));
@@ -23,44 +75,139 @@ namespace MyThings.WebjobSample
 
             // Retrieve a reference to a container.
             CloudQueue queue = queueClient.GetQueueReference("mythingsdecodedqueue");
+            return queue;
+        }
 
-            if (queue.Exists())
+        static void FillCaches()
+        {
+            
+        }
+
+        static void RunPerSensor(String json)
+        {
+            //Verwerk de inkomende data
+            QueueMessageHolder holder = JsonConvert.DeserializeObject<QueueMessageHolder>(json);
+            ContainerEntity containerEntity = TableStorageRepository.GetContainerFromTableStorage(holder.PartitionKey,
+                holder.RowKey);
+            if (containerEntity == null) return;
+
+            //Database Population Management
+                //Check Existance Containertype
+            String containerTypeName = containerEntity.container;
+            ContainerType type = new ContainerType() { Name = containerTypeName };
+            _containerTypeRepository.SaveOrUpdateContainerType(type);
+
+                //Check Existance Sensor
+            Sensor sensor = _sensorRepository.GetSensorByMacAddress(containerEntity.macaddress);
+            if (sensor == null)
             {
-                // Peek at the next message
-                CloudQueueMessage peekedMessage = queue.PeekMessage();
+                sensor = new Sensor();
+                sensor.CreationDate = DateTime.Now;
+                sensor.MACAddress = containerEntity.macaddress;
+                sensor.SensorEntries = 1;
+                sensor.Company = containerEntity.company;
+                sensor.Location = containerEntity.locationid;
+                sensor.Name = containerEntity.macaddress;
+                sensor = _sensorRepository.Insert(sensor);
+            }
+            else
+            {
+                sensor.SensorEntries++;
+                _sensorRepository.Update(sensor);
+            }
+            _sensorRepository.SaveChanges();
 
-                // Display message.
-                Console.WriteLine(peekedMessage.AsString);
-
-                // Fetch the queue attributes.
-                queue.FetchAttributes();
-
-                // Retrieve the cached approximate message count.
-                int? cachedMessageCount = queue.ApproximateMessageCount;
-
-                // Display number of messages.
-                Console.WriteLine("Number of messages in queue: " + cachedMessageCount);
-
-                // Get the next message
-                CloudQueueMessage retrievedMessage = queue.GetMessage();
-
-                //Process the message in less than 30 seconds, and then delete the message
-                queue.DeleteMessage(retrievedMessage);
+                //Check existance container
+            Container container = (from c in sensor.Containers where c.ContainerType.Name == containerTypeName select c).FirstOrDefault();
+            if (container == null)
+            {
+                container = new Container();
+                container.ContainerType = type;
+                container.ContainerTypeId = type.Id;
+                container.CreationTime = DateTime.Now;
+                container.MACAddress = containerEntity.macaddress;
+                container.SensorId = sensor.Id;
+                _containerRepository.Insert(container);
+                _containerRepository.SaveChanges();
             }
 
-            //Do the onCompletedWork
+            //Error-Warning Module
 
-            //Standard Console Logic
-            Console.WriteLine("Press any key to exit");
-            Console.Read();
+            //TODO: Implement Threshold
+            //Check voor de huidige container of de waarde overschreden is.
+            //-> Ja: Resulteerd in MinThresholdWarning of MaxThresholdWarning
+            //-> Indien containertype battery:
+
+                //Check for battery Level warnings
+            if (container.ContainerType.Name == "Battery level")
+            {
+                //Get the most recent value
+                container = TableStorageRepository.GetHistory(container, TimeSpan.FromDays(365));
+
+                //Calculate when the battery would be empty
+                    //Get the average downgrade per update
+                int count = container.History.Count;
+                double totalDelta = 0;
+                double previousValue = container.History.Last().Value;
+
+                foreach (ContainerValue value in container.History)
+                {
+                    double delta = previousValue - value.Value;
+                    totalDelta += delta;
+                }
+
+                    //Temp. Results
+                double average = totalDelta/count;
+                TimeSpan lifeTime = DateTime.Now - container.CreationTime;
+                long lifeTimeTicks = lifeTime.Ticks;
+                long ticksPerUpdate = lifeTimeTicks/count;
+
+                    //Get prediction
+                int updatesLeft = (int)Math.Floor((containerEntity.payload / average));
+                long ticksToLive = ticksPerUpdate*updatesLeft;
+                TimeSpan timeToLive = TimeSpan.FromTicks(ticksToLive);
+
+                //Give the error
+                if (containerEntity.payload < 5)
+                {
+                    Error error = Error.BatteryCriticalError(sensor, container, timeToLive);
+                    _errorRepository.Insert(error);
+                } else if (containerEntity.payload < 15)
+                {
+                    Error error = Error.BatteryWarning(sensor, container, timeToLive);
+                    _errorRepository.Insert(error);
+                }
+            }
+
+                //Check for inactivity
+            bool isActive = false;
+            foreach (Container sensorContainer in sensor.Containers)
+            {
+                Container updatedContainer = TableStorageRepository.UpdateValue(sensorContainer);
+                TimeSpan updatedSince = DateTime.Now - updatedContainer.CurrentValue.Timestamp;
+
+                if (updatedSince.Hours > 48)
+                {
+                    Error error = Error.InactiveContainerWarning(sensor, sensorContainer);
+                    _errorRepository.Insert(error);
+                }
+                else isActive = true;
+            }
+
+            if (!isActive)
+            {
+                Error error = Error.InactiveSensorWarning(sensor);
+                _errorRepository.Insert(error);
+            }
+            _errorRepository.SaveChanges();
         }
 
         static void RunOnceInWebjob()
         {
             //Error-Warning Module
                 //Check voor voorspelde connectivity errors
-                    //Bereken op basis van de sensorentries en de creationdate een gemiddelde responstijd van de sensor.
-                    //Controleer ofdat de laatste waarde die gekend is van de sensor deze responstijd
+                //Bereken op basis van de sensorentries en de creationdate een gemiddelde responstijd van de sensor.
+                //Controleer ofdat de laatste waarde die gekend is van de sensor deze responstijd
                     //-> Indien 2x langer: toon networkconnectivity error.
 
             //Virtuele Sensors Berekenen
@@ -68,36 +215,6 @@ namespace MyThings.WebjobSample
 
             //Timelogging
                 //Schrijf naar SQL wanneer deze webjob voor het laatst ge-execute heeft
-        }
-
-        static void RunPerSensor()
-        {
-            //Verwerk de inkomende data
-                //De json in de message parsen naar een QueueMessageHolder
-                //Via QueueMessageHolder de geposte json rij uit tablestorage halen. -> containerentity
-
-            //Database Population Management
-                //Check in SQL of het containertype bestaat.
-                    //-> Nee: Maak een nieuw containertype aan en voeg toe
-
-                //Check in sql of de sensor met het MAC Address al bestaat
-                    //-> Nee: Maak een nieuwe aan met sensorentries '1'
-                    //-> Ja: Haal op en tel '1' bij op het sensorentries veld
-
-                //Check of de container aanwezig is in de containerlijst van de sensor
-                    //-> Nee: Maak een nieuwe container aan (wijs juiste type en containertype toe) en voeg toe
-                    //-> Ja: Haal op
-
-            //Error-Warning Module
-                //Check voor de huidige container of de waarde overschreden is.
-                    //-> Ja: Resulteerd in MinThresholdWarning of MaxThresholdWarning
-                    //-> Indien containertype battery:
-                //Bereken adhv de containerhistory wanneer de battery zal leeg zijn.
-                    //-> Onder 15%: Geef BatteryWarning
-                    //-> Onder 5%: Geef BatteryCriticalError
-                //Check voor de andere containers van de sensor van wanneer hun meest recente waarde is.
-                    //-> Langer dan 1 week: InactiveContainerWarning
-                    //-> Indien alle containers van een sensor langer dan 1 week niets gestuurd hebben -> InactiveSensorWarning
         }
     }
 }
