@@ -95,6 +95,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\MyThingsWeb - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\MyThingsWeb - Web Deploy.pubxml" />
+    <None Include="Properties\webjob-publish-settings.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyThings.Common\MyThings.Common.csproj">

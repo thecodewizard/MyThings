@@ -221,6 +221,9 @@ namespace MyThings.Web.Controllers
                 Location = "Hier",
                 CreationDate = DateTime.Now,
                 SensorEntries = 1,
+                Lat = 50.8245485,
+                Lng = 3.2500197,
+                Accuracy = 1
             };
             _sensorRepository.Insert(dummySensor);
             _sensorRepository.SaveChanges();

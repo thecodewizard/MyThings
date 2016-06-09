@@ -148,6 +148,10 @@
     <Compile Include="Migrations\201606071200594_GridStructureUpdate.Designer.cs">
       <DependentUpon>201606071200594_GridStructureUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606090907565_Add Location Fields.cs" />
+    <Compile Include="Migrations\201606090907565_Add Location Fields.Designer.cs">
+      <DependentUpon>201606090907565_Add Location Fields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FrontEndModels\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
@@ -190,6 +194,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606071200594_GridStructureUpdate.resx">
       <DependentUpon>201606071200594_GridStructureUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606090907565_Add Location Fields.resx">
+      <DependentUpon>201606090907565_Add Location Fields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

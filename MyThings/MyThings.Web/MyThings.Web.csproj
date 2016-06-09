@@ -229,6 +229,8 @@
     <Content Include="fonts\Proximus-LightItalic.woff" />
     <Content Include="fonts\Proximus-Regular.woff" />
     <Content Include="fonts\Proximus-RegularItalic.woff" />
+    <None Include="Properties\PublishProfiles\MyThingsWeb - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\MyThingsWeb - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
