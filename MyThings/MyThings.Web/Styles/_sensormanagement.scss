@@ -1,0 +1,118 @@
+﻿@import "_colors.scss";
+@import "_fonts.scss";
+h2{
+      display:inline;
+}
+.sensorul{
+    white-space:nowrap;
+    width:100%;
+    margin-bottom:5%;
+    padding:3% 0 0 2.4%;
+}
+.editgroup{
+     display:inline;
+         padding:2%;
+         margin:auto;
+     & a{
+         font-family:$proximusregularfont;
+         font-size:$fontsizesmall;
+         color:$proximuswhite;
+         padding:1% 2%;
+         bottom:10%;
+     background-color:$proximussecpurple;
+     &:hover{
+         color:$proximusblack;
+         background-color:$proximusterdarkpurple;
+     }
+     }
+}
+.groupdiv{
+    display:flex;
+    padding:0 0 5% 2%;
+}
+.grouprectangletile{
+    float:left;
+    width:$largeblock;
+    height:$smallblock;
+    color: $proximuswhite;
+    background-color: $proximusmainblue;
+    margin:2%;
+    & a{
+    color: $proximuswhite;
+    }
+}
+.addgrouptile:hover{
+    background-color: $proximusterdarkblue;
+    & a{
+    color: initial;
+    }
+}
+.textdivgroup{
+    
+    display:inline-block;
+    margin:1%;
+    font-family:$proximusregularfont;
+    font-size:$fontsizemedium;
+}
+.ciphervaluegroup{
+    
+    display:inline;
+    margin:2%;
+    font-family:$proximusregularfont;
+    font-size:$fontsizemedium;
+}
+.sensors{
+    display:inline;
+    float:right;
+    font-family:$proximusregularfont;
+    font-size:$fontsizemedium;
+    margin:8% 2% 0;
+    overflow:hidden;
+}
+.addgroup{
+     display:inline-block;
+    font-family:$proximusregularfont;
+    font-size:$fontsizelarge;
+}
+.addgroup{
+    width:$largeblock;
+    height:$smallblock;
+    margin: 0 auto;
+    padding: 10%;
+    position: relative;
+    text-align:center;
+}
+.searchdiv
+{
+    max-height:30px;
+    max-height:30px;
+}
+.inputimg{
+    width:30px;
+    height:30px;
+    padding:5px;
+    margin-bottom:-5%;
+    background-color:$proximusmainpurple;
+}
+.searchbardiv{
+    height:30px;
+}
+.dropdowntest{
+    display:inline;
+    margin-left:10px;
+}
+form{
+    display:inline-block;
+    padding: 0 10% 5% 5%;
+}
+.sensorlist{
+    width:100%;
+    border-spacing:10px;
+    table-layout:auto;
+}
+.sensorsheadrow{
+    background-color:$proximusterdarkblue;
+}
+.sensorsrows{
+    background-color:$proximusterlightblue;
+}

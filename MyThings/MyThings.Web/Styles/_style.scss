@@ -1,5 +1,40 @@
 ﻿@import "_colors.scss";
+@import "_fonts.scss";
+
+li{
+    list-style-type:none;
+}
 footer{
+    bottom:unset;
     color:$proximusmainpurple;
    float:right;
+}
+
+a:hover{
+    text-decoration:none;
+}
+
+h1{
+    font-size:$fontsizelarge;
+}
+h2{
+     font-size:$fontsizemedium;
+}
+h3{
+     font-size:$fontsizesmall;
+}
+
+ul{
+    padding-left:4%;
+}
+.breadcrumbs{
+    font-family:$proximuslightfont;
+    font-size: $fontsizesmall;
+    & a{
+    color:$proximusmainpurple;
+        &:hover{
+        color:$proximusmainblue;
+               }
+       }
+    
 }

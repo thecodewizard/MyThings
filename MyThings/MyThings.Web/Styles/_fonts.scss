@@ -1,5 +1,4 @@
-﻿
-$font_dirs: '../fonts/';
+﻿$font_dirs: '../fonts/';
 $font_extension_ttf: '.ttf';
 $font_extension_woff: '.woff';
 $font_format_ttf: format('truetype');
@@ -12,6 +11,14 @@ $proximusregularitalicfont: Proximus-RegularItalic;
 $proximusboldfont: Proximus-Bold;
 $proximusbolditalicfont: Proximus-BoldItalic;
 $proximusboldhardfont: Proximus-ExtraBold;
+$largeblock: 200px;
+$smallblock: 100px;
+$fontsizehuge: 6em;
+$fontsizelarge: 2.75em;
+$fontsizemedium: 2em;
+$fontsizesmall: 1.2em;
+$fontsizestiny: 0.85em;
+
 
 @function _customfont($name)
 {
