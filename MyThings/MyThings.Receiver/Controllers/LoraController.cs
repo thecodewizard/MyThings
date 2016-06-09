@@ -43,7 +43,7 @@ namespace Proximus_API.Controllers
         {
             if (request == null || !ModelState.IsValid)
             {
-                AzureRepository.WriteErrorToTable(new Exception("Bad Request on JSON API."));
+                AzureRepository.WriteErrorToTable(new Exception("Bad Request on XML API."));
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             } 
             var xmlDoc = new XmlDocument();

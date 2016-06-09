@@ -85,6 +85,13 @@ namespace MyThings.Common.Repositories
             return GetByID(sensorId);
         }
 
+        public Sensor GetSensorByMacAddress(String MAC)
+        {
+            return
+                (from s in Context.Sensors orderby s.CreationDate descending where s.MACAddress.Equals(MAC) select s)
+                    .FirstOrDefault();
+        }
+
         public void DeleteSensor(Sensor sensor)
         {
             Delete(sensor);

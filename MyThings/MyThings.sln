@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.Api", "MyThings.Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.Receiver", "MyThings.Receiver\MyThings.Receiver.csproj", "{DA12EFF0-85E3-46AF-888A-4FE4C987FCE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.WebJob", "MyThings.WebJob\MyThings.WebJob.csproj", "{99E6DDB7-AC20-41E6-B054-BC3B78E4638F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.Webjob", "MyThings.Webjob\MyThings.Webjob.csproj", "{FB99BAF4-BE6E-43F2-B903-50F0049AC496}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{DA12EFF0-85E3-46AF-888A-4FE4C987FCE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA12EFF0-85E3-46AF-888A-4FE4C987FCE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA12EFF0-85E3-46AF-888A-4FE4C987FCE7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99E6DDB7-AC20-41E6-B054-BC3B78E4638F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99E6DDB7-AC20-41E6-B054-BC3B78E4638F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99E6DDB7-AC20-41E6-B054-BC3B78E4638F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99E6DDB7-AC20-41E6-B054-BC3B78E4638F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB99BAF4-BE6E-43F2-B903-50F0049AC496}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB99BAF4-BE6E-43F2-B903-50F0049AC496}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB99BAF4-BE6E-43F2-B903-50F0049AC496}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB99BAF4-BE6E-43F2-B903-50F0049AC496}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

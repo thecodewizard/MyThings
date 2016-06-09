@@ -80,28 +80,36 @@ namespace MyThings.Common.Models
                 sensor, null);
         }
 
-        public static Error BatteryCriticalError(Sensor sensor, Container container)
+        public static Error BatteryCriticalError(Sensor sensor, Container container, TimeSpan timeToLive)
         {
             return new Error(102, ErrorType.Error, ErrorCategory.Power, "Battery Power Critical",
-                "The battery level on sensor " + sensor.Name + " is at " + container.CurrentValue.Value + "%!",
+                "The battery level on sensor " + sensor.Name + " is at " + container.CurrentValue.Value + "%! At this rate, the sensor will be unresponsive in " + timeToLive.TotalHours + " hours",
                 "Change or charge the battery at this sensor. Not doing this could evoke a NetworkConnectivityError in the near future",
                 sensor, container);
         }
 
-        public static Error BatteryWarning(Sensor sensor, Container container)
+        public static Error BatteryWarning(Sensor sensor, Container container, TimeSpan timeToLive)
         {
             return new Error(203, ErrorType.Warning, ErrorCategory.Power, "Battery Power Low",
-                "The battery level on sensor " + sensor.Name + " is at " + container.CurrentValue.Value + "%.",
+                "The battery level on sensor " + sensor.Name + " is at " + container.CurrentValue.Value + "%. Our System expects this sensor to last for at least " + timeToLive.Days + " days.",
                 "Change or charge the battery at this sensor.",
                 sensor, container);
         }
 
-        public static Error InactiveWarning(Sensor sensor, Container container)
+        public static Error InactiveContainerWarning(Sensor sensor, Container container)
         {
             return new Error(204, ErrorType.Warning, ErrorCategory.Connectivity, "Inactive Value Detected",
                 "Sensor " + sensor.Name + " has send networkdata but is inactive for the " + container.Name + " value",
                 "Check for a malfunctioning " + container.Name + " module, or verify whether it is normal for this value to be idle.",
                 sensor, container);
+        }
+
+        public static Error InactiveSensorWarning(Sensor sensor)
+        {
+            return new Error(205, ErrorType.Warning, ErrorCategory.Connectivity, "Inactive Sensor Detected",
+                "Sensor " + sensor.Name + " has been inactive for more than a week.",
+                "Check for connectivity issues on sensor " + sensor.Name + " or verify whether it is normal for this sensor to be idle.",
+                sensor, null);
         }
 
         public static Error GenericError(Sensor sensor, Container container)
