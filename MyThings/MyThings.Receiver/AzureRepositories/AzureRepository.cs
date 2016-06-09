@@ -8,6 +8,7 @@ using System.Configuration;
 using Microsoft.Azure;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
+using Microsoft.WindowsAzure.Storage.Queue;
 using MyThings.Common.Models.NoSQL_Entities;
 
 
@@ -265,7 +266,22 @@ namespace Proximus_Webservice.Repositories
             QueueMessageHolder holder = new QueueMessageHolder(partitionkey, rowkey);
             String json = JsonConvert.SerializeObject(holder);
 
-            
+            //Retrieve Connection String
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+                ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
+
+            //Create Queue Client.
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+
+            //Make or Append to queue
+            CloudQueue queue = queueClient.GetQueueReference("mythingsdecodedqueue");
+
+            //Create If The Queue doesn't already exists
+            queue.CreateIfNotExists();
+
+            //Add the Order to the Queue
+            CloudQueueMessage message = new CloudQueueMessage(json);
+            queue.AddMessage(message);
         }
 
         #endregion
