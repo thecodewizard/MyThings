@@ -30,7 +30,7 @@
         {
             @:var originalGridsterJson = [];
         }else{
-            @:var originalGridsterJson = @Model.OriginalGridsterJson;
+            @:var originalGridsterJson = @Html.Raw(@Model.OriginalGridsterJson);
         }
 
         var pinnedSensors = [];
