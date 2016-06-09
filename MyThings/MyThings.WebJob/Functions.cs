@@ -17,7 +17,6 @@ namespace MyThings.WebJob
             //Verwerk de inkomende data
                 //De json in de message parsen naar een QueueMessageHolder
                 //Via QueueMessageHolder de geposte json rij uit tablestorage halen. -> containerentity
-                //De bijhorende XML rij ophalen uit de tablestorage. -> ???entity
 
             //Database Population Management
                 //Check in SQL of het containertype bestaat.

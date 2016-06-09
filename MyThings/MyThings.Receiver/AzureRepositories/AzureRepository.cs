@@ -4,15 +4,11 @@ using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using Proximus_API.Models;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Azure;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
+using MyThings.Common.Models.NoSQL_Entities;
 
 
 namespace Proximus_Webservice.Repositories
@@ -60,7 +56,7 @@ namespace Proximus_Webservice.Repositories
             ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
             // Create the table client.
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-            // Create the CloudTable object that represents the "temperature" table.
+            // Create the CloudTable object.
             CloudTable table = tableClient.GetTableReference("proximusnetwerktable");
             table.CreateIfNotExists();
             // Make the object
@@ -76,7 +72,7 @@ namespace Proximus_Webservice.Repositories
             NetwerkEntity entity = new NetwerkEntity(data.Time, data.DevEUI, data.FPort, data.FCntUp, data.ADRbit, data.FCntDn, 
                                                      data.Payload_hex, data.Mic_hex, data.Lrcid, data.LrrRSSI, data.LrrSNR, data.SpFact, data.SubBand,
                                                      data.Channel, data.DevLrrCnt, data.Lrrid, lijst, data.CustomerID, customerData, data.ModelCfg);
-            // Create the TableOperation object that inserts the customer entity.
+            // Create the TableOperation object.
             TableOperation insertOperation = TableOperation.Insert(entity);
             // Execute the insert operation.
             table.Execute(insertOperation);
@@ -88,12 +84,12 @@ namespace Proximus_Webservice.Repositories
             ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
             // Create the table client.
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-            // Create the CloudTable object that represents the "temperature" table.
+            // Create the CloudTable object.
             CloudTable table = tableClient.GetTableReference("proximusdecodedtable");
             table.CreateIfNotExists();
             // Make the entity
             DecodedEntity entity = new DecodedEntity(data.company, data.macaddress, data.container, data.locationid, data.payload, data.timestamp);
-            // Create the TableOperation object that inserts the customer entity.
+            // Create the TableOperation object.
             TableOperation insertOperation = TableOperation.Insert(entity);
             // Execute the insert operation.
             table.Execute(insertOperation);
@@ -123,9 +119,14 @@ namespace Proximus_Webservice.Repositories
                 this.macaddress = macaddress;
                 this.container = container;
                 this.locationid = locationid;
-                this.payload = double.Parse(payload, CultureInfo.InvariantCulture);
+                //this.payload = double.Parse(payload, CultureInfo.InvariantCulture);
                 this.receivedtimestamp = timestamp;
                 this.Timestamp = DateTime.Now;
+
+                double parsedDouble;
+                bool isHex = !double.TryParse(payload, out parsedDouble);
+                if (isHex) this.hexpayload = payload;
+                else this.payload = parsedDouble;
             }
 
             public DecodedEntity() { }
@@ -134,8 +135,8 @@ namespace Proximus_Webservice.Repositories
             public string container { get; set; }
             public string locationid { get; set; }
             public double payload { get; set; }
+            public string hexpayload { get; set; }
             public string receivedtimestamp { get; set; }
-
         }
         class NetwerkEntity : TableEntity
         {
@@ -163,18 +164,18 @@ namespace Proximus_Webservice.Repositories
                 this.Channel = Channel;
                 this.DevLrrCnt = DevLrrCnt;
                 this.Lrrid = Lrrid;
-                this.Lrrid1 = lrrs.Lrr1.Lrrid;
-                this.LrrRSSI1 = lrrs.Lrr1.LrrRSSI;
-                this.LrrSNR1 = lrrs.Lrr1.LrrSNR;
-                this.Lrrid2 = lrrs.Lrr2.Lrrid;
-                this.LrrRSSI2 = lrrs.Lrr2.LrrRSSI;
-                this.LrrSNR2 = lrrs.Lrr2.LrrSNR;
-                this.Lrrid3 = lrrs.Lrr3.Lrrid;
-                this.LrrRSSI3 = lrrs.Lrr3.LrrRSSI;
-                this.LrrSNR3 = lrrs.Lrr3.LrrSNR;
+                this.Lrrid1 = lrrs.Lrr1?.Lrrid;
+                this.LrrRSSI1 = lrrs.Lrr1?.LrrRSSI;
+                this.LrrSNR1 = lrrs.Lrr1?.LrrSNR;
+                this.Lrrid2 = lrrs.Lrr2?.Lrrid;
+                this.LrrRSSI2 = lrrs.Lrr2?.LrrRSSI;
+                this.LrrSNR2 = lrrs.Lrr2?.LrrSNR;
+                this.Lrrid3 = lrrs.Lrr3?.Lrrid;
+                this.LrrRSSI3 = lrrs.Lrr3?.LrrRSSI;
+                this.LrrSNR3 = lrrs.Lrr3?.LrrSNR;
                 this.CustomerID = CustomerID;
-                this.pro = customerData.alr.pro;
-                this.ver = customerData.alr.ver;
+                this.pro = customerData?.alr?.pro;
+                this.ver = customerData?.alr?.ver;
                 this.ModelCfg = ModelCfg;
             }
 
@@ -261,8 +262,8 @@ namespace Proximus_Webservice.Repositories
         public static void PutOnStorageQueue(String partitionkey, String rowkey)
         {
             // Make the object that will carry the queuemessage
-            QueueObject qo = new QueueObject(partitionkey, rowkey);
-            String json = JsonConvert.SerializeObject(qo);
+            QueueMessageHolder holder = new QueueMessageHolder(partitionkey, rowkey);
+            String json = JsonConvert.SerializeObject(holder);
 
             // Create the queue if it does not exist already.
             string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
@@ -277,18 +278,6 @@ namespace Proximus_Webservice.Repositories
             QueueClient Client = QueueClient.CreateFromConnectionString(connectionString, "mythingsdecodedqueue");
             BrokeredMessage message = new BrokeredMessage(json);
             Client.Send(message);
-        }
-
-        public class QueueObject
-        {
-            public String PartitionKey { get; set; }
-            public String RowKey { get; set; }
-
-            public QueueObject(string partitionKey, string rowKey)
-            {
-                PartitionKey = partitionKey;
-                RowKey = rowKey;
-            }
         }
 
         #endregion
