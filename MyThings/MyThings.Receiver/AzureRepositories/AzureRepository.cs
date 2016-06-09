@@ -265,19 +265,7 @@ namespace Proximus_Webservice.Repositories
             QueueMessageHolder holder = new QueueMessageHolder(partitionkey, rowkey);
             String json = JsonConvert.SerializeObject(holder);
 
-            // Create the queue if it does not exist already.
-            string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-            var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
-
-            if (!namespaceManager.QueueExists("mythingsdecodedqueue"))
-            {
-                namespaceManager.CreateQueue("mythingsdecodedqueue");
-            }
-
-            //Send The Queue Message
-            QueueClient Client = QueueClient.CreateFromConnectionString(connectionString, "mythingsdecodedqueue");
-            BrokeredMessage message = new BrokeredMessage(json);
-            Client.Send(message);
+            
         }
 
         #endregion
