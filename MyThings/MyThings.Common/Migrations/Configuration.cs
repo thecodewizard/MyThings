@@ -28,6 +28,7 @@ namespace MyThings.Common.Migrations
 
         protected override void Seed(Context.MyThingsContext context)
         {
+            //Make the ASP Roles
             IdentityResult roleResult;
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             if (!roleManager.RoleExists(ApplicationRoles.ADMIN))
@@ -35,6 +36,7 @@ namespace MyThings.Common.Migrations
             if (!roleManager.RoleExists(ApplicationRoles.USER))
                 roleResult = roleManager.Create(new IdentityRole(ApplicationRoles.USER));
 
+            //Make the lora@proximus.be user
             ApplicationUser appUser = new ApplicationUser();
             if (!context.Users.Any(u => u.Email.Equals("lora@proximus.be")))
             {
@@ -57,6 +59,13 @@ namespace MyThings.Common.Migrations
                 appUser = manager.FindByEmail("lora@proximus.be");
             }
 
+            //Add a first timeholder object for the webjob registration
+            Timeholder holder = new Timeholder();
+            holder.WebjobInstanceStarted = DateTime.Now;
+            holder.WebjobInstanceEnded = DateTime.Now.AddTicks(1);
+            context.Timeholder.Add(holder);
+
+            //Generate dummy data for the database
             GenerateDummyData(appUser);
         }
 
@@ -134,7 +143,7 @@ namespace MyThings.Common.Migrations
             {
                 UserId = user.Id,
                 SavedId = dummyGroup.Id,
-                SavedType = PinType.Sensor
+                SavedType = PinType.Group
             };
             _pinRepository.Insert(dummyPin2);
             _pinRepository.SaveChanges();

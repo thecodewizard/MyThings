@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
@@ -12,24 +13,39 @@ namespace DataStorageQueue
 {
     public class Program
     {
+        private const String queueName = "mythingsdecodedqueue";
+
         //Repository Declarations
         private static readonly ContainerTypeRepository _containerTypeRepository = new ContainerTypeRepository();
         private static readonly SensorRepository _sensorRepository = new SensorRepository();
         private static readonly ContainerRepository _containerRepository = new ContainerRepository();
         private static readonly ErrorRepository _errorRepository = new ErrorRepository();
+        private static readonly GenericRepository<Timeholder> _timeholderRepository = new GenericRepository<Timeholder>();       
 
-        //Static Caches
-        
+        //Caches
+        private static readonly List<ContainerType> ContainerTypeCache = new List<ContainerType>();
+        private static readonly List<Sensor> SensorCache = new List<Sensor>();
 
         public static void Main(string[] args)
         {
-            // Get the Queue
-            CloudQueue queue = ConnectToQueue();
+            // Write the WebJob start time to the Timeholder database
+            Timeholder holder = (_timeholderRepository.All().FirstOrDefault()) ?? new Timeholder();
+            holder.WebjobInstanceStarted = DateTime.Now;
+            _timeholderRepository.Update(holder);
+            _timeholderRepository.SaveChanges();
 
-            // Prefetch the static caches
-            FillCaches();
+            CloudQueue queue = null;
+            try
+            {
+                // Get the Queue
+                queue = ConnectToQueue();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
 
-            if (queue.Exists())
+            if (queue != null && queue.Exists())
             {
                 int cachedMessageCount = 0;
                 do
@@ -59,12 +75,14 @@ namespace DataStorageQueue
             // Do the onCompletedWork
             RunOnceInWebjob();
 
-            // Standard Console Logic
-            Console.WriteLine("Press any key to exit");
-            Console.Read();
+            // Write the WebJob end time to the Timeholder database
+            holder = (_timeholderRepository.All().FirstOrDefault()) ?? new Timeholder();
+            holder.WebjobInstanceEnded = DateTime.Now;
+            _timeholderRepository.Update(holder);
+            _timeholderRepository.SaveChanges();
         }
 
-        static CloudQueue ConnectToQueue()
+        private static CloudQueue ConnectToQueue()
         {
             // Retrieve storage account from connection string.
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
@@ -74,18 +92,13 @@ namespace DataStorageQueue
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
 
             // Retrieve a reference to a container.
-            CloudQueue queue = queueClient.GetQueueReference("mythingsdecodedqueue");
+            CloudQueue queue = queueClient.GetQueueReference(queueName);
             return queue;
         }
 
-        static void FillCaches()
+        private static void RunPerSensor(String json)
         {
-            
-        }
-
-        static void RunPerSensor(String json)
-        {
-            //Verwerk de inkomende data
+            //Parse the incoming data
             QueueMessageHolder holder = JsonConvert.DeserializeObject<QueueMessageHolder>(json);
             ContainerEntity containerEntity = TableStorageRepository.GetContainerFromTableStorage(holder.PartitionKey,
                 holder.RowKey);
@@ -94,11 +107,17 @@ namespace DataStorageQueue
             //Database Population Management
                 //Check Existance Containertype
             String containerTypeName = containerEntity.container;
-            ContainerType type = new ContainerType() { Name = containerTypeName };
-            _containerTypeRepository.SaveOrUpdateContainerType(type);
+            ContainerType type = GetContainerType(containerTypeName);
+            if (type == null)
+            {
+                type = new ContainerType() {Name = containerTypeName};
+                _containerTypeRepository.Insert(type);
+                _containerTypeRepository.SaveChanges();
+                ContainerTypeCache.Add(type);
+            }  
 
-                //Check Existance Sensor
-            Sensor sensor = _sensorRepository.GetSensorByMacAddress(containerEntity.macaddress);
+            //Check Existance Sensor
+            Sensor sensor = GetSensor(containerEntity.macaddress);
             if (sensor == null)
             {
                 sensor = new Sensor();
@@ -108,7 +127,9 @@ namespace DataStorageQueue
                 sensor.Company = containerEntity.company;
                 sensor.Location = containerEntity.locationid;
                 sensor.Name = containerEntity.macaddress;
+                sensor.Containers = new List<Container>();
                 sensor = _sensorRepository.Insert(sensor);
+                SensorCache.Add(sensor);
             }
             else
             {
@@ -121,44 +142,55 @@ namespace DataStorageQueue
             Container container = (from c in sensor.Containers where c.ContainerType.Name == containerTypeName select c).FirstOrDefault();
             if (container == null)
             {
+                //Create the container
                 container = new Container();
                 container.ContainerType = type;
-                container.ContainerTypeId = type.Id;
+                //container.ContainerTypeId = type.Id;
                 container.CreationTime = DateTime.Now;
                 container.MACAddress = containerEntity.macaddress;
-                container.SensorId = sensor.Id;
+                //container.SensorId = sensor.Id;
                 _containerRepository.Insert(container);
                 _containerRepository.SaveChanges();
+                
+                //Update the sensor
+                sensor.Containers.Add(container);
+                _sensorRepository.Update(sensor);
+                _sensorRepository.SaveChanges();
             }
 
             //Error-Warning Module
 
             //TODO: Implement Threshold
-            //Check voor de huidige container of de waarde overschreden is.
-            //-> Ja: Resulteerd in MinThresholdWarning of MaxThresholdWarning
-            //-> Indien containertype battery:
+                //Check voor de huidige container of de waarde overschreden is.
+                    //-> Ja: Resulteerd in MinThresholdWarning of MaxThresholdWarning
+                    //-> Indien containertype battery:
 
                 //Check for battery Level warnings
             if (container.ContainerType.Name == "Battery level")
             {
-                //Get the most recent value
-                container = TableStorageRepository.GetHistory(container, TimeSpan.FromDays(365));
+                //Get all the battery values from last year
+                if (container.History == null)
+                {
+                    container = TableStorageRepository.GetHistory(container, TimeSpan.FromDays(365));
+                }               
 
                 //Calculate when the battery would be empty
                     //Get the average downgrade per update
                 int count = container.History.Count;
                 double totalDelta = 0;
-                double previousValue = container.History.Last().Value;
+                totalDelta = container.History.Last().Value - container.History.First().Value;
 
-                foreach (ContainerValue value in container.History)
-                {
-                    double delta = previousValue - value.Value;
-                    totalDelta += delta;
-                }
+                //double previousValue = container.History.Last().Value;
+                //foreach (ContainerValue value in invertedHistory)
+                //{
+                //    double delta = previousValue - value.Value;
+                //    totalDelta += delta;
+                //    previousValue = value.Value;
+                //}
 
-                    //Temp. Results
+                //Temp. Results
                 double average = totalDelta/count;
-                TimeSpan lifeTime = DateTime.Now - container.CreationTime;
+                TimeSpan lifeTime = DateTime.Now - container.History.Last().Timestamp;
                 long lifeTimeTicks = lifeTime.Ticks;
                 long ticksPerUpdate = lifeTimeTicks/count;
 
@@ -178,43 +210,91 @@ namespace DataStorageQueue
                     _errorRepository.Insert(error);
                 }
             }
-
-                //Check for inactivity
-            bool isActive = false;
-            foreach (Container sensorContainer in sensor.Containers)
-            {
-                Container updatedContainer = TableStorageRepository.UpdateValue(sensorContainer);
-                TimeSpan updatedSince = DateTime.Now - updatedContainer.CurrentValue.Timestamp;
-
-                if (updatedSince.Hours > 48)
-                {
-                    Error error = Error.InactiveContainerWarning(sensor, sensorContainer);
-                    _errorRepository.Insert(error);
-                }
-                else isActive = true;
-            }
-
-            if (!isActive)
-            {
-                Error error = Error.InactiveSensorWarning(sensor);
-                _errorRepository.Insert(error);
-            }
             _errorRepository.SaveChanges();
         }
 
-        static void RunOnceInWebjob()
+        private static void RunOnceInWebjob()
         {
             //Error-Warning Module
-                //Check voor voorspelde connectivity errors
-                //Bereken op basis van de sensorentries en de creationdate een gemiddelde responstijd van de sensor.
-                //Controleer ofdat de laatste waarde die gekend is van de sensor deze responstijd
-                    //-> Indien 2x langer: toon networkconnectivity error.
+                //Predict Network Connectivity Errors per Sensor (-> Triggered when update is slower than 5 times the average updateSpan.)
+            List<Sensor> sensors = _sensorRepository.GetSensors();
+            foreach (Sensor sensor in sensors)
+            {
+                //Calculate a rudimentary the average ticks between all entries for a sensor
+                long creationTimeTicks = sensor.CreationDate.Ticks;
+                long averageTicksBetweenEntry = creationTimeTicks/sensor.SensorEntries;
+
+                bool isActive = false;
+                DateTime mostRecentValue = DateTime.MinValue;
+                foreach (Container container in sensor.Containers)
+                {
+                    //Set the most recent value
+                    Container UpdatedContainer = TableStorageRepository.UpdateValue(container);
+                    if (UpdatedContainer.CurrentValue.Timestamp > mostRecentValue)
+                        mostRecentValue = UpdatedContainer.CurrentValue.Timestamp;
+
+                    //While looping the containers in the sensor, check for sensor/container inactivity as well
+                    if (isActive) break;
+
+                    TimeSpan updatedSince = DateTime.Now - UpdatedContainer.CurrentValue.Timestamp;
+                    if (updatedSince.Hours > 48)
+                    {
+                        Error error = Error.InactiveContainerWarning(sensor, container);
+                        _errorRepository.Insert(error);
+                    } else isActive = true;
+
+                    if (!isActive)
+                    {
+                        Error error = Error.InactiveSensorWarning(sensor);
+                        _errorRepository.Insert(error);
+                    }
+                }
+
+                //Determine when the sensor last had an active container
+                TimeSpan lastUpdatedSpan = DateTime.Now - mostRecentValue;
+                long lastUpdatedTicks = lastUpdatedSpan.Ticks;
+
+                //If the sensor didn't get a message for 5 times the average waittime, throw a networkconnectivityerror
+                if ((averageTicksBetweenEntry*5) < lastUpdatedTicks)
+                {
+                    Error error = Error.NetworkConnectivityError(sensor);
+                    _errorRepository.Insert(error);
+                }
+            }
+            _errorRepository.SaveChanges();
 
             //Virtuele Sensors Berekenen
-                //
-
-            //Timelogging
-                //Schrijf naar SQL wanneer deze webjob voor het laatst ge-execute heeft
+                //TODO: Calculate virtual sensors.
         }
+
+        #region CacheLogic
+
+        private static ContainerType GetContainerType(String containerTypeName)
+        {
+            ContainerType cacheType =
+                (from t in ContainerTypeCache where t.Name.Equals(containerTypeName) select t).FirstOrDefault();
+            if (cacheType == null)
+            {
+                ContainerType dbType = _containerTypeRepository.GetContainerTypeByName(containerTypeName);
+                if(dbType != null) ContainerTypeCache.Add(dbType);
+                return dbType;
+            }
+
+            return cacheType;
+        }
+
+        private static Sensor GetSensor(String MacAddress)
+        {
+            Sensor cacheSensor = (from s in SensorCache where s.MACAddress.Equals(MacAddress) select s).FirstOrDefault();
+            if (cacheSensor == null)
+            {
+                Sensor dbSensor = _sensorRepository.GetSensorByMacAddress(MacAddress);
+                if(dbSensor != null) SensorCache.Add(dbSensor);
+                return dbSensor;
+            }
+            return cacheSensor;
+        }
+
+        #endregion
     }
 }

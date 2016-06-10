@@ -317,10 +317,6 @@ Container.loadFromJson = function (json) {
     if (json != null) {
         var data = JSON.parse(json);
 
-        //make containerobject
-      /*  var container = new Container(data["id"], data["name"], data["macaddress"], data["creationtime"], data["lastupdatedtime"], data["containertype"],
-            data["sensorId"], data["currentValue"], data["history"]);*/
-
         var containers = [];
         if (data.hasOwnProperty("Containers") && data["Containers"] != null) {
             for (var i = 0; i < data["Containers"].length; i++) {
