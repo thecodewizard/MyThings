@@ -1,10 +1,7 @@
 ﻿using MyThings.Common.Models;
-using MyThings.Common.Models.NoSQL_Entities;
 using MyThings.Common.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -25,9 +22,6 @@ namespace MyThings.Web.Controllers
         //Define the repositories
         private readonly SensorRepository _sensorRepository = new SensorRepository();
         private readonly ContainerRepository _containerRepository = new ContainerRepository();
-        private readonly ContainerTypeRepository _containerTypeRepository = new ContainerTypeRepository();
-        private readonly GroupRepository _groupRepository = new GroupRepository();
-        private readonly ErrorRepository _errorRepository = new ErrorRepository();
         private readonly PinRepository _pinRepository = new PinRepository();
 
         // GET: Test
@@ -76,6 +70,7 @@ namespace MyThings.Web.Controllers
                 }
                 _pinRepository.SaveChanges();
             }
+
             return View();
         }
     }
