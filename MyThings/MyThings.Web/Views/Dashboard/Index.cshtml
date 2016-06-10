@@ -24,6 +24,8 @@
     gridsterJson = @Html.Raw(@Model.GridsterJson);
     gridster = null;
     highestId = 0;
+    x=0;
+    y=0;
 
     $(window).load(function () {
 
@@ -62,7 +64,14 @@
             },
             resize:{
                 enabled: true,
-                stop: function(event, ui, $widget){                     
+                start: function(event, ui, $widget){                     
+                    x = $widget.get().getAttribute('data-sizex');
+                    y = $widget.get().getAttribute('data-sizey');
+                },
+                stop: function(event, ui, $widget){ 
+                    gridster.serialize();
+                    if((x+y)>2) var units = 1; else var units = 2
+                    gridster.resize_widget( $widget, units, units);
                       UpdateLayout();
                 },
                 max_size: [2, 2],
