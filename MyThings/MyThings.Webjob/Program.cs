@@ -13,7 +13,7 @@ namespace DataStorageQueue
 {
     public class Program
     {
-        private const String queueName = "mythingsdecodedqueuetest";
+        private const String queueName = "mythingsdecodedqueue";
 
         //Repository Declarations
         private static readonly ContainerTypeRepository _containerTypeRepository = new ContainerTypeRepository();

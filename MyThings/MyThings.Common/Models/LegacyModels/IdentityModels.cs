@@ -13,6 +13,7 @@ namespace MyThings.Common.Models
     public class ApplicationUser : IdentityUser
     {
         public String GridsterJson { get; set; }
+        public String Company { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
