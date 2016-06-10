@@ -100,26 +100,74 @@ h2{
 .dropdowntest{
     display:inline;
     margin-left:10px;
+    // background-image:url('Images/Arrowhead-Down-01.png');
+    // background-position:88px;
 }
 .searchsensorform{
     display:inline-block;
     padding: 0 10% 5% 5%;
 }
+.sensormanagementhtml{
+    background-color:white;
+}
 .sensorlist{
     width:100%;
-    border-spacing:0 5px;
-    table-layout:auto;
-    margin-bottom:5%;
-    border-collapse:separate;
 }
+/*
 .sensorsheadrow{
+    
+    display:flex;
+    justify-content:space-around;
     padding-bottom:2%;
     background-color:$proximusterdarkblue;
 }
 .sensorrows{
     background-color:$proximusterlightblue;
     margin-bottom:10px;
+    align-items:center;
+    flex-grow:0;
+    flex-basis:25%;
+    & a{
+        color:$proximusblack;
+    display:flex;
+    justify-content:space-around;
+    }
+    &:hover .sensorpinimg{
+        display:flex;
+    }
 }
-.sensormanagementhtml{
-    background-color:white;
+    */
+  /*  .idsensordiv,.namesensordiv,.numbercontainerdiv,.sensorlocationdiv{
+    flex-grow: 0;
+    flex-basis: 25%;
+    margin-left:10px;
+    }*/
+  .sensorsheadrow{
+      display:table-row;
+    padding-bottom:2%;
+    background-color:$proximusterdarkblue;
 }
+
+.sensorrows{
+    background-color:$proximusterlightblue;
+    margin-bottom:10px;
+    & a{
+    display:block;
+    color:$proximusblack;
+    }
+    &:hover .sensorpinimg{
+    width:20px;
+    height:20px;
+    }
+}
+/*.sensorpinimg{
+     display:none;
+    max-height:20px;
+    max-width:20px;
+    width:auto;
+    height:auto;
+}
+.pinlink{
+    display:inline;
+    float:right;
+}*/
