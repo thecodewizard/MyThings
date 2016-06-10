@@ -66,26 +66,28 @@ namespace MyThings.Common.Repositories
 
         public virtual void SaveChanges()
         {
-            bool saveFailed;
-            do
-            {
-                saveFailed = false;
+            Context.SaveChanges();
+            //    bool saveFailed;
+            //    do
+            //    {
+            //        saveFailed = false;
 
-                try
-                {
-                    Context.SaveChanges();
-                }
-                catch (DbUpdateConcurrencyException ex)
-                {
-                    saveFailed = true;
+            //        try
+            //        {
+            //            
+            //        }
+            //        catch (DbUpdateConcurrencyException ex)
+            //        {
+            //            saveFailed = true;
 
-                    // Update original values from the database 
-                    if (ex.Data.Count == 0) return;
-                    var entry = ex.Entries.Single();               
-                    entry.OriginalValues.SetValues(entry.GetDatabaseValues());
-                }
+            //            // Update original values from the database 
+            //            if (ex.Data.Count == 0) return;
+            //            var entry = ex.Entries.Single();               
+            //            entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+            //        }
 
-            } while (saveFailed);
+            //    } while (saveFailed);
+            //}
         }
     }
 }

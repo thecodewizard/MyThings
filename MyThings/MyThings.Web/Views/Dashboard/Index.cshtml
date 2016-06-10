@@ -31,11 +31,7 @@
         {
             @:var originalGridsterJson = [];
         }else{
-<<<<<<< HEAD
-            @:var originalGridsterJson = @Html.Raw(@Model.GridsterJson);
-=======
-            @:var originalGridsterJson = @Html.Raw(@Model.OriginalGridsterJson);
->>>>>>> refs/remotes/origin/master
+            @:gridsterJson = @Html.Raw(@Model.OriginalGridsterJson);
         }
 
         var pinnedSensors = [];
@@ -56,10 +52,21 @@
             widget_base_dimensions: [120, 120],
             max_rows: 5,
             widget_margins: [10, 10],
+            helper: 'clone',
+            max_size_x: 2,
+            max_size_y: 2,
             draggable:{
                 stop: function(event, ui){
                     UpdateLayout();
                 }
+            },
+            resize:{
+                enabled: true,
+                stop: function(event, ui, $widget){                     
+                      UpdateLayout();
+                },
+                max_size: [2, 2],
+                min_size: [1, 1]
             },
             shift_widgets_up: false,
             shift_larger_widgets_down: false,
@@ -70,12 +77,12 @@
 
         $.each(gridsterJson, function (index, value) {
             if (value.Id == 0) {
-                gridster.add_widget('<li class="tile">id is 0</li>');
+                gridster.add_widget('<li class="tile">id is 0<span class="gs-resize-handle gs-resize-handle-both"></span></li>');
                 //var li = $(".tile:eq("+ index +")");
             } else {
                 if (value.Size_X == 0) value.Size_X = 1;
                 if (value.Size_Y == 0) value.Size_Y = 1;
-                gridster.add_widget('<li class="tile">id heeft waarde</li>', value.Size_X, value.Size_Y, value.Row, value.Col);
+                gridster.add_widget('<li class="tile">id heeft waarde<span class="gs-resize-handle gs-resize-handle-both"></span></li>', value.Size_X, value.Size_Y, value.Col, value.Row);
             }
 
             if(highestId < gridsterJson[index].Id) highestId = gridsterJson[index].Id;
@@ -97,7 +104,6 @@
         gridsterJson = newPos;
         $.ajax({
             method: 'POST',
-            dataType: "json",
             contentType: 'application/json; charset=utf-8',
             url: siteBaseUrl + "UpdateGridString",
             data: JSON.stringify({ gridsterJson: gridsterJson })
