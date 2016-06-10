@@ -156,6 +156,10 @@
     <Compile Include="Migrations\201606091749122_Timeholder Added.Designer.cs">
       <DependentUpon>201606091749122_Timeholder Added.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606101251523_Added Company to user.cs" />
+    <Compile Include="Migrations\201606101251523_Added Company to user.Designer.cs">
+      <DependentUpon>201606101251523_Added Company to user.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FrontEndModels\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
@@ -205,6 +209,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606091749122_Timeholder Added.resx">
       <DependentUpon>201606091749122_Timeholder Added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606101251523_Added Company to user.resx">
+      <DependentUpon>201606101251523_Added Company to user.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
