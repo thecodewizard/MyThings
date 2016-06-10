@@ -83,11 +83,19 @@ namespace MyThings.Common.Repositories
             // Create the table query.
             TableQuery<ContainerEntity> rangeQuery = new TableQuery<ContainerEntity>().Where(TableQuery.CombineFilters(
                             TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionkey), TableOperators.And,
-                            TableQuery.GenerateFilterCondition("container", QueryComparisons.Equal, rowkey))
+                            TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowkey))
                             ).Take(1);
 
-            // Loop through the results, displaying information about the entity.
-            ContainerEntity entity = table.ExecuteQuery(rangeQuery).First<ContainerEntity>();
+            ContainerEntity entity;
+            try
+            {
+                // Loop through the results, displaying information about the entity.
+                entity = table.ExecuteQuery(rangeQuery).First<ContainerEntity>();
+            }
+            catch (Exception ex)
+            {
+                entity = null;
+            }
 
             return entity;
         }

@@ -88,7 +88,10 @@ namespace MyThings.Common.Repositories
         public Sensor GetSensorByMacAddress(String MAC)
         {
             return
-                (from s in Context.Sensors orderby s.CreationDate descending where s.MACAddress.Equals(MAC) select s)
+                (from s in Context.Sensors.Include(s => s.Containers.Select(c => c.ContainerType))
+                    orderby s.CreationDate descending
+                    where s.MACAddress.Equals(MAC)
+                    select s)
                     .FirstOrDefault();
         }
 
