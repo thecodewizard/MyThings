@@ -144,11 +144,11 @@ namespace DataStorageQueue
             {
                 //Create the container
                 container = new Container();
+                container.Name = containerEntity.macaddress;
                 container.ContainerType = type;
-                //container.ContainerTypeId = type.Id;
                 container.CreationTime = DateTime.Now;
                 container.MACAddress = containerEntity.macaddress;
-                //container.SensorId = sensor.Id;
+                container.SensorId = sensor.Id;
                 _containerRepository.Insert(container);
                 _containerRepository.SaveChanges();
                 

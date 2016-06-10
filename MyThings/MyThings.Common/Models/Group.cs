@@ -12,6 +12,7 @@ namespace MyThings.Common.Models
         //Fields
         public int Id { get; set; }
         public String Name { get; set; }
+        public String User_Id { get; set; }
 
         //References
         public List<Sensor> Sensors { get; set; }

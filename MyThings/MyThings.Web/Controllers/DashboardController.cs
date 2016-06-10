@@ -29,6 +29,7 @@ namespace MyThings.Web.Controllers
         //Define the repositories
         private readonly SensorRepository _sensorRepository = new SensorRepository();
         private readonly ContainerRepository _containerRepository = new ContainerRepository();
+        private readonly ContainerTypeRepository _containerTypeRepository = new ContainerTypeRepository();
         private readonly GroupRepository _groupRepository = new GroupRepository();
         private readonly ErrorRepository _errorRepository = new ErrorRepository();
         private readonly PinRepository _pinRepository = new PinRepository();
@@ -154,7 +155,7 @@ namespace MyThings.Web.Controllers
             String gridsterJson = GridsterHelper.TileListToJson(pinnedTiles) ?? "";
 
             //Check the user's sensors for warnings and errors
-            List<Error> errors = _errorRepository.GetErrors(); //TODO: Make this only the errors valid to this user.
+            List<Error> errors = (from e in _errorRepository.GetErrors() where e.Sensor.Company.Equals(user.Company) select e).ToList();
 
             //Make the viewbag variables
             ViewBag.TotalTileCount = pinnedTiles.Count;
@@ -225,7 +226,43 @@ namespace MyThings.Web.Controllers
 
         public ActionResult Sensormanagement()
         {
-            return View();
+            //This will result in the user specific custom homepage
+            ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+            //Get the first 50 sensors for the user
+            List<Sensor> sensors = (from s in _sensorRepository.GetSensors(50) where s.Company.Equals(user.Company) select s).ToList();
+
+            //Get the different containertypes for the filtering in the combobox
+            List<ContainerType> types = _containerTypeRepository.GetContainerTypes();
+
+            //Get the pins for the user
+            List<Pin> pins = (from p in _pinRepository.GetPinsForUser(user.Id) where p.SavedType.Equals(PinType.Sensor) select p).ToList();
+
+            //Get the groups for the user
+            List<Group> groups = _groupRepository.GetGroupsForUser(user.Id);
+
+            //Populate the suggestionlist
+            List<String> suggestionList = new List<String>();
+            foreach (Sensor sensor in sensors)
+            {
+                suggestionList.Add(sensor.Name);
+                suggestionList.Add(sensor.Location);
+                foreach (Container container in sensor.Containers)
+                {
+                    suggestionList.Add(container.Name);
+                    suggestionList.Add(nameof(container.ContainerType.Name));
+                }    
+            }
+
+            return View(new SensorManagementViewModel()
+            {
+                Sensors = sensors,
+                ContainerTypes = types,
+                PinnedSensors = pins,
+                Groups = groups,
+                TotalSensors = sensors.Count,
+                AutoCompleteSuggestionList = suggestionList
+            });
         }
         #endregion
 
