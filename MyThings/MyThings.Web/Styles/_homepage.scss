@@ -7,19 +7,15 @@
     color: white;
 }
 
-html, body {
+.homepageBody{
     overflow-x: auto;
     overflow-y: hidden;
     height: 100vh;
-}
-
-*{
-    font-family: $proximusregularfont;
+     font-family: $proximusregularfont,$basicfonts;
 }
 
 body{
     background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png");
-    overflow-y: hidden;
     background-size:cover;
 }
 
