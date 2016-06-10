@@ -127,7 +127,7 @@ namespace MyThings.Web.Controllers
             _pinRepository.SaveChanges(); //Save all the pin changes after filtering
 
             //Go over all the tiles and map their pins.
-            if (String.IsNullOrWhiteSpace(originalGridsterJson))
+            if (!String.IsNullOrWhiteSpace(originalGridsterJson))
             {
                 List<Tile> tiles = GridsterHelper.JsonToTileList(originalGridsterJson);
                 foreach (Tile tile in tiles)
@@ -157,9 +157,9 @@ namespace MyThings.Web.Controllers
             List<Error> errors = _errorRepository.GetErrors(); //TODO: Make this only the errors valid to this user.
 
             //Make the viewbag variables
-            ViewBag.CustomTileCount = pinnedTiles.Count;
+            ViewBag.TotalTileCount = pinnedTiles.Count;
             ViewBag.FixedTileCount = 9; //Clock, Warnings, Errors, Logout, 4x Nav, Map
-            ViewBag.TotalTileCount = ViewBag.FixedTileCount + ViewBag.CustomTileCount;
+            ViewBag.CustomTileCount = ViewBag.TotalTileCount - ViewBag.FixedTileCount;
             ViewBag.ErrorCount = (from e in errors where e.Type == ErrorType.Error select e).Count();
             ViewBag.WarningCount = (from e in errors where e.Type == ErrorType.Warning select e).Count();
 
