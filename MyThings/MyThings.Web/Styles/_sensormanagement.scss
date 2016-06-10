@@ -23,7 +23,7 @@ h2{
      &:hover{
          color:$proximusblack;
          background-color:$proximusterdarkpurple;
-     }
+            }
      }
 }
 .groupdiv{
@@ -84,8 +84,7 @@ h2{
 }
 .searchdiv
 {
-    max-height:30px;
-    max-height:30px;
+    height:30px;
 }
 .inputimg{
     width:30px;
@@ -100,19 +99,82 @@ h2{
 .dropdowntest{
     display:inline;
     margin-left:10px;
+    font-family:$proximusregularfont;
+    padding:0 4% 0 1%;
+    -webkit-appearance: none; 
+    height:30px;
+    background-image:url("http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg");
+    background-position:98%;
+    background-repeat:no-repeat;
 }
-form{
+.searchsensorform{
     display:inline-block;
     padding: 0 10% 5% 5%;
 }
+/*.sensormanagementhtml{
+    background-color:white;
+}*/
 .sensorlist{
     width:100%;
-    border-spacing:10px;
-    table-layout:auto;
 }
+/*
 .sensorsheadrow{
+    
+    display:flex;
+    justify-content:space-around;
+    padding-bottom:2%;
     background-color:$proximusterdarkblue;
 }
-.sensorsrows{
+.sensorrows{
     background-color:$proximusterlightblue;
+    margin-bottom:10px;
+    align-items:center;
+    flex-grow:0;
+    flex-basis:25%;
+    & a{
+        color:$proximusblack;
+    display:flex;
+    justify-content:space-around;
+    }
+    &:hover .sensorpinimg{
+        display:flex;
+    }
 }
+    */
+  /*  .idsensordiv,.namesensordiv,.numbercontainerdiv,.sensorlocationdiv{
+    flex-grow: 0;
+    flex-basis: 25%;
+    margin-left:10px;
+    }*/
+  .sensorsheadrow{
+    font-family:$proximusboldfont;
+      display:table-row;
+    padding-bottom:2%;
+    background-color:$proximusterdarkblue;
+}
+
+.sensorrows{
+    height:40px;
+    font-family:$proximusregularfont;
+    background-color:$proximusterlightblue;
+    margin-bottom:10px;
+    & a{
+    display:block;
+    color:$proximusblack;
+    }
+    &:hover .sensorpinimg{
+    width:20px;
+    height:20px;
+    }
+}
+/*.sensorpinimg{
+     display:none;
+    max-height:20px;
+    max-width:20px;
+    width:auto;
+    height:auto;
+}
+.pinlink{
+    display:inline;
+    float:right;
+}*/

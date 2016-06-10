@@ -247,9 +247,9 @@ namespace MyThings.Api.Controllers
                 int sensorID = sensorId.Value;
                 Group group = _groupRepository.GetGroupById(groupID);
                 Sensor sensor = _sensorRepository.GetSensorById(sensorID);
-                bool sensorInGroup = _groupRepository.SensorInGroup(groupID, sensorID);
                 if (group != null && sensor != null)
                 {
+                    bool sensorInGroup = _groupRepository.SensorInGroup(groupID, sensorID);
                     if (sensorInGroup)
                         return new HttpResponseMessage(HttpStatusCode.OK);
                     else

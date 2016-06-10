@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.Receiver", "MyThin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.Webjob", "MyThings.Webjob\MyThings.Webjob.csproj", "{FB99BAF4-BE6E-43F2-B903-50F0049AC496}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyThings.TableToQueueConverter", "MyThings.TableToQueueConverter\MyThings.TableToQueueConverter.csproj", "{90BFEE8F-1E1C-4F32-8385-7247C4A098CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{FB99BAF4-BE6E-43F2-B903-50F0049AC496}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB99BAF4-BE6E-43F2-B903-50F0049AC496}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB99BAF4-BE6E-43F2-B903-50F0049AC496}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90BFEE8F-1E1C-4F32-8385-7247C4A098CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90BFEE8F-1E1C-4F32-8385-7247C4A098CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90BFEE8F-1E1C-4F32-8385-7247C4A098CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90BFEE8F-1E1C-4F32-8385-7247C4A098CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
