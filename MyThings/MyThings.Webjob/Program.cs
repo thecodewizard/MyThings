@@ -13,6 +13,8 @@ namespace DataStorageQueue
 {
     public class Program
     {
+        private const String queueName = "mythingsdecodedqueue";
+
         //Repository Declarations
         private static readonly ContainerTypeRepository _containerTypeRepository = new ContainerTypeRepository();
         private static readonly SensorRepository _sensorRepository = new SensorRepository();
@@ -86,7 +88,7 @@ namespace DataStorageQueue
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
 
             // Retrieve a reference to a container.
-            CloudQueue queue = queueClient.GetQueueReference("mythingsdecodedqueue");
+            CloudQueue queue = queueClient.GetQueueReference(queueName);
             return queue;
         }
 
