@@ -57,6 +57,15 @@ namespace MyThings.Web.Controllers
             //Check the default tiles for the user
             allPins = CheckDefaultTilesForUser(user, allPins);
 
+            //Set up caches to improve efficiency
+            List<Sensor> cacheSensors = _sensorRepository.GetSensors();
+            List<Container> cacheContainers = (from c in _containerRepository.GetContainers()
+                where
+                    c.SensorId.HasValue && (from s in cacheSensors select s.Id).ToList<int>().Contains(c.SensorId.Value)
+                select c).ToList();
+            List<Group> cacheGroups = _groupRepository.GetGroupsForUser(user.Id);
+            List<Error> cacheErrors = _errorRepository.GetErrorsForUser(user.Company);
+
             //Go over all the user's pins and fetch their object. Filter the faulty pins
             foreach (Pin pin in allPins)
             {
@@ -137,6 +146,7 @@ namespace MyThings.Web.Controllers
                     if (pin != null)
                     {
                         tile.Pin = pin;
+                        tile.Pin.SavedTypeString = tile.Pin.SavedType.ToString();
                         allPins.Remove(pin);
                         pinnedTiles.Add(tile);
                     }
@@ -155,7 +165,7 @@ namespace MyThings.Web.Controllers
             String gridsterJson = GridsterHelper.TileListToJson(pinnedTiles) ?? "";
 
             //Check the user's sensors for warnings and errors
-            List<Error> errors = (from e in _errorRepository.GetErrors() where e.Sensor.Company.Equals(user.Company) select e).ToList();
+            List<Error> errors = _errorRepository.GetErrorsForUser(user.Company);
 
             //Make the viewbag variables
             ViewBag.TotalTileCount = pinnedTiles.Count;
@@ -163,6 +173,11 @@ namespace MyThings.Web.Controllers
             ViewBag.CustomTileCount = ViewBag.TotalTileCount - ViewBag.FixedTileCount;
             ViewBag.ErrorCount = (from e in errors where e.Type == ErrorType.Error select e).Count();
             ViewBag.WarningCount = (from e in errors where e.Type == ErrorType.Warning select e).Count();
+
+            foreach (Tile tile in pinnedTiles)
+            {
+                String typename = tile.Pin.SavedType.ToString();
+            }
 
             //Return the view
             return View(new HomePageViewModel()
@@ -237,6 +252,8 @@ namespace MyThings.Web.Controllers
 
             //Get the pins for the user
             List<Pin> pins = (from p in _pinRepository.GetPinsForUser(user.Id) where p.SavedType.Equals(PinType.Sensor) select p).ToList();
+            List<Sensor> pinnedSensors =
+                (from p in pins select (from s in sensors where s.Id.Equals(p.SavedId) select s).First()).ToList();
 
             //Get the groups for the user
             List<Group> groups = _groupRepository.GetGroupsForUser(user.Id);
@@ -245,12 +262,12 @@ namespace MyThings.Web.Controllers
             List<String> suggestionList = new List<String>();
             foreach (Sensor sensor in sensors)
             {
-                suggestionList.Add(sensor.Name);
-                suggestionList.Add(sensor.Location);
+                if(!String.IsNullOrWhiteSpace(sensor.Name)) suggestionList.Add(sensor.Name);
+                if (!String.IsNullOrWhiteSpace(sensor.Location))  suggestionList.Add(sensor.Location);
                 foreach (Container container in sensor.Containers)
                 {
-                    suggestionList.Add(container.Name);
-                    suggestionList.Add(nameof(container.ContainerType.Name));
+                    if (!String.IsNullOrWhiteSpace(container.Name)) suggestionList.Add(container.Name);
+                    if (!String.IsNullOrWhiteSpace(nameof(container.ContainerType.Name))) suggestionList.Add(nameof(container.ContainerType.Name));
                 }    
             }
 
@@ -258,7 +275,7 @@ namespace MyThings.Web.Controllers
             {
                 Sensors = sensors,
                 ContainerTypes = types,
-                PinnedSensors = pins,
+                PinnedSensors = pinnedSensors,
                 Groups = groups,
                 TotalSensors = sensors.Count,
                 AutoCompleteSuggestionList = suggestionList

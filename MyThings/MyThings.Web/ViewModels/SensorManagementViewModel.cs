@@ -10,7 +10,7 @@ namespace MyThings.Web.ViewModels
     {
         public List<Sensor> Sensors { get; set; }
         public List<ContainerType> ContainerTypes { get; set; }
-        public List<Pin> PinnedSensors { get; set; }
+        public List<Sensor> PinnedSensors { get; set; }
         public List<Group> Groups { get; set; }
         public int TotalSensors { get; set; }
         public List<String> AutoCompleteSuggestionList { get; set; }
