@@ -32,15 +32,15 @@
         @if(Model.OriginalGridsterJson == null || Model.OriginalGridsterJson == "")
         {
             @:var originalGridsterJson = [];
-        }else{
-            @:gridsterJson = @Html.Raw(@Model.OriginalGridsterJson);
-        }
+                }else{
+            @:var originalGridsterJson = @Html.Raw(@Model.OriginalGridsterJson);
+                }
 
-        var pinnedSensors = [];
-        var pinnedContainers = [];
-        var pinnedGroups = [];
-        var pinnedErrors = [];
-        var errors = [];
+        var pinnedSensors = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedSensors));
+        var pinnedContainers = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedContainers));
+        var pinnedGroups = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedGroups));
+        var pinnedErrors = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedErrors));
+        var errors = @Html.Raw(JsonConvert.SerializeObject(Model.Errors));
 
         var errorCount = @ViewBag.ErrorCount.ToString();
         var warningCount = @ViewBag.WarningCount.ToString();
@@ -49,6 +49,7 @@
         var customTileCount = @ViewBag.CustomTileCount.ToString();
         var totalTileCount = @ViewBag.TotalTileCount.ToString();
 
+        //in pin: savetype en save id, savetype zegt welke tabel, saveid zegt het id van het object daj nodig et
 
         gridster = $(".gridster ul").gridster({
             widget_base_dimensions: [120, 120],
@@ -64,15 +65,17 @@
             },
             resize:{
                 enabled: true,
-                start: function(event, ui, $widget){                     
-                    x = $widget.get().getAttribute('data-sizex');
-                    y = $widget.get().getAttribute('data-sizey');
+                start: function(event, ui, $widget){
+                    x = $widget.data('sizex');
+                    y = $widget.data('sizey');
                 },
-                stop: function(event, ui, $widget){ 
+                stop: function(event, ui, $widget){
                     gridster.serialize();
                     if((x+y)>2) var units = 1; else var units = 2
                     gridster.resize_widget( $widget, units, units);
-                      UpdateLayout();
+                    $widget.data('sizex', units);
+                    $widget.data('sizey', units);
+                    UpdateLayout();
                 },
                 max_size: [2, 2],
                 min_size: [1, 1]
@@ -83,21 +86,50 @@
                 wait_for_mouseup: true
             }
         }).data('gridster');
-
+        //Container, Sensor, Error, Group, FixedClock, FixedNavigation, FixedError
         $.each(gridsterJson, function (index, value) {
             if (value.Id == 0) {
-                gridster.add_widget('<li class="tile">id is 0<span class="gs-resize-handle gs-resize-handle-both"></span></li>');
-                //var li = $(".tile:eq("+ index +")");
+                gridster.add_widget('<li class="tile"></li>');
             } else {
                 if (value.Size_X == 0) value.Size_X = 1;
                 if (value.Size_Y == 0) value.Size_Y = 1;
-                gridster.add_widget('<li class="tile">id heeft waarde<span class="gs-resize-handle gs-resize-handle-both"></span></li>', value.Size_X, value.Size_Y, value.Col, value.Row);
+                gridster.add_widget('<li class="tile"></li>', value.Size_X, value.Size_Y, value.Col, value.Row);
             }
 
             if(highestId < gridsterJson[index].Id) highestId = gridsterJson[index].Id;
         });
 
         UpdateLayout();
+
+        //inhoud fill
+        $.each(gridsterJson, function (index, value) {
+            console.log(value);
+            var tile = $(".gridster ul").find("[data-row='" + value.row + "'][data-col='" + value.col + "']");
+            var innerHTML = "";
+            switch(value.Pin.SavedTypeString){
+                case "Sensor":
+
+                    break;
+                case "Container":
+                    var werkContainer = $.grep(pinnedContainers, function(e){ 
+                        console.log(e.Id);
+                        return e.Id == value.Pin.SavedId;
+                    })[0];
+
+
+                    innerHTML += 
+                    "<div class='textdiv'>"+ werkContainer.Name +"</div>" +
+                    "<div class='errorvalue ciphervalue'>5</div>" +
+                    "<img class='errorimg customimg' alt='erroricon' src='http://loradatagroep9.blob.core.windows.net/proximusimages/warning-icon.png' />"
+                    break;
+                default:
+                    break;
+            }
+
+            innerHTML += '<span class="gs-resize-handle gs-resize-handle-both"></span>';
+            tile.html(innerHTML);
+        });
+
     })
 
     function UpdateLayout(){

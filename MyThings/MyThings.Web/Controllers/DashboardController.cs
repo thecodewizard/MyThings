@@ -136,6 +136,7 @@ namespace MyThings.Web.Controllers
                     if (pin != null)
                     {
                         tile.Pin = pin;
+                        tile.Pin.SavedTypeString = tile.Pin.SavedType.ToString();
                         allPins.Remove(pin);
                         pinnedTiles.Add(tile);
                     }
