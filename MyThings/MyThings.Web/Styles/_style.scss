@@ -23,7 +23,10 @@ h2{
 h3{
      font-size:$fontsizesmall;
 }
-
+body{
+    
+    font-family:$proximusregularfont,$basicfonts;
+}
 ul{
     padding-left:4%;
 }

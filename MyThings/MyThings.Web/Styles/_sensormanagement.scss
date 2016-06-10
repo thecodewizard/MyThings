@@ -23,7 +23,7 @@ h2{
      &:hover{
          color:$proximusblack;
          background-color:$proximusterdarkpurple;
-     }
+            }
      }
 }
 .groupdiv{
@@ -84,8 +84,7 @@ h2{
 }
 .searchdiv
 {
-    max-height:30px;
-    max-height:30px;
+    height:30px;
 }
 .inputimg{
     width:30px;
@@ -100,16 +99,21 @@ h2{
 .dropdowntest{
     display:inline;
     margin-left:10px;
-    // background-image:url('Images/Arrowhead-Down-01.png');
-    // background-position:88px;
+    font-family:$proximusregularfont;
+    padding:0 4% 0 1%;
+    -webkit-appearance: none; 
+    height:30px;
+    background-image:url("http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg");
+    background-position:98%;
+    background-repeat:no-repeat;
 }
 .searchsensorform{
     display:inline-block;
     padding: 0 10% 5% 5%;
 }
-.sensormanagementhtml{
+/*.sensormanagementhtml{
     background-color:white;
-}
+}*/
 .sensorlist{
     width:100%;
 }
@@ -143,12 +147,15 @@ h2{
     margin-left:10px;
     }*/
   .sensorsheadrow{
+    font-family:$proximusboldfont;
       display:table-row;
     padding-bottom:2%;
     background-color:$proximusterdarkblue;
 }
 
 .sensorrows{
+    height:40px;
+    font-family:$proximusregularfont;
     background-color:$proximusterlightblue;
     margin-bottom:10px;
     & a{
