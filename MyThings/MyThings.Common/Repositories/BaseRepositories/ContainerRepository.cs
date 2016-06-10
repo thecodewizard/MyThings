@@ -19,7 +19,10 @@ namespace MyThings.Common.Repositories
 
         public override Container GetByID(object id)
         {
-            return (from c in Context.Container.Include(c => c.ContainerType) select c).FirstOrDefault();
+            int containerId = -1;
+            return !int.TryParse(id.ToString(), out containerId)
+                ? null
+                : (from c in Context.Container.Include(c => c.ContainerType) where c.Id.Equals(containerId) select c).FirstOrDefault();
         }
 
         public override Container Insert(Container container)
