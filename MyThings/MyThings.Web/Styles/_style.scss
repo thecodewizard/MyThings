@@ -31,8 +31,13 @@ li{
 }
 footer{
     bottom:unset;
+<<<<<<< HEAD
     color:$proximuswhite;
    float:right;
+=======
+    color:$proximusmainpurple;
+    float:right;
+>>>>>>> refs/remotes/origin/master
 }
 
 a:hover{
@@ -48,7 +53,10 @@ h2{
 h3{
      font-size:$fontsizesmall;
 }
-
+body{
+    
+    font-family:$proximusregularfont,$basicfonts;
+}
 ul{
     padding-left:4%;
 }
