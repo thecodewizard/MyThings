@@ -33,7 +33,8 @@ namespace MyThings.TableToQueueConverter
             {
                 Log("Fetching Location for sensor " + sensor.Name);
                 await LocationApiRepository.UpdateSensorLocation(sensor.MACAddress);
-                //await LocationApiRepository.SubscribeOnLocation(sensor.MACAddress);
+                Log("Subscribing sensor " + sensor.Name);
+                await LocationApiRepository.SubscribeOnLocation(sensor.MACAddress);
             }
         }
 

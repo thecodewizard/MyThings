@@ -80,7 +80,7 @@ namespace MyThings.Common.Repositories.RemoteRepositories
                    { "key", "4ab5bd3c135348359affd162283d9370" },
                    { "uri", "https://mythingsapi.azurewebsites.net/api/post/updatelocation" },
                    { "user", "esteban.denis.ed@gmail.com" },
-                   { "tll", "-1" }
+                   { "ttl", "-1" }
                 };
 
                 var content = new FormUrlEncodedContent(values);
@@ -90,5 +90,39 @@ namespace MyThings.Common.Repositories.RemoteRepositories
                 var responseString = await response.Content.ReadAsStringAsync();
             }
         }
+
+        //public static async Task SubscribeOnLocation(String MacAddress)
+        //{
+        //    //Subscribe on the webhooks
+        //    using (var client = new HttpClient())
+        //    {
+        //        client.DefaultRequestHeaders.Accept.Clear();
+        //        client.DefaultRequestHeaders.Accept.Add(
+        //            new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+        //        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "4ab5bd3c135348359affd162283d9370");
+
+        //        SubscriptionHolder holder = new SubscriptionHolder()
+        //        {
+        //            filter = MacAddress,
+        //            key = "4ab5bd3c135348359affd162283d9370",
+        //            uri = "https://mythingsapi.azurewebsites.net/api/post/updatelocation",
+        //            user = "esteban.denis.ed@gmail.com",
+        //            ttl = -1
+        //        };
+
+        //        var content = new ByteArrayContent(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(holder)));
+
+        //        var response = await client.PostAsync(registerOnWebhooks, content);
+        //    }
+        //}
+    }
+
+    public class SubscriptionHolder
+    {
+        public string filter { get; set; }
+        public string key { get; set; }
+        public string uri { get; set; }
+        public string user { get; set; }
+        public int ttl { get; set; }
     }
 }
