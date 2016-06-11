@@ -46,7 +46,8 @@ namespace MyThings.Common.Migrations
                 {
                     Email = "lora@proximus.be",
                     UserName = "lora@proximus.be",
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    Company = "Proximus Demo"
                 };
                 manager.Create(user, "LoRa1234!");
                 manager.AddToRole(user.Id, ApplicationRoles.USER);

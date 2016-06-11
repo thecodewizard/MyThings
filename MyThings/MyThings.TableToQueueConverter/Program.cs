@@ -17,6 +17,11 @@ namespace MyThings.TableToQueueConverter
     {
         static void Main(string[] args)
         {
+            PortTableStorageToQueue();
+        }
+
+        private static void PortTableStorageToQueue()
+        {
             //Get all tablestorage rows
             Log("Querying Tablestorage");
             List<ContainerEntity> entities = GetAllTableEntries();

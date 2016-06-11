@@ -14,6 +14,7 @@ namespace DataStorageQueue
     public class Program
     {
         private const String queueName = "mythingsdecodedqueue";
+        //private const String queueName = "mythingsdecodedqueuetest";
 
         //Repository Declarations
         private static readonly ContainerTypeRepository _containerTypeRepository = new ContainerTypeRepository();
@@ -73,7 +74,9 @@ namespace DataStorageQueue
             }
 
             // Do the onCompletedWork
+            Console.Write("Started General Checkup");
             RunOnceInWebjob();
+            Console.Write("Finished Unique Checkup");
 
             // Write the WebJob end time to the Timeholder database
             holder = (_timeholderRepository.All().FirstOrDefault()) ?? new Timeholder();
@@ -144,11 +147,11 @@ namespace DataStorageQueue
             {
                 //Create the container
                 container = new Container();
+                container.Name = containerEntity.macaddress;
                 container.ContainerType = type;
-                //container.ContainerTypeId = type.Id;
                 container.CreationTime = DateTime.Now;
                 container.MACAddress = containerEntity.macaddress;
-                //container.SensorId = sensor.Id;
+                container.SensorId = sensor.Id;
                 _containerRepository.Insert(container);
                 _containerRepository.SaveChanges();
                 

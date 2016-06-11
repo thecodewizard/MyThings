@@ -16,6 +16,10 @@ namespace MyThings.Common.Models
         //Saved Fields
         public int SavedId { get; set; }
         public PinType SavedType { get; set; }
+        
+        //Helper Field
+        [NotMapped]
+        public String SavedTypeString { get; set; }
     }
 
     public enum PinType

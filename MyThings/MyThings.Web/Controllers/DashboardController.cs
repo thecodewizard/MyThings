@@ -29,6 +29,7 @@ namespace MyThings.Web.Controllers
         //Define the repositories
         private readonly SensorRepository _sensorRepository = new SensorRepository();
         private readonly ContainerRepository _containerRepository = new ContainerRepository();
+        private readonly ContainerTypeRepository _containerTypeRepository = new ContainerTypeRepository();
         private readonly GroupRepository _groupRepository = new GroupRepository();
         private readonly ErrorRepository _errorRepository = new ErrorRepository();
         private readonly PinRepository _pinRepository = new PinRepository();
@@ -56,7 +57,18 @@ namespace MyThings.Web.Controllers
             //Check the default tiles for the user
             allPins = CheckDefaultTilesForUser(user, allPins);
 
+            //Set up caches to improve efficiency
+            List<Sensor> cacheSensors =
+                (from s in _sensorRepository.GetSensors() where s.Company.Equals(user.Company) select s).ToList();
+            List<Container> cacheContainers = (from c in _containerRepository.GetContainers()
+                where
+                    c.SensorId.HasValue && (from s in cacheSensors select s.Id).ToList<int>().Contains(c.SensorId.Value)
+                select c).ToList();
+            List<Group> cacheGroups = _groupRepository.GetGroupsForUser(user.Id);
+            List<Error> cacheErrors = _errorRepository.GetErrorsForUser(user.Company);
+
             //Go over all the user's pins and fetch their object. Filter the faulty pins
+            bool pinsDeleted = false;
             foreach (Pin pin in allPins)
             {
                 //Container & sensor values are fetched with ajax. Group and errors are fetched now
@@ -64,7 +76,7 @@ namespace MyThings.Web.Controllers
                 {
                     case PinType.Group:
                         //Give the found group to javascript.
-                        Group group = _groupRepository.GetGroupById(pin.SavedId);
+                        Group group = (from g in cacheGroups where g.Id.Equals(pin.SavedId) select g).FirstOrDefault();
                         if (group != null)
                         {
                             pinnedGroups.Add(group);
@@ -72,12 +84,12 @@ namespace MyThings.Web.Controllers
                         else
                         {
                             _pinRepository.DeletePin(pin);
-                                //If the pinned group could not be resolved, remove the faulty pin.
+                            pinsDeleted = true; //If the pinned group could not be resolved, remove the faulty pin.
                         }
                         break;
                     case PinType.Error:
                         //Give the found error to javascript.
-                        Error error = _errorRepository.GetErrorById(pin.SavedId);
+                        Error error = (from e in cacheErrors where e.Id.Equals(pin.SavedId) select e).FirstOrDefault();
                         if (error != null)
                         {
                             pinnedErrors.Add(error);
@@ -85,12 +97,13 @@ namespace MyThings.Web.Controllers
                         else
                         {
                             _pinRepository.DeletePin(pin);
-                                //If the pinned error could not be resolved, remove the faulty pin.
+                            pinsDeleted = true; //If the pinned error could not be resolved, remove the faulty pin.
                         }
                         break;
                     case PinType.Sensor:
                         //Give the found sensor to javascript
-                        Sensor sensor = _sensorRepository.GetSensorById(pin.SavedId);
+                        Sensor sensor =
+                            (from s in cacheSensors where s.Id.Equals(pin.SavedId) select s).FirstOrDefault();
                         if (sensor != null)
                         {
                             pinnedSensors.Add(sensor);
@@ -98,12 +111,13 @@ namespace MyThings.Web.Controllers
                         else
                         {
                             _pinRepository.DeletePin(pin);
-                                //If the pinned sensor could not be resolved, remove the faulty pin.
+                            pinsDeleted = true; //If the pinned sensor could not be resolved, remove the faulty pin.
                         }
                         break;
                     case PinType.Container:
                         //Give the found container to javascript
-                        Container container = _containerRepository.GetContainerById(pin.SavedId);
+                        Container container =
+                            (from c in cacheContainers where c.Id.Equals(pin.SavedId) select c).FirstOrDefault();
                         if (container != null)
                         {
                             pinnedContainers.Add(container);
@@ -111,7 +125,7 @@ namespace MyThings.Web.Controllers
                         else
                         {
                             _pinRepository.DeletePin(pin);
-                                //If the pinned container could not be resolved, remove the faulty pin.
+                            pinsDeleted = true; //If the pinned container could not be resolved, remove the faulty pin.
                         }
                         break;
                     case PinType.FixedClock:
@@ -120,11 +134,11 @@ namespace MyThings.Web.Controllers
                         break; // Don't drop the default pins.
                     default:
                         _pinRepository.DeletePin(pin);
-                            //If the pin doesn't match any of the known types, remove the faulty pin.
+                        pinsDeleted = true; //If the pin doesn't match any of the known types, remove the faulty pin.
                         break;
                 }
             }
-            _pinRepository.SaveChanges(); //Save all the pin changes after filtering
+            if(pinsDeleted) _pinRepository.SaveChanges(); //Save all the pin changes after filtering
 
             //Go over all the tiles and map their pins.
             if (!String.IsNullOrWhiteSpace(originalGridsterJson))
@@ -136,6 +150,7 @@ namespace MyThings.Web.Controllers
                     if (pin != null)
                     {
                         tile.Pin = pin;
+                        tile.Pin.SavedTypeString = tile.Pin.SavedType.ToString();
                         allPins.Remove(pin);
                         pinnedTiles.Add(tile);
                     }
@@ -154,7 +169,7 @@ namespace MyThings.Web.Controllers
             String gridsterJson = GridsterHelper.TileListToJson(pinnedTiles) ?? "";
 
             //Check the user's sensors for warnings and errors
-            List<Error> errors = _errorRepository.GetErrors(); //TODO: Make this only the errors valid to this user.
+            List<Error> errors = cacheErrors;
 
             //Make the viewbag variables
             ViewBag.TotalTileCount = pinnedTiles.Count;
@@ -225,7 +240,57 @@ namespace MyThings.Web.Controllers
 
         public ActionResult Sensormanagement()
         {
-            return View();
+            //This will result in the user specific custom homepage
+            ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+            //Get the first 50 sensors for the user
+            List<Sensor> sensors = (from s in _sensorRepository.GetSensors(50) where s.Company.Equals(user.Company) select s).ToList();
+
+            //Get the different containertypes for the filtering in the combobox
+            List<ContainerType> types = _containerTypeRepository.GetContainerTypes();
+
+            //Get the pins for the user
+            bool pinsDeleted = false;
+            List<Pin> pins = (from p in _pinRepository.GetPinsForUser(user.Id) where p.SavedType.Equals(PinType.Sensor) select p).ToList();
+            List<Sensor> pinnedSensors = new List<Sensor>();
+            foreach (Pin pin in pins)
+            {
+                Sensor sensor = (from s in sensors where s.Id.Equals(pin.SavedId) select s).FirstOrDefault();
+                if (sensor == null)
+                {
+                    pins.Remove(pin);
+                    _pinRepository.DeletePin(pin); //Delete invalid pins
+                    pinsDeleted = true;
+                } else pinnedSensors.Add(sensor);
+            }
+            if(pinsDeleted) _pinRepository.SaveChanges();
+
+            //Get the groups for the user
+            List<Group> groups = _groupRepository.GetGroupsForUser(user.Id);
+
+            //Populate the suggestionlist
+            List<String> suggestionList = new List<String>();
+            foreach (Sensor sensor in sensors)
+            {
+                if(!String.IsNullOrWhiteSpace(sensor.Name) && !suggestionList.Contains(sensor.Name)) suggestionList.Add(sensor.Name);
+                if (!String.IsNullOrWhiteSpace(sensor.Location) && !suggestionList.Contains(sensor.Location))  suggestionList.Add(sensor.Location);
+                foreach (Container container in sensor.Containers)
+                {
+                    if (!String.IsNullOrWhiteSpace(container.Name) && !suggestionList.Contains(container.Name)) suggestionList.Add(container.Name);
+                    if (!String.IsNullOrWhiteSpace(container.ContainerType.Name) && !suggestionList.Contains(container.ContainerType.Name))
+                        suggestionList.Add(container.ContainerType.Name);
+                }    
+            }
+
+            return View(new SensorManagementViewModel()
+            {
+                Sensors = sensors,
+                ContainerTypes = types,
+                PinnedSensors = pinnedSensors,
+                Groups = groups,
+                TotalSensors = sensors.Count,
+                AutoCompleteSuggestionList = suggestionList
+            });
         }
         #endregion
 

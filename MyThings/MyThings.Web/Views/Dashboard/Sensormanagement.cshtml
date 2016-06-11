@@ -1,4 +1,7 @@
 ﻿@using System.Web.UI.WebControls
+@using MyThings.Common.Models
+@using Newtonsoft.Json
+@model MyThings.Web.ViewModels.SensorManagementViewModel
 
 @{
     ViewBag.Title = "Sensormanagement";
@@ -146,4 +149,42 @@
     <br/>
 </div>
 
+@section scripts{
+    <script type="text/javascript">
+        $(window).load(function () {
+            //integer
+            var allSensorsCount = @Html.Raw(Model.TotalSensors);
 
+            //Manier 1 - Met JSON Objecten
+            var allSensors = @Html.Raw(JsonConvert.SerializeObject(Model.Sensors));
+            var comboboxContainerTypes = @Html.Raw(JsonConvert.SerializeObject(Model.ContainerTypes));
+            var pinnedSensors = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedSensors));
+            var groups = @Html.Raw(JsonConvert.SerializeObject(Model.Groups));
+            var autocompleteFeed = @Html.Raw(JsonConvert.SerializeObject(Model.AutoCompleteSuggestionList));
+
+            allSensors = allSensors || [];
+            comboboxContainerTypes = comboboxContainerTypes || [];
+            pinnedSensors = pinnedSensors || [];
+            groups = groups || [];
+            autocompleteFeed = autocompleteFeed || [];
+
+            console.log(allSensors);
+            console.log(comboboxContainerTypes);
+            console.log(pinnedSensors);
+            console.log(groups);
+            console.log(autocompleteFeed);
+            console.log(allSensorsCount);
+
+            @*
+
+            //Manier 2 - Met eigen objecten
+            var allSensors = [];
+            @foreach (Sensor sensor in Model.Sensors)
+            {
+                @: allSensors.push(Sensor.loadFromJson(@Html.Raw(JsonConvert.SerializeObject(sensor))));
+            }
+                
+            *@
+        })
+    </script>
+}
