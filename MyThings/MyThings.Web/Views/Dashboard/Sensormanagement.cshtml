@@ -34,7 +34,6 @@
             <div class="ciphervaluegroup">5000</div>
             <div class="sensors">sensors</div>
         </div>
-
         <div class="grouprectangletile addgrouptile">
             <a href="@Url.Action("Editgroups", "Dashboard")">
                 <div class="addgroup">+</div>
@@ -54,19 +53,19 @@
     {
         <div class="searchdiv">
             <input class="searchbardiv" type="search" name="searchsensor"/>
-            <input class="inputimg" type="image" value="submit" src="http://loradatagroep9.blob.core.windows.net/proximusimages/search-icon.svg"/>
+            <input class="inputimg ui-autocomplete-input" autocomplete="off" type="image" value="submit" src="http://loradatagroep9.blob.core.windows.net/proximusimages/search-icon.svg"/>
         </div>
     }
 
     @*@Html.DropDownListFor(model => model.iets, null, "Pick a sorting method")*@
 
     <select class="dropdowntest">
-        <option value="select">Pick a sorting method</option>
-        <option value="Exemplo2">Exemplo2</option>
-        <option value="Exemplo3">Exemplo3</option>
+     @*  <option value="select">Pick a sorting method</option>
+    <option value="Exemplo2">Exemplo2</option>
+    <option value="Exemplo3">Exemplo3</option>*@
     </select>
 
-     <table class="table">
+     <table class="table sensorlist">
         <tr class="sensorsheadrow">
             <th>ID</th>
             <th>Name</th>
@@ -75,20 +74,20 @@
             <th></th>
         </tr>
 
-        <tr class="sensorrows">
-            <td class="idsensordiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">1B81111DA35AEG</a> </td>
-            <td class="namesensordiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">1B81111DA35AEG</a> </td>
-            <td class="numbercontainerdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">35</a> </td>
-            <td class="sensorlocationdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">West Flanders, Belgium</a> </td>
-            <td class="sensorpinimg"><a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "5")"><img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" /></a> </td>
-        </tr>
-        <tr class="sensorrows">
-            <td class="idsensordiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">1B811GHDA35AG</a> </td>
-            <td><a href="@Url.Action("SensorDetail", "Dashboard", "5")">Proxsensor20</a> </td>
-            <td class="numbercontainerdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">7</a> </td>
-            <td class="sensorlocationdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">Antwerp, Belgium</a> </td>
-            <td class="sensorpinimg"><a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "5")"><img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" /></a> </td>
-        </tr>
+        @*<tr class="sensorrows">
+        <td class="idsensordiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">1B81111DA35AEG</a> </td>
+        <td class="namesensordiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">1B81111DA35AEG</a> </td>
+        <td class="numbercontainerdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">35</a> </td>
+        <td class="sensorlocationdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">West Flanders, Belgium</a> </td>
+        <td class="sensorpinimg"><a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "5")"><img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" /></a> </td>
+    </tr>
+    <tr class="sensorrows">
+        <td class="idsensordiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">1B811GHDA35AG</a> </td>
+        <td><a href="@Url.Action("SensorDetail", "Dashboard", "5")">Proxsensor20</a> </td>
+        <td class="numbercontainerdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">7</a> </td>
+        <td class="sensorlocationdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">Antwerp, Belgium</a> </td>
+        <td class="sensorpinimg"><a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "5")"><img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" /></a> </td>
+    </tr>*@
     </table>
 
     <div>
@@ -151,31 +150,77 @@
 
 @section scripts{
     <script type="text/javascript">
-        $(window).load(function () {
-            //integer
-            var allSensorsCount = @Html.Raw(Model.TotalSensors);
+        $(window)
+            .load(function() {
+                //integer
+                var allSensorsCount = @Html.Raw(Model.TotalSensors);
 
-            //Manier 1 - Met JSON Objecten
-            var allSensors = @Html.Raw(JsonConvert.SerializeObject(Model.Sensors));
-            var comboboxContainerTypes = @Html.Raw(JsonConvert.SerializeObject(Model.ContainerTypes));
-            var pinnedSensors = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedSensors));
-            var groups = @Html.Raw(JsonConvert.SerializeObject(Model.Groups));
-            var autocompleteFeed = @Html.Raw(JsonConvert.SerializeObject(Model.AutoCompleteSuggestionList));
+                //Manier 1 - Met JSON Objecten
+                var allSensors = @Html.Raw(JsonConvert.SerializeObject(Model.Sensors));
+                var comboboxContainerTypes = @Html.Raw(JsonConvert.SerializeObject(Model.ContainerTypes));
+                var pinnedSensors = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedSensors));
+                var groups = @Html.Raw(JsonConvert.SerializeObject(Model.Groups));
+                var autocompleteFeed = @Html.Raw(JsonConvert.SerializeObject(Model.AutoCompleteSuggestionList));
 
-            allSensors = allSensors || [];
-            comboboxContainerTypes = comboboxContainerTypes || [];
-            pinnedSensors = pinnedSensors || [];
-            groups = groups || [];
-            autocompleteFeed = autocompleteFeed || [];
+                allSensors = allSensors || [];
+                comboboxContainerTypes = comboboxContainerTypes || [];
+                pinnedSensors = pinnedSensors || [];
+                groups = groups || [];
+                autocompleteFeed = autocompleteFeed || [];
 
-            console.log(allSensors);
-            console.log(comboboxContainerTypes);
-            console.log(pinnedSensors);
-            console.log(groups);
-            console.log(autocompleteFeed);
-            console.log(allSensorsCount);
+                console.log(allSensors);
+                console.log(comboboxContainerTypes);
+                console.log(pinnedSensors);
+                console.log(groups);
+                console.log(autocompleteFeed);
+                console.log(allSensorsCount);
 
-            @*
+                function searchauto() {
+                    var arr = "";
+                    for (var i = 0; i < autocompleteFeed.length; i++) {
+                        arr += jQuery.makeArray(autocompleteFeed[i]+',');
+                    } 
+                    $(".searchbardiv").autocomplete({
+                        source: [arr]
+                    });  
+                }
+
+                function fillSortingbox() {
+                    $(".dropdowntest").append('<option value="">Pick a sorting method</option>');
+                    for (var i = 0; i < comboboxContainerTypes.length; i++) {
+                        $(".dropdowntest").append('<option value="'+comboboxContainerTypes[i].Id+'">'+comboboxContainerTypes[i].Name+'</option>')
+                    } 
+                }
+
+                function sensorlistCreate() {
+                    for (var i = 0; i < allSensors.length; i++) {
+                        $(".sensorlist")
+                            .append('<tr class="sensorrows">' +
+                                '<td class="idsensordiv">' +
+                                allSensors[i].MACAddress +
+                                '</td>' +
+                                '<td class="namesensordiv">' +
+                                allSensors[i].Name +
+                                '</td>' +
+                                '<td class="numbercontainerdiv">' +
+                                allSensors[i].SensorEntries +
+                                '</td>' +
+                                '<td class="sensorlocationdiv">' +
+                                allSensors[i].Location +
+                                '</td>' +
+                                '<td class="sensorpinimg">' +
+                                '<a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "3")">' +
+                                '<img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" />' +
+                                '</a> ' +
+                                '</td>' +
+                                '</tr>');
+                    }
+                }
+
+                sensorlistCreate();
+                fillSortingbox();
+                searchauto();
+                @*
 
             //Manier 2 - Met eigen objecten
             var allSensors = [];
@@ -183,8 +228,8 @@
             {
                 @: allSensors.push(Sensor.loadFromJson(@Html.Raw(JsonConvert.SerializeObject(sensor))));
             }
-                
+
             *@
-        })
+            })
     </script>
 }
