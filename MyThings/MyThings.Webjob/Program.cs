@@ -74,7 +74,9 @@ namespace DataStorageQueue
             }
 
             // Do the onCompletedWork
+            Console.Write("Started General Checkup");
             RunOnceInWebjob();
+            Console.Write("Finished Unique Checkup");
 
             // Write the WebJob end time to the Timeholder database
             holder = (_timeholderRepository.All().FirstOrDefault()) ?? new Timeholder();
