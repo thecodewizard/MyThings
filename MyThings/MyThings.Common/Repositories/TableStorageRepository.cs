@@ -4,11 +4,8 @@ using MyThings.Common.Models;
 using MyThings.Common.Models.NoSQL_Entities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyThings.Common.Repositories
 {
@@ -98,6 +95,46 @@ namespace MyThings.Common.Repositories
             }
 
             return entity;
+        }
+
+        public static Sensor UpdateBasestationCoordinates(Sensor sensor)
+        {
+            // Retrieve the storage account from the connection string.
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+                        ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
+            // Create the table client.
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            // Create the CloudTable object.
+            CloudTable table = tableClient.GetTableReference("proximusnetwerktable");
+            // Create the table query.
+            TableQuery<NetwerkEntity> rangeQuery =
+                new TableQuery<NetwerkEntity>().Where(TableQuery.GenerateFilterCondition("DevEUI",
+                    QueryComparisons.Equal, sensor.MACAddress)).Take(1);
+            NetwerkEntity entity = table.ExecuteQuery(rangeQuery).FirstOrDefault();
+            if (entity == null) return sensor;
+
+            sensor.Accuracy = 1;
+            bool success = true;
+            if (entity.LrrLAT != null)
+            {
+                double lat;
+                success = double.TryParse(entity.LrrLAT, out lat);
+                if (success && Math.Abs(lat) > 0)
+                {
+                    sensor.Lat = lat;
+                }
+            }
+            if (entity.LrrLON != null)
+            {
+                double lng;
+                success = double.TryParse(entity.LrrLON, out lng);
+                if (success && Math.Abs(lng) > 0)
+                {
+                    sensor.Lng = lng;
+                }
+            }
+
+            return sensor;
         }
     }
 }
