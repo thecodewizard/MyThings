@@ -8,16 +8,33 @@ using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
+using MyThings.Common.Models;
 using MyThings.Common.Models.NoSQL_Entities;
+using MyThings.Common.Repositories;
+using MyThings.Common.Repositories.RemoteRepositories;
 using Newtonsoft.Json;
 
 namespace MyThings.TableToQueueConverter
 {
     class Program
     {
+        static SensorRepository sensorRepository = new SensorRepository();
+
         static void Main(string[] args)
         {
-            PortTableStorageToQueue();
+            //PortTableStorageToQueue();
+            FetchLocationForAllSensors().Wait();
+        }
+
+        private static async Task FetchLocationForAllSensors()
+        {
+            List<Sensor> sensors = sensorRepository.GetSensors();
+            foreach (Sensor sensor in sensors)
+            {
+                Log("Fetching Location for sensor " + sensor.Name);
+                await LocationApiRepository.UpdateSensorLocation(sensor.MACAddress);
+                //await LocationApiRepository.SubscribeOnLocation(sensor.MACAddress);
+            }
         }
 
         private static void PortTableStorageToQueue()

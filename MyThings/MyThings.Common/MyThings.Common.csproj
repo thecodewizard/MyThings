@@ -167,6 +167,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FrontEndModels\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
+    <Compile Include="Models\FrontEndModels\LocationJsonModel.cs" />
+    <Compile Include="Models\FrontEndModels\LocationWebhookModel.cs" />
     <Compile Include="Models\FrontEndModels\Pin.cs" />
     <Compile Include="Models\FrontEndModels\Tile.cs" />
     <Compile Include="Models\LegacyModels\AccountViewModels.cs" />
@@ -177,6 +179,7 @@
     <Compile Include="Models\LegacyModels\IdentityModels.cs" />
     <Compile Include="Models\LegacyModels\ManageViewModels.cs" />
     <Compile Include="Models\NoSQL Entities\ContainerEntity.cs" />
+    <Compile Include="Models\NoSQL Entities\NetwerkEntity.cs" />
     <Compile Include="Models\NoSQL Entities\QueueMessageHolder.cs" />
     <Compile Include="Models\Sensor.cs" />
     <Compile Include="Models\Timeholder.cs" />
@@ -189,6 +192,7 @@
     <Compile Include="Repositories\Interfaces\IGenericRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\PinRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\SensorRepository.cs" />
+    <Compile Include="Repositories\RemoteRepositories\LocationApiRepository.cs" />
     <Compile Include="Repositories\TableStorageRepository.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,9 +5,6 @@ using Newtonsoft.Json;
 using Proximus_API.Models;
 using System;
 using System.Configuration;
-using Microsoft.Azure;
-using Microsoft.ServiceBus;
-using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure.Storage.Queue;
 using MyThings.Common.Models.NoSQL_Entities;
 
@@ -72,7 +69,7 @@ namespace Proximus_Webservice.Repositories
 
             NetwerkEntity entity = new NetwerkEntity(data.Time, data.DevEUI, data.FPort, data.FCntUp, data.ADRbit, data.FCntDn, 
                                                      data.Payload_hex, data.Mic_hex, data.Lrcid, data.LrrRSSI, data.LrrSNR, data.SpFact, data.SubBand,
-                                                     data.Channel, data.DevLrrCnt, data.Lrrid, lijst, data.CustomerID, customerData, data.ModelCfg);
+                                                     data.Channel, data.DevLrrCnt, data.Lrrid, data.LrrLAT, data.LrrLON, lijst, data.CustomerID, customerData, data.ModelCfg);
             // Create the TableOperation object.
             TableOperation insertOperation = TableOperation.Insert(entity);
             // Execute the insert operation.
@@ -143,7 +140,7 @@ namespace Proximus_Webservice.Repositories
         {
             public NetwerkEntity(string Time, string DevEUI, string FPort, string FCntUp, string ADRbit, string FCntDn,
                                 string payload_hex, string mic_hex, string Lrcid, string LrrRSSI, string LrrSNR, string SpFact,
-                                string SubBand, string Channel, string DevLrrCnt, string Lrrid, Lrrs lrrs, string CustomerID,
+                                string SubBand, string Channel, string DevLrrCnt, string Lrrid, string LrrLAT, string LrrLON, Lrrs lrrs, string CustomerID,
                                 CustomerData customerData, string ModelCfg)
             {
                 this.PartitionKey = CustomerID;
@@ -165,6 +162,8 @@ namespace Proximus_Webservice.Repositories
                 this.Channel = Channel;
                 this.DevLrrCnt = DevLrrCnt;
                 this.Lrrid = Lrrid;
+                this.LrrLAT = LrrLAT;
+                this.LrrLON = LrrLON;
                 this.Lrrid1 = lrrs.Lrr1?.Lrrid;
                 this.LrrRSSI1 = lrrs.Lrr1?.LrrRSSI;
                 this.LrrSNR1 = lrrs.Lrr1?.LrrSNR;
@@ -196,6 +195,8 @@ namespace Proximus_Webservice.Repositories
             public string Channel { get; set; }
             public string DevLrrCnt { get; set; }
             public string Lrrid { get; set; }
+            public string LrrLAT { get; set; }
+            public string LrrLON { get; set; }
             public string Lrrid1 { get; set; }
             public string LrrRSSI1 { get; set; }
             public string LrrSNR1 { get; set; }
