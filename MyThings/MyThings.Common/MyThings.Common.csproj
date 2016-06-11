@@ -167,6 +167,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FrontEndModels\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
+    <Compile Include="Models\FrontEndModels\GroupCreator.cs" />
     <Compile Include="Models\FrontEndModels\LocationJsonModel.cs" />
     <Compile Include="Models\FrontEndModels\LocationWebhookModel.cs" />
     <Compile Include="Models\FrontEndModels\Pin.cs" />
