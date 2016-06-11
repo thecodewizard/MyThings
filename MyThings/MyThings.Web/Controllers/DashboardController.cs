@@ -684,7 +684,7 @@ namespace MyThings.Web.Controllers
                     if (_groupRepository.SensorInGroup(gid, sid))
                     {
                         Group group = _groupRepository.GetGroupById(gid);
-                        Sensor sensor = _sensorRepository.GetSensorById(sid);
+                        Sensor sensor = group.Sensors.Find(s => s.Id.Equals(sid));
 
                         if (group != null && sensor != null)
                         {

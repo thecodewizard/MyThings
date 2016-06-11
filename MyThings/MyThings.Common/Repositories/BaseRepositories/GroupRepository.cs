@@ -29,12 +29,73 @@ namespace MyThings.Common.Repositories
         {
             if (group.Sensors != null)
                 foreach (Sensor sensor in group.Sensors)
+                {
                     if (Context.Entry<Sensor>(sensor).State != EntityState.Unchanged)
                         Context.Entry<Sensor>(sensor).State = EntityState.Unchanged;
+                    if (sensor.Containers != null)
+                    {
+                        foreach (Container container in sensor.Containers)
+                        {
+                            if (Context.Entry<Container>(container).State != EntityState.Unchanged)
+                                Context.Entry<Container>(container).State = EntityState.Unchanged;
+                            if (Context.Entry<ContainerType>(container.ContainerType).State != EntityState.Unchanged)
+                                Context.Entry<ContainerType>(container.ContainerType).State = EntityState.Unchanged;
+                        }
+                    }
+                }
 
             Context.Group.Add(group);
             return group;
         }
+
+        public override void Update(Group group)
+        {
+            if (group.Sensors != null)
+                foreach (Sensor sensor in group.Sensors)
+                {
+                    if (Context.Entry<Sensor>(sensor).State != EntityState.Unchanged)
+                        Context.Entry<Sensor>(sensor).State = EntityState.Unchanged;
+                    if (sensor.Containers != null)
+                    {
+                        foreach (Container container in sensor.Containers)
+                        {
+                            if (Context.Entry<Container>(container).State != EntityState.Unchanged)
+                                Context.Entry<Container>(container).State = EntityState.Unchanged;
+                            if (Context.Entry<ContainerType>(container.ContainerType).State != EntityState.Unchanged)
+                                Context.Entry<ContainerType>(container.ContainerType).State = EntityState.Unchanged;
+                        }
+                    }
+                }
+
+            DbSet.Attach(group);
+            Context.Entry(group).State = EntityState.Modified;
+        }
+
+        public override void Delete(Group group)
+        {
+            if (group.Sensors != null)
+                foreach (Sensor sensor in group.Sensors)
+                {
+                    if (Context.Entry<Sensor>(sensor).State != EntityState.Unchanged)
+                        Context.Entry<Sensor>(sensor).State = EntityState.Unchanged;
+                    if (sensor.Containers != null)
+                    {
+                        foreach (Container container in sensor.Containers)
+                        {
+                            if (Context.Entry<Container>(container).State != EntityState.Unchanged)
+                                Context.Entry<Container>(container).State = EntityState.Unchanged;
+                            if (Context.Entry<ContainerType>(container.ContainerType).State != EntityState.Unchanged)
+                                Context.Entry<ContainerType>(container.ContainerType).State = EntityState.Unchanged;
+                        }
+                    }
+                }
+            if (Context.Entry(group).State == EntityState.Detached)
+            {
+                DbSet.Attach(group);
+            }
+            DbSet.Remove(group);
+        }
+
         #endregion
 
         #region Functionality Methods
