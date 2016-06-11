@@ -68,21 +68,21 @@ namespace MyThings.Common.Repositories
             SaveChanges();
         }
 
-        public Group SaveOrUpdateGroup(Group group)
-        {
-            if (DbSet.Find(group.Id) != null)
-            {
-                //The group already exists -> Update the group
-                Update(group);
-            } else
-            {
-                //The group doesn't exist -> Insert the group
-                Insert(group);
-            }
+        //public Group SaveOrUpdateGroup(Group group)
+        //{
+        //    if (DbSet.Find(group.Id) != null)
+        //    {
+        //        //The group already exists -> Update the group
+        //        Update(group);
+        //    } else
+        //    {
+        //        //The group doesn't exist -> Insert the group
+        //        Insert(group);
+        //    }
 
-            SaveChanges();
-            return group;
-        }
+        //    SaveChanges();
+        //    return group;
+        //}
 
         #endregion
     }

@@ -29,7 +29,7 @@ namespace MyThings.Common.Repositories
             // Loop through the results, displaying information about the entity.
             ContainerEntity entity = table.ExecuteQuery(rangeQuery).First<ContainerEntity>();
 
-            container.CurrentValue = new ContainerValue(entity.payload, entity.Timestamp.LocalDateTime);
+            container.CurrentValue = new ContainerValue(entity.payload, entity.hexpayload, entity.Timestamp.LocalDateTime);
             container.LastUpdatedTime = DateTime.Now;
             return container;
         }
@@ -57,12 +57,12 @@ namespace MyThings.Common.Repositories
             if (container.History == null) container.History = new List<ContainerValue>();
             foreach (ContainerEntity entity in rangeQuery)
             {
-                container.History.Add(new ContainerValue(entity.payload, entity.Timestamp.LocalDateTime));
+                container.History.Add(new ContainerValue(entity.payload, entity.hexpayload, entity.Timestamp.LocalDateTime));
             }
 
             if(container.History.Count >= 1)
             {
-                container.CurrentValue = new ContainerValue(container.History.First().Value, container.History.First().Timestamp);
+                container.CurrentValue = new ContainerValue(container.History.First().Value, container.History.First().HexValue, container.History.First().Timestamp);
                 container.LastUpdatedTime = DateTime.Now;
             }
             return container;
