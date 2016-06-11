@@ -1,28 +1,15 @@
-﻿using System.Xml.Serialization;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+using MyThings.Common.Models.NoSQL_Entities;
 
-namespace Proximus_API.Models
+namespace MyThings.Common.Models.FrontEndModels
 {
-    [XmlRoot(ElementName = "Lrr", Namespace = "http://uri.actility.com/lora")]
-    public class Lrr
-    {
-        [XmlElement(ElementName = "Lrrid", Namespace = "http://uri.actility.com/lora")]
-        public string Lrrid { get; set; }
-        [XmlElement(ElementName = "LrrRSSI", Namespace = "http://uri.actility.com/lora")]
-        public string LrrRSSI { get; set; }
-        [XmlElement(ElementName = "LrrSNR", Namespace = "http://uri.actility.com/lora")]
-        public string LrrSNR { get; set; }
-    }
-
-    [XmlRoot(ElementName = "Lrrs", Namespace = "http://uri.actility.com/lora")]
-    public class Lrrs
-    {
-        [XmlElement(ElementName = "Lrr", Namespace = "http://uri.actility.com/lora")]
-        public List<Lrr> Lrr { get; set; }
-    }
-
     [XmlRoot(ElementName = "DevEUI_uplink", Namespace = "http://uri.actility.com/lora")]
-    public class DevEUI_uplink
+    public class LocationWebhookElement
     {
         [XmlElement(ElementName = "Time", Namespace = "http://uri.actility.com/lora")]
         public string Time { get; set; }
@@ -56,10 +43,6 @@ namespace Proximus_API.Models
         public string DevLrrCnt { get; set; }
         [XmlElement(ElementName = "Lrrid", Namespace = "http://uri.actility.com/lora")]
         public string Lrrid { get; set; }
-        [XmlElement(ElementName = "LrrLAT", Namespace = "http://uri.actility.com/lora")]
-        public string LrrLAT { get; set; }
-        [XmlElement(ElementName = "LrrLON", Namespace = "http://uri.actility.com/lora")]
-        public string LrrLON { get; set; }
         [XmlElement(ElementName = "Lrrs", Namespace = "http://uri.actility.com/lora")]
         public Lrrs Lrrs { get; set; }
         [XmlElement(ElementName = "CustomerID", Namespace = "http://uri.actility.com/lora")]
@@ -70,6 +53,19 @@ namespace Proximus_API.Models
         public string ModelCfg { get; set; }
         [XmlAttribute(AttributeName = "xmlns")]
         public string Xmlns { get; set; }
-    }
+        [XmlElement(ElementName = "LrrLAT", Namespace = "http://uri.actility.com/lora")]
+        public string LrrLAT { get; set; }
+        [XmlElement(ElementName = "LrrLON", Namespace = "http://uri.actility.com/lora")]
+        public string LrrLON { get; set; }
 
+        public string LrrsString { get; set; }
+
+        public double lat { get; set; }
+        public double lng { get; set; }
+        public int accuracy { get; set; }
+
+        public double averageCount { get; set; }
+        public double averageLat { get; set; }
+        public double averageLong { get; set; }
+    }
 }

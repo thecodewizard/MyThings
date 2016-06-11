@@ -7,6 +7,7 @@ using Microsoft.WindowsAzure.Storage.Queue;
 using MyThings.Common.Models;
 using MyThings.Common.Models.NoSQL_Entities;
 using MyThings.Common.Repositories;
+using MyThings.Common.Repositories.RemoteRepositories;
 using Newtonsoft.Json;
 
 namespace DataStorageQueue
@@ -123,6 +124,7 @@ namespace DataStorageQueue
             Sensor sensor = GetSensor(containerEntity.macaddress);
             if (sensor == null)
             {
+                //Make the new sensor
                 sensor = new Sensor();
                 sensor.CreationDate = DateTime.Now;
                 sensor.MACAddress = containerEntity.macaddress;
@@ -133,6 +135,9 @@ namespace DataStorageQueue
                 sensor.Containers = new List<Container>();
                 sensor = _sensorRepository.Insert(sensor);
                 SensorCache.Add(sensor);
+
+                //Subscribe on the location API
+                LocationApiRepository.SubscribeOnLocation(sensor.MACAddress).Wait();
             }
             else
             {
