@@ -33,6 +33,19 @@ namespace MyThings.Common.Repositories
             Context.Container.Add(container);
             return container;
         }
+
+        public override void Delete(Container container)
+        {
+            if (container.ContainerType != null && Context.Entry(container.ContainerType).State != EntityState.Unchanged)
+                Context.Entry(container.ContainerType).State = EntityState.Unchanged;
+
+            if (Context.Entry(container).State == EntityState.Detached)
+            {
+                DbSet.Attach(container);
+            }
+            DbSet.Remove(container);
+        }
+
         #endregion
 
         #region Functionality Methods

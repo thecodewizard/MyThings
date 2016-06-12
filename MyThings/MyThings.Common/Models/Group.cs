@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,5 +17,11 @@ namespace MyThings.Common.Models
 
         //References
         public List<Sensor> Sensors { get; set; }
+
+        //Virtual Sensor
+        public bool IsChanged { get; set; }
+        public int VirtualSensorIdentifier { get; set; }
+        [NotMapped]
+        public Sensor VirtualSensor { get; set; }
     }
 }
