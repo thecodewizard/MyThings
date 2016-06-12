@@ -1,6 +1,7 @@
 ﻿@import "_colors.scss";
 @import "_fonts.scss";
 
+<<<<<<< HEAD
 .gridsterContainer > .gridster > ul > .tile{
     background-color: $proximusmainpurple;
     list-style: none;
@@ -16,6 +17,12 @@
 
 .tile *{
     transition: 0.2s;
+=======
+.tile{
+    background-color: #5c2d91;
+    list-style: none;
+    color: white;
+>>>>>>> refs/remotes/origin/master
 }
 
 .homepageBody{
@@ -25,6 +32,14 @@
      font-family: $proximusregularfont,$basicfonts;
 }
 
+<<<<<<< HEAD
+=======
+body{
+    background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png");
+    background-size:cover;
+}
+
+>>>>>>> refs/remotes/origin/master
 .gridsterContainer {
     padding: 30px 50px 50px 50px ;
     min-height: 100%;
@@ -37,6 +52,7 @@
     margin: 20px 0 0 50px;
 }
 
+<<<<<<< HEAD
 .itemName 
 {
     text-align:center;
@@ -137,6 +153,8 @@ sup{
 
 }
 
+=======
+>>>>>>> refs/remotes/origin/master
 /*$largeblock: 200px;
 $smallblock: 100px;
 $fontsizelarge: 6em;
