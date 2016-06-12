@@ -72,8 +72,22 @@ h3 {
   font-family: Proximus-ExtraBold;
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
+.gridsterContainer > .gridster > ul > .tile {
+  background-color: #5C2D91;
+  list-style: none;
+  color: white;
+  overflow: hidden;
+  transition: background-color 0.2s;
+  cursor: pointer; }
+
+.gridsterContainer > .gridster > ul > .tile:hover {
+  background-color: #00bCEe; }
+
+.tile * {
+  transition: 0.2s; }
+
 .tile {
-  background-color: #5c2d91;
+  background-color: #5C2D91;
   list-style: none;
   color: white; }
 
@@ -97,10 +111,72 @@ body {
   color: #fff;
   margin: 20px 0 0 50px; }
 
-.textdiv {
-  font-size: 2em;
-  text-align: center;
-  vertical-align: bottom; }
+.itemName {
+  text-align: center; }
+
+.itemName, .itemType {
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.itemValue, .itemName, .itemType {
+  margin: 2px; }
+
+.itemValue, .itemType {
+  position: absolute;
+  text-align: right; }
+
+.smallWidget .itemValue {
+  top: 40%;
+  right: 5%;
+  font-size: 2.75em; }
+
+.smallWidget .itemType {
+  right: 5%;
+  top: 15%;
+  font-size: 0.8em; }
+
+.largeWidget .itemValue {
+  top: 40%;
+  right: 5%;
+  font-size: 5em; }
+
+.largeWidget .itemName {
+  font-size: 2em; }
+
+.largeWidget .itemType {
+  right: 5%;
+  top: 15%;
+  font-size: 1.5em; }
+
+sup {
+  font-size: 0.5em; }
+
+.customimg, .itemType {
+  opacity: 0.4; }
+
+.customimg {
+  position: absolute; }
+  .customimg.errorimg {
+    max-height: 75%;
+    max-width: 75%;
+    float: right;
+    bottom: 40%;
+    right: -20%; }
+  .customimg.warningimg {
+    max-height: 65%;
+    max-width: 65%;
+    float: right;
+    bottom: 35%;
+    right: -20%; }
+  .customimg.logoutimg {
+    max-height: 95%;
+    max-width: 95%;
+    bottom: -2%; }
+  .customimg.pinimg {
+    max-height: 80%;
+    max-width: 80%;
+    bottom: 0;
+    left: -37%; }
 
 /*$largeblock: 200px;
 $smallblock: 100px;
@@ -399,6 +475,13 @@ h3 {
 @media (min-width: 1200px) {
   .colorWrapper {
     width: 1170px; } }
+
+body {
+  background: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; }
 
 li {
   list-style-type: none; }
