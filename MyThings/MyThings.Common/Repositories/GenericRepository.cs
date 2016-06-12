@@ -4,6 +4,8 @@ using System.Data.Entity;
 using MyThings.Common.Context;
 using MyThings.Common.Models;
 using MyThings.Common.Repositories.Interfaces;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
 
 namespace MyThings.Common.Repositories
 {
@@ -65,6 +67,27 @@ namespace MyThings.Common.Repositories
         public virtual void SaveChanges()
         {
             Context.SaveChanges();
+            //    bool saveFailed;
+            //    do
+            //    {
+            //        saveFailed = false;
+
+            //        try
+            //        {
+            //            
+            //        }
+            //        catch (DbUpdateConcurrencyException ex)
+            //        {
+            //            saveFailed = true;
+
+            //            // Update original values from the database 
+            //            if (ex.Data.Count == 0) return;
+            //            var entry = ex.Entries.Single();               
+            //            entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+            //        }
+
+            //    } while (saveFailed);
+            //}
         }
     }
 }

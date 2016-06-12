@@ -97,6 +97,11 @@ body {
   color: #fff;
   margin: 20px 0 0 50px; }
 
+.textdiv {
+  font-size: 2em;
+  text-align: center;
+  vertical-align: bottom; }
+
 /*$largeblock: 200px;
 $smallblock: 100px;
 $fontsizelarge: 6em;
@@ -379,11 +384,29 @@ h3 {
   font-family: Proximus-ExtraBold;
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
+.colorWrapper {
+  background-color: rgba(255, 255, 255, 0.7);
+  margin: auto; }
+
+@media (min-width: 768px) {
+  .colorWrapper {
+    width: 750px; } }
+
+@media (min-width: 992px) {
+  .colorWrapper {
+    width: 970px; } }
+
+@media (min-width: 1200px) {
+  .colorWrapper {
+    width: 1170px; } }
+
 li {
   list-style-type: none; }
 
 footer {
   bottom: unset;
+  color: #FFFFFF;
+  float: right;
   color: #5C2D91;
   float: right; }
 
@@ -468,7 +491,7 @@ h1 {
   margin-bottom: 0px; }
 
 .navoverride {
-  background-color: white;
+  background-color: transparent;
   border: none; }
 
 .buttonoverride {
