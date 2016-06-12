@@ -60,7 +60,7 @@ namespace MyThings.Web.Controllers
 
             //Set up caches to improve efficiency
             List<Sensor> cacheSensors =
-                (from s in _sensorRepository.GetSensors() where s.Company.Equals(user.Company) select s).ToList();
+                (from s in _sensorRepository.GetSensors(null, true) where s.Company.Equals(user.Company) select s).ToList();
             List<Container> cacheContainers = (from c in _containerRepository.GetContainers()
                 where
                     c.SensorId.HasValue && (from s in cacheSensors select s.Id).ToList<int>().Contains(c.SensorId.Value)
@@ -651,6 +651,7 @@ namespace MyThings.Web.Controllers
 
                         if (group != null && sensor != null)
                         {
+                            group.IsChanged = true;
                             group.Sensors.Add(sensor);
                             _groupRepository.Update(group);
                             _groupRepository.SaveChanges();
@@ -688,6 +689,7 @@ namespace MyThings.Web.Controllers
 
                         if (group != null && sensor != null)
                         {
+                            group.IsChanged = true;
                             group.Sensors.Remove(sensor);
                             _groupRepository.Update(group);
                             _groupRepository.SaveChanges();

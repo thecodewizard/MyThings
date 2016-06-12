@@ -7,6 +7,7 @@ using System;
 using System.Configuration;
 using Microsoft.WindowsAzure.Storage.Queue;
 using MyThings.Common.Models.NoSQL_Entities;
+using MyThings.Common.Repositories;
 
 
 namespace Proximus_Webservice.Repositories
@@ -91,7 +92,7 @@ namespace Proximus_Webservice.Repositories
             TableOperation insertOperation = TableOperation.Insert(entity);
             // Execute the insert operation.
             table.Execute(insertOperation);
-            PutOnStorageQueue(entity.PartitionKey, entity.RowKey);
+            TableStorageRepository.PutOnStorageQueue(entity.PartitionKey, entity.RowKey);
         }
         #endregion
         #region entities
@@ -258,33 +259,6 @@ namespace Proximus_Webservice.Repositories
             // Execute the insert operation.
             table.Execute(insertOperation);
         }
-        #endregion
-        #region Storage queue
-
-        public static void PutOnStorageQueue(String partitionkey, String rowkey)
-        {
-            // Make the object that will carry the queuemessage
-            QueueMessageHolder holder = new QueueMessageHolder(partitionkey, rowkey);
-            String json = JsonConvert.SerializeObject(holder);
-
-            //Retrieve Connection String
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
-
-            //Create Queue Client.
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-
-            //Make or Append to queue
-            CloudQueue queue = queueClient.GetQueueReference("mythingsdecodedqueue");
-
-            //Create If The Queue doesn't already exists
-            queue.CreateIfNotExists();
-
-            //Add the Order to the Queue
-            CloudQueueMessage message = new CloudQueueMessage(json);
-            queue.AddMessage(message);
-        }
-
-        #endregion
+        #endregion        
     }
 }

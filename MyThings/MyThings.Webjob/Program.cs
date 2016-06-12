@@ -186,15 +186,17 @@ namespace DataStorageQueue
                     //Get the average downgrade per update
                 int count = container.History.Count;
                 double totalDelta = 0;
-                totalDelta = container.History.Last().Value - container.History.First().Value;
+                //totalDelta = container.History.Last().Value - container.History.First().Value;
 
-                //double previousValue = container.History.Last().Value;
-                //foreach (ContainerValue value in invertedHistory)
-                //{
-                //    double delta = previousValue - value.Value;
-                //    totalDelta += delta;
-                //    previousValue = value.Value;
-                //}
+                double previousValue = container.History.Last().Value;
+                List<ContainerValue> invertedHistory = container.History;
+                invertedHistory.Reverse();
+                foreach (ContainerValue value in invertedHistory)
+                {
+                    double delta = previousValue - value.Value;
+                    if(delta > -10) totalDelta += delta;
+                    previousValue = value.Value;
+                }
 
                 //Temp. Results
                 double average = totalDelta/count;

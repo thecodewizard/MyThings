@@ -193,6 +193,7 @@
     <Compile Include="Repositories\Interfaces\IGenericRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\PinRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\SensorRepository.cs" />
+    <Compile Include="Repositories\MachineLearningRepository.cs" />
     <Compile Include="Repositories\RemoteRepositories\LocationApiRepository.cs" />
     <Compile Include="Repositories\TableStorageRepository.cs" />
   </ItemGroup>
