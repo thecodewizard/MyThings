@@ -53,6 +53,13 @@ namespace MyThings.Common.Repositories
             return All().ToList();
         }
 
+        public List<Error> GetErrorsForUser(String userCompany)
+        {
+            return
+                (from e in Context.Error where e.Sensor.Company.Equals(userCompany) orderby e.Time descending select e)
+                    .ToList();
+        }
+
         public Error GetErrorById(int errorId)
         {
             return GetByID(errorId);

@@ -1,0 +1,6 @@
+USE [MyThings]
+GO
+
+SELECT SUM(SensorEntries) AS 'Entries'
+  FROM [dbo].[Sensors]
+GO

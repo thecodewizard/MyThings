@@ -62,17 +62,36 @@ namespace MyThings.Common.Repositories
             Context.Sensors.Add(sensor);
             return sensor;
         }
+
+        public override void Delete(Sensor sensor)
+        {
+            foreach (Container container in sensor.Containers)
+            {
+                if (Context.Entry<Container>(container).State != EntityState.Unchanged)
+                    Context.Entry<Container>(container).State = EntityState.Unchanged;
+                if (container.ContainerType != null && Context.Entry(container.ContainerType).State != EntityState.Unchanged)
+                    Context.Entry(container.ContainerType).State = EntityState.Unchanged;
+            }
+
+            if (Context.Entry(sensor).State == EntityState.Detached)
+            {
+                DbSet.Attach(sensor);
+            }
+            DbSet.Remove(sensor);
+        }
+
         #endregion
 
         #region Functionality Methods
 
-        public List<Sensor> GetSensors(int? count = null)
+        public List<Sensor> GetSensors(int? count = null, bool includeVirtual = false)
         {
             if (count.HasValue)
                 return
                     (from s in Context.Sensors
                         .Include(s => s.Containers.Select(c => c.ContainerType))
-                     orderby s.CreationDate descending 
+                     where s.IsVirtual == includeVirtual
+                     orderby s.CreationDate descending
                      select s)
                         .Take(count.Value)
                         .ToList();

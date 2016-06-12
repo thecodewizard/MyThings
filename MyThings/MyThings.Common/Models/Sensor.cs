@@ -25,5 +25,8 @@ namespace MyThings.Common.Models
 
         //References
         public List<Container> Containers { get; set; }
+
+        //Virtual Sensor
+        public bool IsVirtual { get; set; }
     }
 }

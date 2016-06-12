@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
@@ -7,6 +8,7 @@ using Microsoft.WindowsAzure.Storage.Queue;
 using MyThings.Common.Models;
 using MyThings.Common.Models.NoSQL_Entities;
 using MyThings.Common.Repositories;
+using MyThings.Common.Repositories.RemoteRepositories;
 using Newtonsoft.Json;
 
 namespace DataStorageQueue
@@ -14,11 +16,13 @@ namespace DataStorageQueue
     public class Program
     {
         private const String queueName = "mythingsdecodedqueue";
+        //private const String queueName = "mythingsdecodedqueuetest";
 
         //Repository Declarations
         private static readonly ContainerTypeRepository _containerTypeRepository = new ContainerTypeRepository();
         private static readonly SensorRepository _sensorRepository = new SensorRepository();
         private static readonly ContainerRepository _containerRepository = new ContainerRepository();
+        private static readonly GroupRepository _groupRepository = new GroupRepository();
         private static readonly ErrorRepository _errorRepository = new ErrorRepository();
         private static readonly GenericRepository<Timeholder> _timeholderRepository = new GenericRepository<Timeholder>();       
 
@@ -33,6 +37,12 @@ namespace DataStorageQueue
             holder.WebjobInstanceStarted = DateTime.Now;
             _timeholderRepository.Update(holder);
             _timeholderRepository.SaveChanges();
+
+
+            // Do the onCompletedWork
+            Console.Write("Started Grouplogic");
+            RunOnceInWebjobStart();
+            Console.WriteLine(" -- Finished");
 
             CloudQueue queue = null;
             try
@@ -73,7 +83,9 @@ namespace DataStorageQueue
             }
 
             // Do the onCompletedWork
-            RunOnceInWebjob();
+            Console.Write("Started General Checkup");
+            RunOnceInWebjobEnd();
+            Console.WriteLine(" -- Finished");
 
             // Write the WebJob end time to the Timeholder database
             holder = (_timeholderRepository.All().FirstOrDefault()) ?? new Timeholder();
@@ -94,6 +106,62 @@ namespace DataStorageQueue
             // Retrieve a reference to a container.
             CloudQueue queue = queueClient.GetQueueReference(queueName);
             return queue;
+        }
+
+        private static void RunOnceInWebjobStart()
+        {
+            //Get all the groups
+            List<Group> groups = _groupRepository.GetGroups();
+
+            //For each group, update the values
+            foreach (Group group in groups)
+            {
+                Sensor virtSensor = _sensorRepository.GetSensorById(group.VirtualSensorIdentifier);
+                if (virtSensor?.Containers == null)
+                {
+                    _groupRepository.DeleteGroup(group); //Remove invalid groups.
+                }
+
+                if (group.IsChanged)
+                {
+                    //The group has changed -> All the virtual sensors have to be recalculated
+                    TableStorageRepository.RemoveValuesFromTablestorage(virtSensor.MACAddress);
+
+                    // Get the oldest date in the group
+                    DateTime oldestDate = DateTime.Now;
+                    List<Container> containers = new List<Container>();
+                    foreach (Sensor gSensor in group.Sensors)
+                    {
+                        Sensor gS = _sensorRepository.GetSensorById(gSensor.Id);
+                        if (oldestDate > gS.CreationDate) oldestDate = gS.CreationDate;
+                        foreach(Container gC in gS.Containers) containers.Add(gC);
+                    }
+
+                    foreach (Container container in virtSensor.Containers)
+                    {
+                        // Insert the First value in tablestorage to keep the system crashing when someone queries the new virt sensor
+                        double payloadTotal = 0;
+                        double numberOfContainers = 0;
+                        foreach (Container c in containers)
+                        {
+                            if (c.ContainerType.Name.Equals(container.ContainerType.Name))
+                            {
+                                double cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
+                                payloadTotal += cPayload;
+                                numberOfContainers++;
+                            }
+                        }
+                        double payload = (Math.Abs(numberOfContainers) <= 0) ? 0 : payloadTotal / numberOfContainers;
+
+                        String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
+                        ContainerEntity entity = new ContainerEntity(virtSensor.Company, container.MACAddress, container.ContainerType.Name, virtSensor.Location, payloadValue, oldestDate.Ticks.ToString(), null);
+                        TableStorageRepository.WriteToVirtualSensorTable(entity, false);
+                    }
+                }
+
+                //Check for new virtual sensor entries
+                _groupRepository.UpdateVirtualSensor(group);
+            }
         }
 
         private static void RunPerSensor(String json)
@@ -120,6 +188,7 @@ namespace DataStorageQueue
             Sensor sensor = GetSensor(containerEntity.macaddress);
             if (sensor == null)
             {
+                //Make the new sensor
                 sensor = new Sensor();
                 sensor.CreationDate = DateTime.Now;
                 sensor.MACAddress = containerEntity.macaddress;
@@ -130,6 +199,9 @@ namespace DataStorageQueue
                 sensor.Containers = new List<Container>();
                 sensor = _sensorRepository.Insert(sensor);
                 SensorCache.Add(sensor);
+
+                //Subscribe on the location API
+                LocationApiRepository.SubscribeOnLocation(sensor.MACAddress).Wait();
             }
             else
             {
@@ -144,11 +216,11 @@ namespace DataStorageQueue
             {
                 //Create the container
                 container = new Container();
+                container.Name = containerEntity.macaddress;
                 container.ContainerType = type;
-                //container.ContainerTypeId = type.Id;
                 container.CreationTime = DateTime.Now;
                 container.MACAddress = containerEntity.macaddress;
-                //container.SensorId = sensor.Id;
+                container.SensorId = sensor.Id;
                 _containerRepository.Insert(container);
                 _containerRepository.SaveChanges();
                 
@@ -178,15 +250,17 @@ namespace DataStorageQueue
                     //Get the average downgrade per update
                 int count = container.History.Count;
                 double totalDelta = 0;
-                totalDelta = container.History.Last().Value - container.History.First().Value;
+                //totalDelta = container.History.Last().Value - container.History.First().Value;
 
-                //double previousValue = container.History.Last().Value;
-                //foreach (ContainerValue value in invertedHistory)
-                //{
-                //    double delta = previousValue - value.Value;
-                //    totalDelta += delta;
-                //    previousValue = value.Value;
-                //}
+                double previousValue = container.History.Last().Value;
+                List<ContainerValue> invertedHistory = container.History;
+                invertedHistory.Reverse();
+                foreach (ContainerValue value in invertedHistory)
+                {
+                    double delta = previousValue - value.Value;
+                    if(delta > -10) totalDelta += delta;
+                    previousValue = value.Value;
+                }
 
                 //Temp. Results
                 double average = totalDelta/count;
@@ -213,7 +287,7 @@ namespace DataStorageQueue
             _errorRepository.SaveChanges();
         }
 
-        private static void RunOnceInWebjob()
+        private static void RunOnceInWebjobEnd()
         {
             //Error-Warning Module
                 //Predict Network Connectivity Errors per Sensor (-> Triggered when update is slower than 5 times the average updateSpan.)
@@ -262,9 +336,6 @@ namespace DataStorageQueue
                 }
             }
             _errorRepository.SaveChanges();
-
-            //Virtuele Sensors Berekenen
-                //TODO: Calculate virtual sensors.
         }
 
         #region CacheLogic
@@ -285,14 +356,15 @@ namespace DataStorageQueue
 
         private static Sensor GetSensor(String MacAddress)
         {
-            Sensor cacheSensor = (from s in SensorCache where s.MACAddress.Equals(MacAddress) select s).FirstOrDefault();
-            if (cacheSensor == null)
-            {
-                Sensor dbSensor = _sensorRepository.GetSensorByMacAddress(MacAddress);
-                if(dbSensor != null) SensorCache.Add(dbSensor);
-                return dbSensor;
-            }
-            return cacheSensor;
+            return _sensorRepository.GetSensorByMacAddress(MacAddress);
+            //Sensor cacheSensor = (from s in SensorCache where s.MACAddress.Equals(MacAddress) select s).FirstOrDefault();
+            //if (cacheSensor == null)
+            //{
+            //    Sensor dbSensor = _sensorRepository.GetSensorByMacAddress(MacAddress);
+            //    if(dbSensor != null) SensorCache.Add(dbSensor);
+            //    return dbSensor;
+            //}
+            //return cacheSensor;
         }
 
         #endregion

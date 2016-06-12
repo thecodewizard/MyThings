@@ -62,9 +62,28 @@ function Sensor(id, name, company, macaddress, location, creationdate, sensorent
         //send to url in api/post/pinSensor/id
         //onSensorPinned is a function which expects a sensorobject as argument
 
-        if ($.isFunction(onSensorPinned)) {
-            onSensorPinned(that);
+        if (that.id != null && that.name != null) {
+            $.ajax({
+                url: apiBaseUrl + "post/pinSensor?sensorId=" + that.sensor.id,
+                method: "POST"
+            }).done(function (json) {
+                if (json != null) {
+                    var dataUpdate = JSON.parse(json);
+                    that.id = dataUpdate.Id;
+                    if ($.isFunction(onSensorPinned)) {
+                        onSensorPinned(that);
+                    }
+                }
+            }).fail(function (json) {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("The sensor" +
+                        that.sensor.id +
+                        " could not be pinned.");
+                }
+            });
         }
+
+
     };
 }
 
@@ -153,9 +172,27 @@ function Container(id, name, macaddress, creationtime, lastupdatedtime, containe
         //send to url in api/post/pinContainer/id
         //onContainerPinned is a function which expects a containerobject as argument
 
-        if ($.isFunction(onContainerPinned)) {
-            onContainerPinned(that);
+        if (that.id != null && that.name != null) {
+            $.ajax({
+                url: apiBaseUrl + "post/pinSensor?sensorId=" + that.container.id,
+                method: "POST"
+            }).done(function (json) {
+                if (json != null) {
+                    var dataUpdate = JSON.parse(json);
+                    that.id = dataUpdate.Id;
+                    if ($.isFunction(onContainerPinned)) {
+                        onContainerPinned(that);
+                    }
+                }
+            }).fail(function (json) {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("The container" +
+                        that.container.id +
+                        " could not be pinned.");
+                }
+            });
         }
+
     };
 }
 
@@ -208,9 +245,27 @@ function Group(id, name, sensors) {
         //send to url in api/post/pinGroup/id
         //onGroupPinned is a function which expects a groupobject as argument
 
-        if ($.isFunction(onGroupPinned)) {
-            onGroupPinned(that);
+        if (that.id != null && that.name != null) {
+            $.ajax({
+                url: apiBaseUrl + "post/pinSensor?sensorId=" + that.group.id,
+                method: "POST"
+            }).done(function (json) {
+                if (json != null) {
+                    var dataUpdate = JSON.parse(json);
+                    that.id = dataUpdate.Id;
+                    if ($.isFunction(onGroupPinned)) {
+                        onGroupPinned(that);
+                    }
+                }
+            }).fail(function (json) {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("The group" +
+                        that.group.id +
+                        " could not be pinned.");
+                }
+            });
         }
+
     };
     this.addSensor = function(sensor, onGroupSaved) {
         //send to url in api/post/addToGroup/sensor
@@ -327,7 +382,7 @@ Container.loadFromJson = function (json) {
                     var container = new Container(data["id"], data["name"], data["macaddress"], data["creationtime"], data["lastupdatedtime"], data["containertype"],
                                     data["sensorId"], data["currentValue"], data["history"]);
 
-                    //Add to sensor
+                    //Add to containers
                     containers.push(container);
                 }
             }
