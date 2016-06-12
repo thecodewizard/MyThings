@@ -38,7 +38,6 @@ namespace DataStorageQueue
             _timeholderRepository.Update(holder);
             _timeholderRepository.SaveChanges();
 
-
             // Do the onCompletedWork
             Console.Write("Started Grouplogic");
             RunOnceInWebjobStart();
@@ -146,9 +145,12 @@ namespace DataStorageQueue
                         {
                             if (c.ContainerType.Name.Equals(container.ContainerType.Name))
                             {
-                                double cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
-                                payloadTotal += cPayload;
-                                numberOfContainers++;
+                                double? cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
+                                if (cPayload.HasValue)
+                                {
+                                    payloadTotal += cPayload.Value;
+                                    numberOfContainers++;
+                                }
                             }
                         }
                         double payload = (Math.Abs(numberOfContainers) <= 0) ? 0 : payloadTotal / numberOfContainers;
@@ -240,46 +242,20 @@ namespace DataStorageQueue
                 //Check for battery Level warnings
             if (container.ContainerType.Name == "Battery level")
             {
-                //Get all the battery values from last year
-                if (container.History == null)
-                {
-                    container = TableStorageRepository.GetHistory(container, TimeSpan.FromDays(365));
-                }               
-
-                //Calculate when the battery would be empty
-                    //Get the average downgrade per update
-                int count = container.History.Count;
-                double totalDelta = 0;
-                //totalDelta = container.History.Last().Value - container.History.First().Value;
-
-                double previousValue = container.History.Last().Value;
-                List<ContainerValue> invertedHistory = container.History;
-                invertedHistory.Reverse();
-                foreach (ContainerValue value in invertedHistory)
-                {
-                    double delta = previousValue - value.Value;
-                    if(delta > -10) totalDelta += delta;
-                    previousValue = value.Value;
-                }
-
-                //Temp. Results
-                double average = totalDelta/count;
-                TimeSpan lifeTime = DateTime.Now - container.History.Last().Timestamp;
-                long lifeTimeTicks = lifeTime.Ticks;
-                long ticksPerUpdate = lifeTimeTicks/count;
-
-                    //Get prediction
-                int updatesLeft = (int)Math.Floor((containerEntity.payload / average));
-                long ticksToLive = ticksPerUpdate*updatesLeft;
-                TimeSpan timeToLive = TimeSpan.FromTicks(ticksToLive);
-
-                //Give the error
                 if (containerEntity.payload < 5)
                 {
+                    //Get the time to live
+                    TimeSpan timeToLive = MachineLearningRepository.CalculateTimeToLive(container, containerEntity.payload);
+
+                    //Give the error
                     Error error = Error.BatteryCriticalError(sensor, container, timeToLive);
                     _errorRepository.Insert(error);
                 } else if (containerEntity.payload < 15)
-                {
+                {                    
+                    //Get the time to live
+                    TimeSpan timeToLive = MachineLearningRepository.CalculateTimeToLive(container, containerEntity.payload);
+
+                    //Give the error
                     Error error = Error.BatteryWarning(sensor, container, timeToLive);
                     _errorRepository.Insert(error);
                 }
