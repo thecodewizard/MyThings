@@ -42,7 +42,7 @@ namespace DataStorageQueue
             // Do the onCompletedWork
             Console.Write("Started Grouplogic");
             RunOnceInWebjobStart();
-            Console.Write(" -- Finished");
+            Console.WriteLine(" -- Finished");
 
             CloudQueue queue = null;
             try
@@ -85,7 +85,7 @@ namespace DataStorageQueue
             // Do the onCompletedWork
             Console.Write("Started General Checkup");
             RunOnceInWebjobEnd();
-            Console.Write(" -- Finished");
+            Console.WriteLine(" -- Finished");
 
             // Write the WebJob end time to the Timeholder database
             holder = (_timeholderRepository.All().FirstOrDefault()) ?? new Timeholder();

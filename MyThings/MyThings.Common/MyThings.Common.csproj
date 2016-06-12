@@ -168,6 +168,10 @@
     <Compile Include="Migrations\201606120953388_Added Virtual Sensor Fields.Designer.cs">
       <DependentUpon>201606120953388_Added Virtual Sensor Fields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606121029228_Removed SensorContainers Table.cs" />
+    <Compile Include="Migrations\201606121029228_Removed SensorContainers Table.Designer.cs">
+      <DependentUpon>201606121029228_Removed SensorContainers Table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FrontEndModels\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
@@ -232,6 +236,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606120953388_Added Virtual Sensor Fields.resx">
       <DependentUpon>201606120953388_Added Virtual Sensor Fields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606121029228_Removed SensorContainers Table.resx">
+      <DependentUpon>201606121029228_Removed SensorContainers Table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
