@@ -2,7 +2,8 @@
     //Always load this AFTER jquery and BEFORE other self made scripts
 
 //Serverlocations
-var apiBaseUrl = "http://localhost:22056/api/";
+//var apiBaseUrl = "http://localhost:22056/api/";
+var apiBaseUrl = "http://mythingsapi.azurewebsites.net/api/";
 var siteBaseUrl = "http://localhost:16964/Dashboard/";
 
 //OBJECTS

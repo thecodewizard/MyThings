@@ -21,36 +21,39 @@
 @section scripts{
 <script type="text/javascript">
 
-    gridsterJson = @Html.Raw(@Model.GridsterJson);
-    gridster = null;
-    highestId = 0;
-    x=0;
-    y=0;
+    var gridsterJson = @Html.Raw(@Model.GridsterJson);
+    var gridster = null;
+    var highestId = 0;
+    var x=0;
+    var y=0;
+
+
+    @if(string.IsNullOrEmpty(Model.OriginalGridsterJson))
+    {
+        @:var originalGridsterJson = [];
+    }else{
+        @:var originalGridsterJson = @Html.Raw(@Model.OriginalGridsterJson);
+    }
+
+    var pinnedSensors = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedSensors));
+    var pinnedContainers = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedContainers));
+    var pinnedGroups = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedGroups));
+    var pinnedErrors = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedErrors));
+    var errors = @Html.Raw(JsonConvert.SerializeObject(Model.Errors));
+
+    var errorCount = @ViewBag.ErrorCount.ToString();
+    var warningCount = @ViewBag.WarningCount.ToString();
+
+    var fixedTileCount = @ViewBag.FixedTileCount.ToString();
+    var customTileCount = @ViewBag.CustomTileCount.ToString();
+    var totalTileCount = @ViewBag.TotalTileCount.ToString();
 
     $(window).load(function () {
 
-        @if(Model.OriginalGridsterJson == null || Model.OriginalGridsterJson == "")
-        {
-            @:var originalGridsterJson = [];
-                }else{
-            @:var originalGridsterJson = @Html.Raw(@Model.OriginalGridsterJson);
-                }
-
-        var pinnedSensors = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedSensors));
-        var pinnedContainers = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedContainers));
-        var pinnedGroups = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedGroups));
-        var pinnedErrors = @Html.Raw(JsonConvert.SerializeObject(Model.PinnedErrors));
-        var errors = @Html.Raw(JsonConvert.SerializeObject(Model.Errors));
-
-        var errorCount = @ViewBag.ErrorCount.ToString();
-        var warningCount = @ViewBag.WarningCount.ToString();
-
-        var fixedTileCount = @ViewBag.FixedTileCount.ToString();
-        var customTileCount = @ViewBag.CustomTileCount.ToString();
-        var totalTileCount = @ViewBag.TotalTileCount.ToString();
-
         //in pin: savetype en save id, savetype zegt welke tabel, saveid zegt het id van het object daj nodig et
+        //Container, Sensor, Error, Group, FixedClock, FixedNavigation, FixedError
 
+        //init grid + behavior
         gridster = $(".gridster ul").gridster({
             widget_base_dimensions: [120, 120],
             max_rows: 5,
@@ -60,7 +63,7 @@
             max_size_y: 2,
             draggable:{
                 stop: function(event, ui){
-                    UpdateLayout();
+                    updateLayout(true);
                 }
             },
             resize:{
@@ -71,11 +74,21 @@
                 },
                 stop: function(event, ui, $widget){
                     gridster.serialize();
-                    if((x+y)>2) var units = 1; else var units = 2
+                    var units;
+                    if((x+y)>2){
+                        units = 1;
+                        $widget.removeClass("largeWidget");
+                        $widget.addClass("smallWidget");
+                    } else {
+                        units = 2;
+                        $widget.removeClass("smallWidget");
+                        $widget.addClass("largeWidget");
+                    }                  
                     gridster.resize_widget( $widget, units, units);
                     $widget.data('sizex', units);
                     $widget.data('sizey', units);
-                    UpdateLayout();
+
+                    updateLayout(true);
                 },
                 max_size: [2, 2],
                 min_size: [1, 1]
@@ -86,53 +99,161 @@
                 wait_for_mouseup: true
             }
         }).data('gridster');
-        //Container, Sensor, Error, Group, FixedClock, FixedNavigation, FixedError
+
+        //insert all current and new tiles and update the layout to the database
+        var newTileCount = 0;
         $.each(gridsterJson, function (index, value) {
-            if (value.Id == 0) {
-                gridster.add_widget('<li class="tile"></li>');
+            if (value.Id === 0) {
+                newTileCount ++;
+                gridster.add_widget('<li class="smallWidget tile"></li>');
             } else {
-                if (value.Size_X == 0) value.Size_X = 1;
-                if (value.Size_Y == 0) value.Size_Y = 1;
-                gridster.add_widget('<li class="tile"></li>', value.Size_X, value.Size_Y, value.Col, value.Row);
+                if (value.Size_X === 0) value.Size_X = 1;
+                if (value.Size_Y === 0) value.Size_Y = 1;
+                if(value.Size_X === 1) gridster.add_widget('<li class="smallWidget tile"></li>', value.Size_X, value.Size_Y, value.Col, value.Row);
+                else gridster.add_widget('<li class="largeWidget tile"></li>', value.Size_X, value.Size_Y, value.Col, value.Row);
             }
 
             if(highestId < gridsterJson[index].Id) highestId = gridsterJson[index].Id;
         });
+        if (newTileCount > 0) updateLayout(true);
+        else updateLayout(false);
 
-        UpdateLayout();
-
-        //inhoud fill
+        //fill tiles with right contents based on gridsterJson
         $.each(gridsterJson, function (index, value) {
-            console.log(value);
+            //console.log(value);
             var tile = $(".gridster ul").find("[data-row='" + value.row + "'][data-col='" + value.col + "']");
-            var innerHTML = "";
-            switch(value.Pin.SavedTypeString){
-                case "Sensor":
+            refreshTile(tile, value);
+        });
+    });
 
+    function refreshTile(tile, tileInfo){          
+        var url;
+        switch(tileInfo.Pin.SavedTypeString){
+            //Container, Sensor, Error, Group, FixedClock, FixedNavigation, FixedError            
+            case "Sensor":
+                url = "GetMostRecentValue";
+                return;
+                break;
+            case "Container":
+                url = "get/getmostrecentvalue?containerId=";                      
+                break;
+            case "Error":
+                url = "Error";
+                return;
+                break;
+            case "Group":
+                url = "Group";
+                return;
+                break;                     
+            case "FixedError":
+                url =  "ErrFixedError";
+                return;
+                break;
+            default: case "FixedClock": case "FixedNavigation":
+                return;
+        }
+
+        $.ajax({
+            url: apiBaseUrl + url + tileInfo.Pin.SavedId,
+            method: "GET"
+        }).done(function (json) {
+            if (json != null) {
+                var data = JSON.parse(json);
+                setTileValue(tile, tileInfo, data.CurrentValue.Value, data.CurrentValue.Timestamp);
+            }
+        }).fail(function (json) {
+            if ($.isFunction(MyThings.logToUser)) {
+                MyThings.logToUser("Item" + tileInfo.Pin.SavedTypeString + " " +
+                    tileInfo.Pin.Id +
+                    " could not be loaded.");
+                setTileValue(tile, tileInfo, null, null);
+            }
+        });
+    }
+
+    function setTileValue(tile, tileInfo, value, time) {
+        
+        var innerHtml = "";
+
+        if (!(value == null || time == null)) {
+            
+            switch(tileInfo.Pin.SavedTypeString){
+                //Container, Sensor, Error, Group, FixedClock, FixedNavigation, FixedError
+                case "Sensor":
+                    innerHtml += "Sensor";
                     break;
                 case "Container":
-                    var werkContainer = $.grep(pinnedContainers, function(e){ 
-                        console.log(e.Id);
-                        return e.Id == value.Pin.SavedId;
-                    })[0];
+                    var werkContainer = $.grep(pinnedContainers, function(e){  return e.Id === tileInfo.Pin.SavedId; })[0];
 
+                    innerHtml += 
+                    "<p title='"+ werkContainer.Name +"' class='itemName'>"+ werkContainer.Name +"</p>" +
+                    "<p class='itemType'>"+ werkContainer.ContainerType.Name +"</p>";
 
-                    innerHTML += 
-                    "<div class='textdiv'>"+ werkContainer.Name +"</div>" +
-                    "<div class='errorvalue ciphervalue'>5</div>" +
-                    "<img class='errorimg customimg' alt='erroricon' src='http://loradatagroep9.blob.core.windows.net/proximusimages/warning-icon.png' />"
+                    // var containerValue = ;
+                    if(werkContainer.ContainerType.Name !== "Temperature") 
+                        innerHtml += "TBT";
+
+                    switch(werkContainer.ContainerType.Name){
+                        case "Battery Level":
+
+                            break;
+                        case "Temperature":
+                            innerHtml += "<p class='itemValue'>"+ value +"<sup>°C</sup></p>" + 
+                                "<img class='pinimg customimg' alt='Temperature' src='http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png' />"
+                            break;
+                        case "Humidity":
+
+                            break;
+                        case "GPS":
+
+                            break;
+                        case "OnOff": case "Button1":
+
+                            break;
+                        case "Luminance":
+
+                            break;
+                        case "PIR":
+
+                            break;
+                        case "Accelerometer":
+
+                            break;
+                        default: case "Simple Metering Current": case "Simple Metering Demand": case "Raw payload":
+                            
+                            break;
+                    }
+                                                            
+                    break;
+                case "Error":
+                    innerHtml += "Error";
+                    break;
+                case "Group":
+                    innerHtml += "Group";
+                    break;
+                case "FixedClock":
+                    innerHtml += "FixedClock";
+                    break;
+                case "FixedNavigation":
+                    innerHtml += "FixedNavigation";
+                    break;
+                case "FixedError":
+                    innerHtml += "ErrFixedErroror";
                     break;
                 default:
+                    innerHtml += "Other";
                     break;
             }
+        }
+        innerHtml += '<span class="gs-resize-handle gs-resize-handle-both"></span>';
+        tile.html(innerHtml);
+    }
 
-            innerHTML += '<span class="gs-resize-handle gs-resize-handle-both"></span>';
-            tile.html(innerHTML);
-        });
+    function getTileValue(){
 
-    })
+    }
 
-    function UpdateLayout(){
+    function updateLayout(toDatabase){
         var newPos = gridster.serialize();
         $.each(newPos, function (index, value) {
             newPos[index].Pin = gridsterJson[index].Pin;
@@ -143,18 +264,22 @@
             newPos[index].Id = newPos[index].Pin.TileId;
         });
         gridsterJson = newPos;
-        $.ajax({
-            method: 'POST',
-            contentType: 'application/json; charset=utf-8',
-            url: siteBaseUrl + "UpdateGridString",
-            data: JSON.stringify({ gridsterJson: gridsterJson })
-        }).done(function(){
-            console.log("Layout saved.")
-        }).fail(function(json) {
-            if ($.isFunction(MyThings.logToUser)) {
-                MyThings.logToUser("Layout could not be saved.");
-            }
-        });
+
+        if(toDatabase)
+        {
+            $.ajax({
+                method: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: siteBaseUrl + "UpdateGridString",
+                data: JSON.stringify({ gridsterJson: gridsterJson })
+            }).done(function(){
+                console.log("Layout saved.")
+            }).fail(function(json) {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("Layout could not be saved.");
+                }
+            });
+        }
     }
 </script>
 }

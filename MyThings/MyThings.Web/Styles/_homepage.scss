@@ -1,10 +1,21 @@
 ﻿@import "_colors.scss";
 @import "_fonts.scss";
 
-.tile{
-    background-color: #5c2d91;
+.gridsterContainer > .gridster > ul > .tile{
+    background-color: $proximusmainpurple;
     list-style: none;
     color: white;
+    overflow: hidden;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.gridsterContainer > .gridster > ul > .tile:hover{
+    background-color: $proximusmainblue;
+}
+
+.tile *{
+    transition: 0.2s;
 }
 
 .homepageBody{
@@ -12,11 +23,6 @@
     overflow-y: hidden;
     height: 100vh;
      font-family: $proximusregularfont,$basicfonts;
-}
-
-body{
-    background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png");
-    background-size:cover;
 }
 
 .gridsterContainer {
@@ -31,11 +37,104 @@ body{
     margin: 20px 0 0 50px;
 }
 
-.textdiv 
+.itemName 
 {
-    font-size:$fontsizemedium;
     text-align:center;
-    vertical-align:bottom;
+}
+
+.itemName, .itemType{
+    overflow: hidden;
+    text-overflow:ellipsis;   
+}
+
+.itemValue, .itemName, .itemType{
+    margin: 2px;
+}
+.itemValue, .itemType{
+    position: absolute;
+    text-align: right;
+}
+
+
+.smallWidget .itemValue{
+    top: 40%;
+    right: 5%;  
+    font-size:$fontsizelarge;
+}
+
+.smallWidget .itemName{
+
+}
+
+.smallWidget .itemType{
+    right: 5%;
+    top: 15%;
+    font-size: 0.8em;
+}
+
+
+.largeWidget .itemValue{
+    top: 40%;
+    right: 5%;
+    font-size:5em;
+}
+
+.largeWidget .itemName{
+    font-size:$fontsizemedium;
+}
+
+.largeWidget .itemType{
+    right: 5%;
+    top: 15%;
+    font-size: 1.5em;
+}
+
+
+
+sup{
+    font-size: 0.5em;
+}
+
+.customimg, .itemType{
+    opacity: 0.4;
+}
+
+.customimg
+{
+    position:absolute;
+
+    &.errorimg 
+    {
+    max-height:75%;
+    max-width:75%;
+    float: right;
+    bottom: 40%;
+    right: -20%;
+    }
+
+    &.warningimg 
+    {
+    max-height:65%;
+    max-width:65%;
+    float: right;
+    bottom: 35%;
+    right: -20%;
+    }
+
+    &.logoutimg
+    {
+    max-height:95%;
+    max-width:95%;
+    bottom:-2%;
+    }
+    &.pinimg
+    {
+    max-height:80%;
+    max-width:80%;
+    bottom: 0;
+    left: -37%;
+    }
+
 }
 
 /*$largeblock: 200px;
