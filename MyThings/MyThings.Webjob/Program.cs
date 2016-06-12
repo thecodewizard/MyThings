@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
@@ -21,6 +22,7 @@ namespace DataStorageQueue
         private static readonly ContainerTypeRepository _containerTypeRepository = new ContainerTypeRepository();
         private static readonly SensorRepository _sensorRepository = new SensorRepository();
         private static readonly ContainerRepository _containerRepository = new ContainerRepository();
+        private static readonly GroupRepository _groupRepository = new GroupRepository();
         private static readonly ErrorRepository _errorRepository = new ErrorRepository();
         private static readonly GenericRepository<Timeholder> _timeholderRepository = new GenericRepository<Timeholder>();       
 
@@ -35,6 +37,12 @@ namespace DataStorageQueue
             holder.WebjobInstanceStarted = DateTime.Now;
             _timeholderRepository.Update(holder);
             _timeholderRepository.SaveChanges();
+
+
+            // Do the onCompletedWork
+            Console.Write("Started Grouplogic");
+            RunOnceInWebjobStart();
+            Console.Write(" -- Finished");
 
             CloudQueue queue = null;
             try
@@ -76,8 +84,8 @@ namespace DataStorageQueue
 
             // Do the onCompletedWork
             Console.Write("Started General Checkup");
-            RunOnceInWebjob();
-            Console.Write("Finished Unique Checkup");
+            RunOnceInWebjobEnd();
+            Console.Write(" -- Finished");
 
             // Write the WebJob end time to the Timeholder database
             holder = (_timeholderRepository.All().FirstOrDefault()) ?? new Timeholder();
@@ -98,6 +106,46 @@ namespace DataStorageQueue
             // Retrieve a reference to a container.
             CloudQueue queue = queueClient.GetQueueReference(queueName);
             return queue;
+        }
+
+        private static void RunOnceInWebjobStart()
+        {
+            //Get all the groups
+            List<Group> groups = _groupRepository.GetGroups();
+
+            //For each group, update the values
+            foreach (Group group in groups)
+            {
+                Sensor virtSensor = _sensorRepository.GetSensorById(group.VirtualSensorIdentifier);
+                if (virtSensor?.Containers == null)
+                {
+                    _groupRepository.DeleteGroup(group); //Remove invalid groups.
+                }
+
+                if (group.IsChanged)
+                {
+                    //The group has changed -> All the virtual sensors have to be recalculated
+                    TableStorageRepository.RemoveValuesFromTablestorage(virtSensor.MACAddress);
+
+                    // Get the oldest date in the group
+                    DateTime oldestDate = DateTime.Now;
+                    foreach (Sensor gSensor in group.Sensors)
+                        if (oldestDate > gSensor.CreationDate) oldestDate = gSensor.CreationDate;
+
+                    foreach (Container container in virtSensor.Containers)
+                    {
+                        // Insert the First value in tablestorage to keep the system crashing when someone queries the new virt sensor
+                        double payload = MachineLearningRepository.ParseAverageInTime(container, oldestDate, TimeSpan.FromHours(1));
+                        String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
+
+                        ContainerEntity entity = new ContainerEntity(virtSensor.Company, container.MACAddress, container.ContainerType.Name, virtSensor.Location, payloadValue, oldestDate.Ticks.ToString(), null);
+                        TableStorageRepository.WriteToVirtualSensorTable(entity, false);
+                    }
+                }
+
+                //Check for new virtual sensor entries
+                _groupRepository.UpdateVirtualSensor(group);
+            }
         }
 
         private static void RunPerSensor(String json)
@@ -223,7 +271,7 @@ namespace DataStorageQueue
             _errorRepository.SaveChanges();
         }
 
-        private static void RunOnceInWebjob()
+        private static void RunOnceInWebjobEnd()
         {
             //Error-Warning Module
                 //Predict Network Connectivity Errors per Sensor (-> Triggered when update is slower than 5 times the average updateSpan.)
@@ -272,9 +320,6 @@ namespace DataStorageQueue
                 }
             }
             _errorRepository.SaveChanges();
-
-            //Virtuele Sensors Berekenen
-                //TODO: Calculate virtual sensors.
         }
 
         #region CacheLogic
@@ -295,14 +340,15 @@ namespace DataStorageQueue
 
         private static Sensor GetSensor(String MacAddress)
         {
-            Sensor cacheSensor = (from s in SensorCache where s.MACAddress.Equals(MacAddress) select s).FirstOrDefault();
-            if (cacheSensor == null)
-            {
-                Sensor dbSensor = _sensorRepository.GetSensorByMacAddress(MacAddress);
-                if(dbSensor != null) SensorCache.Add(dbSensor);
-                return dbSensor;
-            }
-            return cacheSensor;
+            return _sensorRepository.GetSensorByMacAddress(MacAddress);
+            //Sensor cacheSensor = (from s in SensorCache where s.MACAddress.Equals(MacAddress) select s).FirstOrDefault();
+            //if (cacheSensor == null)
+            //{
+            //    Sensor dbSensor = _sensorRepository.GetSensorByMacAddress(MacAddress);
+            //    if(dbSensor != null) SensorCache.Add(dbSensor);
+            //    return dbSensor;
+            //}
+            //return cacheSensor;
         }
 
         #endregion
