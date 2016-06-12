@@ -40,6 +40,7 @@ namespace MyThings.Common.Repositories
             }
 
             //Give the average
+            if (count == 0) return 0;
             return totalValue/count;
         }
         #endregion

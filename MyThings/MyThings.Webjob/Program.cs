@@ -129,15 +129,31 @@ namespace DataStorageQueue
 
                     // Get the oldest date in the group
                     DateTime oldestDate = DateTime.Now;
+                    List<Container> containers = new List<Container>();
                     foreach (Sensor gSensor in group.Sensors)
-                        if (oldestDate > gSensor.CreationDate) oldestDate = gSensor.CreationDate;
+                    {
+                        Sensor gS = _sensorRepository.GetSensorById(gSensor.Id);
+                        if (oldestDate > gS.CreationDate) oldestDate = gS.CreationDate;
+                        foreach(Container gC in gS.Containers) containers.Add(gC);
+                    }
 
                     foreach (Container container in virtSensor.Containers)
                     {
                         // Insert the First value in tablestorage to keep the system crashing when someone queries the new virt sensor
-                        double payload = MachineLearningRepository.ParseAverageInTime(container, oldestDate, TimeSpan.FromHours(1));
-                        String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
+                        double payloadTotal = 0;
+                        double numberOfContainers = 0;
+                        foreach (Container c in containers)
+                        {
+                            if (c.ContainerType.Name.Equals(container.ContainerType.Name))
+                            {
+                                double cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
+                                payloadTotal += cPayload;
+                                numberOfContainers++;
+                            }
+                        }
+                        double payload = (Math.Abs(numberOfContainers) <= 0) ? 0 : payloadTotal / numberOfContainers;
 
+                        String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
                         ContainerEntity entity = new ContainerEntity(virtSensor.Company, container.MACAddress, container.ContainerType.Name, virtSensor.Location, payloadValue, oldestDate.Ticks.ToString(), null);
                         TableStorageRepository.WriteToVirtualSensorTable(entity, false);
                     }

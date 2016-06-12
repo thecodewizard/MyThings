@@ -197,6 +197,8 @@ namespace MyThings.Common.Repositories
                 sensor.Name = "Virtual Sensor Group " + group.Id;
                 sensor.IsVirtual = true;
                 sensor.Containers = new List<Container>();
+                _sensorRepository.Insert(sensor);
+                _sensorRepository.SaveChanges();
 
                 // Make the new containers
                 List<Container> VirtualContainers = new List<Container>(); 
@@ -212,9 +214,20 @@ namespace MyThings.Common.Repositories
                     _containerRepository.Insert(container);
 
                     // Insert the First value in tablestorage to keep the system crashing when someone queries the new virt sensor
-                    double payload = MachineLearningRepository.ParseAverageInTime(container, oldestDate, TimeSpan.FromHours(1));
-                    String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
+                    double payloadTotal = 0;
+                    double numberOfContainers = 0;
+                    foreach (Container c in containers)
+                    {
+                        if (c.ContainerType.Name.Equals(uniqueType.Name))
+                        {
+                            double cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
+                            payloadTotal += cPayload;
+                            numberOfContainers++;
+                        }
+                    }
+                    double payload = (Math.Abs(numberOfContainers) <= 0) ? 0 : payloadTotal/numberOfContainers;
 
+                    String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
                     ContainerEntity entity = new ContainerEntity(sensor.Company, container.MACAddress, container.ContainerType.Name, sensor.Location, payloadValue, oldestDate.Ticks.ToString(), null);
                     TableStorageRepository.WriteToVirtualSensorTable(entity, false);
                 }
@@ -222,9 +235,7 @@ namespace MyThings.Common.Repositories
 
                 // Update the sensor
                 sensor.Containers = VirtualContainers;
-
-                // Save the virtual sensors & containers
-                _sensorRepository.Insert(sensor);
+                _sensorRepository.Update(sensor);
                 _sensorRepository.SaveChanges();
 
                 // Update the group
@@ -245,6 +256,13 @@ namespace MyThings.Common.Repositories
                 //Get the virtual sensor
                 Sensor VirtSensor = _sensorRepository.GetSensorById(group.VirtualSensorIdentifier);
 
+                List<Container> containers = new List<Container>();
+                foreach (Sensor gSensor in group.Sensors)
+                {
+                    Sensor gS = _sensorRepository.GetSensorById(gSensor.Id);
+                    foreach (Container gC in gS.Containers) containers.Add(gC);
+                }
+
                 //Calculate the virtual values
                 if (VirtSensor?.Containers == null) return;
                 foreach (Container container in VirtSensor.Containers)
@@ -262,10 +280,21 @@ namespace MyThings.Common.Repositories
                     while (nextEntityDate < DateTime.Now)
                     {
                         //Render the payload for the nextEntity
-                        double payload = MachineLearningRepository.ParseAverageInTime(container, nextEntityDate, interval);
-                        String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
+                        double payloadTotal = 0;
+                        double numberOfContainers = 0;
+                        foreach (Container c in containers)
+                        {
+                            if (c.ContainerType.Name.Equals(container.ContainerType.Name))
+                            {
+                                double cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
+                                payloadTotal += cPayload;
+                                numberOfContainers++;
+                            }
+                        }
+                        double payload = (Math.Abs(numberOfContainers) <= 0) ? 0 : payloadTotal / numberOfContainers;
 
                         //Write to tablestorage
+                        String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
                         ContainerEntity newEntity = new ContainerEntity(VirtSensor.Company, container.MACAddress, container.ContainerType.Name, VirtSensor.Location, payloadValue, nextEntityDate.Ticks.ToString(), null);
                         TableStorageRepository.WriteToVirtualSensorTable(newEntity, false);
 

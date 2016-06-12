@@ -211,9 +211,9 @@ namespace MyThings.Common.Repositories
             // Create the CloudTable object.
             CloudTable table = tableClient.GetTableReference("virtualsensorvalues");
             // Create the table query.
-            TableQuery<ContainerEntity> rangeQuery =
-                new TableQuery<ContainerEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey",
-                    QueryComparisons.Equal, macAddress));
+            var rangeQuery = (from entry in table.CreateQuery<ContainerEntity>()
+                              where entry.macaddress == macAddress
+                              select entry);
 
             // Delete the entities
             List<TableOperation> operations = new List<TableOperation>();
@@ -223,7 +223,7 @@ namespace MyThings.Common.Repositories
             }
             foreach (TableOperation operation in operations)
             {
-                table.ExecuteAsync(operation);
+                table.Execute(operation);
             }
         }
 

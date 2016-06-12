@@ -594,6 +594,10 @@ namespace MyThings.Web.Controllers
                     //Fetch the user
                     ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
+                    List<Group> groups = _groupRepository.GetGroupsForUser(user.Id);
+                    foreach(Group g in groups) _groupRepository.Delete(g);
+                    _groupRepository.SaveChanges();
+
                     //Resolve the sensors
                     List<Sensor> sensors = new List<Sensor>();
                     foreach (int sensorId in groupCreator.sensors)
@@ -610,6 +614,9 @@ namespace MyThings.Web.Controllers
                     group.Sensors = sensors;
                     _groupRepository.Insert(group);
                     _groupRepository.SaveChanges();
+
+                    //Setup a virtual sensor
+                    _groupRepository.CreateVirtualSensor(group);
 
                     //Autopin if requested
                     if (groupCreator.autoPinGroup)
