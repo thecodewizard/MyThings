@@ -28,6 +28,7 @@ h2{
 }
 .groupdiv{
     display:flex;
+    flex-wrap:wrap;
     padding:0 0 5% 2%;
 }
 .grouprectangletile{
@@ -49,7 +50,7 @@ h2{
 }
 .textdivgroup{
     
-    display:inline-block;
+    display:block;
     margin:1%;
     font-family:$proximusregularfont;
     font-size:$fontsizemedium;
@@ -154,10 +155,12 @@ h2{
 }
 
 .sensorrows{
+
     height:40px;
     font-family:$proximusregularfont;
     background-color:$proximusterlightblue;
     margin-bottom:10px;
+    opacity:0.8;
     & a{
     display:block;
     color:$proximusblack;

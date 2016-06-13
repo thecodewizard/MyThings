@@ -305,6 +305,7 @@
     <Content Include="Views\Dashboard\Sensormanagement.cshtml" />
     <Content Include="Styles\_sensormanagement.scss" />
     <Content Include="Views\Test\PinEverything.cshtml" />
+    <Content Include="Styles\_jqueryui.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
