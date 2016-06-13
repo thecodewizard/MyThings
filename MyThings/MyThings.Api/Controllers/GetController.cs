@@ -121,6 +121,39 @@ namespace MyThings.Api.Controllers
         }
         #endregion
 
+        #region SearchQuery Methods
+
+        [HttpGet]
+        public HttpResponseMessage GetSensorsOnQuery(String query)
+        {
+            List<Sensor> sensors = _sensorRepository.GetSensors();
+            String json = String.Empty;
+
+            if (String.IsNullOrWhiteSpace(query))
+            {
+                json = JsonConvert.SerializeObject(sensors);
+            }
+            else
+            {
+                List<Sensor> filteredSensors =
+                    (from s in sensors
+                        where
+                            s.Name.Contains(query) || s.Location.Contains(query) ||
+                            (from c in s.Containers
+                                where !c.Name.Contains(query) && c.ContainerType.Name.Contains(query)
+                                select c.SensorId).Contains(s.Id)
+                        select s).ToList();
+                json = JsonConvert.SerializeObject(filteredSensors);
+            }
+
+            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+            message.Content = new StringContent(json);
+            message.Headers.Add("Access-Control-Allow-Origin", "*");
+            return message;
+        }
+
+        #endregion
+
         #region GetMultiObject Methods
 
         [HttpGet]
