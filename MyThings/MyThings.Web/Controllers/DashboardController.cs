@@ -13,6 +13,7 @@ using MyThings.Common.Models.FrontEndModels;
 using MyThings.Common.Models.NoSQL_Entities;
 using MyThings.Common.Repositories;
 using MyThings.Web.ViewModels;
+using Newtonsoft.Json;
 
 namespace MyThings.Web.Controllers
 {
@@ -152,6 +153,7 @@ namespace MyThings.Web.Controllers
             });
         }
 
+        
         private List<Tile> CheckDefaultTilesForUser(ApplicationUser user, List<Tile> tiles)
         {
             //Check if the user's pin already include the static pins. If not, add them
@@ -188,9 +190,11 @@ namespace MyThings.Web.Controllers
             return tiles;
         }
 
-        public ActionResult Sensormanagement()
+        [HttpGet]
+        [Route("manage")]
+        public ActionResult Sensormanagement(String query = "", int? selectedSensor = null)
         {
-            //This will result in the user specific custom homepage
+            //Get the current user
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
             //Get the first 50 sensors for the user
@@ -225,6 +229,10 @@ namespace MyThings.Web.Controllers
                 }    
             }
 
+            //Fill the viewbag
+            ViewBag.SelectedSensor = selectedSensor;
+            ViewBag.Query = query;
+                 
             return View(new SensorManagementViewModel()
             {
                 Sensors = sensors,
@@ -233,6 +241,102 @@ namespace MyThings.Web.Controllers
                 Groups = groups,
                 TotalSensors = sensors.Count,
                 AutoCompleteSuggestionList = suggestionList
+            });
+        }
+
+        [HttpGet]
+        [Route("sensor/{0}")]
+        public ActionResult SensorDetail(int? id)
+        {
+            if (id.HasValue)
+            {
+                //Get the current user
+                ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+                //Get the sensor
+                int sensorId = id.Value;
+                Sensor sensor = _sensorRepository.GetSensorById(sensorId);
+                if (!sensor.Company.Equals(user.Company)) return RedirectToAction("Index");
+
+                //Get the warnings and errors for the sensor
+                List<Error> errorsForSensor = _errorRepository.GetErrorsForUser(user.Id);
+
+                //Fill the viewbag
+                ViewBag.ContainerCount = sensor.Containers.Count;
+                ViewBag.ErrorList =
+                    (from e in errorsForSensor
+                        where e.SensorId.Equals(sensor.Id) && e.Type.Equals(ErrorType.Error)
+                        select e).ToList();
+                ViewBag.WarningList =
+                    (from e in errorsForSensor
+                     where e.SensorId.Equals(sensor.Id) && e.Type.Equals(ErrorType.Warning)
+                     select e).ToList();
+
+                return View(sensor);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("container/{0}")]
+        public ActionResult ContainerDetail(int? id)
+        {
+            if (id.HasValue)
+            {
+                //Get the current user
+                ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+                //Get the container
+                int containerId = id.Value;
+                Container container = _containerRepository.GetContainerById(containerId);
+
+                //Get the parent sensor
+                Sensor sensor = (container.SensorId.HasValue)
+                    ? _sensorRepository.GetSensorById(container.SensorId.Value)
+                    : null;
+                if (sensor != null && !user.Company.Equals(sensor.Company)) return RedirectToAction("Index");
+
+                //Fill the Viewbag
+                ViewBag.ParentSensor = sensor;
+                return View(container);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("Error")]
+        public ActionResult ErrorList(int? selectedError = null, bool onlyErrors = false, String query = "",
+            ErrorCategory category = ErrorCategory.All)
+        {
+            //Get the current user
+            ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+            //Get the errors for the user
+            List<Error> allErrors = _errorRepository.GetErrorsForUser(user.Id);
+
+            //Fill the category list for the combobox
+            List<ErrorCategory> errorCategories = new List<ErrorCategory>();
+            List<String> errorCategoryStrings = new List<string>();
+
+            //Fill the auto completion list for the textbox
+            List<String> suggestionList = new List<string>();
+
+            //Fill the viewbag
+            ViewBag.Query = query;
+            ViewBag.SelectedError = selectedError;
+            ViewBag.SelectedCategory = category;
+            ViewBag.ErrorCount = (from e in allErrors where e.Type.Equals(ErrorType.Error) select e).Count();
+            ViewBag.WarningCount = (from e in allErrors where e.Type.Equals(ErrorType.Warning) select e).Count();
+
+            return View(new ErrorListViewModel()
+            {
+                AllErrorsWarnings = allErrors,
+                Errors = (from e in allErrors where e.Type.Equals(ErrorType.Error) select e).ToList(),
+                Warnings = (from e in allErrors where e.Type.Equals(ErrorType.Warning) select e).ToList(),
+                AutoCompleteSuggestionList = suggestionList,
+                ErrorsOnly = onlyErrors,
+                ErrorCategories = errorCategories,
+                ErrorCategoryStrings = errorCategoryStrings
             });
         }
         #endregion
@@ -700,6 +804,51 @@ namespace MyThings.Web.Controllers
                         return new HttpResponseMessage(HttpStatusCode.NotFound);
                     }
                     return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
+        #endregion
+
+        #region Sensor Management Methods
+
+        [HttpPost]
+        public HttpResponseMessage UpdateSensorName(int? sensorId, String name)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (sensorId.HasValue)
+                {
+                    int Id = sensorId.Value;
+
+                    if (!String.IsNullOrWhiteSpace(name))
+                    {
+                        //Fetch the user
+                        ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+                        Sensor sensor = _sensorRepository.GetSensorById(Id);
+                        if (sensor != null)
+                        {
+                            sensor.Name = name;
+                            _sensorRepository.Update(sensor);
+                            _sensorRepository.SaveChanges();
+
+                            //Return the sensor when successful
+                            HttpResponseMessage success = new HttpResponseMessage();
+                            success.StatusCode = HttpStatusCode.OK;
+                            success.Content = new StringContent(JsonConvert.SerializeObject(sensor));
+                            return success;
+                        }
+                        return new HttpResponseMessage(HttpStatusCode.Conflict);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
                 }
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
