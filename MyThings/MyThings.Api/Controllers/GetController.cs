@@ -127,7 +127,9 @@ namespace MyThings.Api.Controllers
         public HttpResponseMessage GetSensorsOnQuery(String query)
         {
             List<Sensor> sensors = _sensorRepository.GetSensors();
+            List<Group> groups = _groupRepository.GetGroups();
             String json = String.Empty;
+            query = query.ToLower();
 
             if (String.IsNullOrWhiteSpace(query))
             {
@@ -138,11 +140,26 @@ namespace MyThings.Api.Controllers
                 List<Sensor> filteredSensors =
                     (from s in sensors
                         where
-                            s.Name.Contains(query) || s.Location.Contains(query) ||
+                            s.Name.ToLower().Contains(query) || s.Location.ToLower().Contains(query) || s.MACAddress.ToLower().Contains(query) ||
                             (from c in s.Containers
-                                where !c.Name.Contains(query) && c.ContainerType.Name.Contains(query)
+                                where !c.Name.ToLower().Contains(query) && c.ContainerType.Name.ToLower().Contains(query)
                                 select c.SensorId).Contains(s.Id)
                         select s).ToList();
+
+                foreach (Group group in groups)
+                {
+                    if (group.Name.ToLower().Contains(query))
+                    {
+                        foreach (Sensor sensor in group.Sensors)
+                        {
+                            if (!(from s in filteredSensors select s.Id).ToList<int>().Contains(sensor.Id))
+                            {
+                                filteredSensors.Add(sensor);
+                            }
+                        }
+                    }
+                }
+
                 json = JsonConvert.SerializeObject(filteredSensors);
             }
 
