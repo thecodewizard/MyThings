@@ -132,14 +132,6 @@ namespace MyThings.Common.Repositories
                 RemoveVirtualSensor(group);
             }
 
-            //Unbind everything in the group
-            group.Sensors = new List<Sensor>();
-            group.VirtualSensor = null;
-            group.VirtualSensorIdentifier = 0;
-            group.User_Id = "";
-            Update(group);
-            SaveChanges();
-
             //Delete the group
             Delete(group);
             SaveChanges();
@@ -314,38 +306,9 @@ namespace MyThings.Common.Repositories
             group = GetVirtualSensor(group, _sensorRepository);
             if (group.VirtualSensor != null)
             {
-<<<<<<< HEAD
                 //Remove the sensor
                 _sensorRepository.DeleteSensor(group.VirtualSensor);
 
-=======
-                Sensor VirtSensor = _sensorRepository.GetSensorById(group.VirtualSensorIdentifier);
-                if (VirtSensor?.Containers == null) return;
-                List<Container> containers = VirtSensor.Containers;
-
-                //Detach the container from the sensor
-                VirtSensor.Containers = null;
-                _sensorRepository.Update(VirtSensor);
-                _sensorRepository.SaveChanges();
-
-                //Remove all the containers
-                foreach (Container container in containers)
-                {
-                    _containerRepository.Delete(container);
-                }
-                _containerRepository.SaveChanges();
-
-                //Remove the sensor from the group
-                group.VirtualSensor = null;
-                group.VirtualSensorIdentifier = 0;
-                Update(group);
-                SaveChanges();
-
-                //Remove the sensor
-                VirtSensor = _sensorRepository.GetSensorById(VirtSensor.Id);
-                _sensorRepository.DeleteSensor(VirtSensor);
-                
->>>>>>> refs/remotes/origin/master
                 //Remove all the NoSQL Values
                 TableStorageRepository.RemoveValuesFromTablestorage(group.VirtualSensor.MACAddress);
             }

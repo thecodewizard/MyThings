@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 namespace MyThings.Web.Controllers
 {
+    //TODO: Delete this code
     public class TestController : Controller
     {
         //Define the usermanager
@@ -43,7 +44,6 @@ namespace MyThings.Web.Controllers
             return View();
         }
 
-<<<<<<< HEAD
         [HttpGet]
         public string s()
         {
@@ -54,9 +54,6 @@ namespace MyThings.Web.Controllers
             return JsonConvert.SerializeObject(creator);
         }
 
-=======
-        //TODO: Delete this code
->>>>>>> refs/remotes/origin/master
         public ActionResult PinEverything()
         {
             if (User.Identity.IsAuthenticated)

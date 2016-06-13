@@ -584,9 +584,6 @@ namespace MyThings.Web.Controllers
                     //Fetch the user
                     ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
-                    //List<Group> groups = _groupRepository.GetGroupsForUser(user.Id);
-                    //foreach (Group g in groups) _groupRepository.DeleteGroup(g);
-
                     //Resolve the sensors
                     List<Sensor> sensors = new List<Sensor>();
                     foreach (int sensorId in groupCreator.sensors)
@@ -618,7 +615,7 @@ namespace MyThings.Web.Controllers
                         _pinRepository.SaveChanges();
                     }
 
-                    //Throw a 'Not Allowed' Error
+                    //Return the ID on success
                     HttpResponseMessage successMessage = new HttpResponseMessage();
                     successMessage.StatusCode = HttpStatusCode.OK;
                     successMessage.Content = new StringContent(group.Id.ToString());
