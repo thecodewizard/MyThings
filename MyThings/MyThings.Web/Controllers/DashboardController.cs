@@ -584,9 +584,8 @@ namespace MyThings.Web.Controllers
                     //Fetch the user
                     ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
-                    List<Group> groups = _groupRepository.GetGroupsForUser(user.Id);
-                    foreach(Group g in groups) _groupRepository.Delete(g);
-                    _groupRepository.SaveChanges();
+                    //List<Group> groups = _groupRepository.GetGroupsForUser(user.Id);
+                    //foreach (Group g in groups) _groupRepository.DeleteGroup(g);
 
                     //Resolve the sensors
                     List<Sensor> sensors = new List<Sensor>();
@@ -694,6 +693,12 @@ namespace MyThings.Web.Controllers
                             group.Sensors.Remove(sensor);
                             _groupRepository.Update(group);
                             _groupRepository.SaveChanges();
+
+                            //Remove empty groups
+                            if (group.Sensors.Count == 0)
+                            {
+                                _groupRepository.DeleteGroup(group);
+                            }
 
                             return new HttpResponseMessage(HttpStatusCode.OK);
                         }

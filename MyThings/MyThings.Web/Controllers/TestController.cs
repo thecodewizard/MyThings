@@ -43,6 +43,7 @@ namespace MyThings.Web.Controllers
             return View();
         }
 
+<<<<<<< HEAD
         [HttpGet]
         public string s()
         {
@@ -53,6 +54,9 @@ namespace MyThings.Web.Controllers
             return JsonConvert.SerializeObject(creator);
         }
 
+=======
+        //TODO: Delete this code
+>>>>>>> refs/remotes/origin/master
         public ActionResult PinEverything()
         {
             if (User.Identity.IsAuthenticated)
@@ -64,7 +68,6 @@ namespace MyThings.Web.Controllers
                 foreach(Pin pin in pins) _pinRepository.Delete(pin);
                 _pinRepository.SaveChanges();
 
-                //TODO: Delete this code
                 List<Sensor> allSensors = _sensorRepository.GetSensors();
                 List<Container> allContainers = _containerRepository.GetContainers();
                 foreach (Sensor sensor in allSensors)

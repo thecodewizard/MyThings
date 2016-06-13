@@ -126,6 +126,21 @@ namespace MyThings.Common.Repositories
 
         public void DeleteGroup(Group group)
         {
+            //Remove the virtual sensor
+            if (GetVirtualSensor(group, new SensorRepository()) != null)
+            {
+                RemoveVirtualSensor(group);
+            }
+
+            //Unbind everything in the group
+            group.Sensors = new List<Sensor>();
+            group.VirtualSensor = null;
+            group.VirtualSensorIdentifier = 0;
+            group.User_Id = "";
+            Update(group);
+            SaveChanges();
+
+            //Delete the group
             Delete(group);
             SaveChanges();
         }
@@ -186,7 +201,7 @@ namespace MyThings.Common.Repositories
                 {
                     //Create the container
                     Container container = new Container();
-                    container.Name = uniqueType.Name + "-" + sensor.MACAddress;
+                    container.Name = "VContainer " +  group.Id + "-" + uniqueType.Name;
                     container.ContainerType = uniqueType;
                     container.CreationTime = DateTime.Now;
                     container.MACAddress = sensor.MACAddress;
@@ -200,9 +215,12 @@ namespace MyThings.Common.Repositories
                     {
                         if (c.ContainerType.Name.Equals(uniqueType.Name))
                         {
-                            double cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
-                            payloadTotal += cPayload;
-                            numberOfContainers++;
+                            double? cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
+                            if (cPayload.HasValue)
+                            {
+                                payloadTotal += cPayload.Value;
+                                numberOfContainers++;
+                            }
                         }
                     }
                     double payload = (Math.Abs(numberOfContainers) <= 0) ? 0 : payloadTotal/numberOfContainers;
@@ -266,9 +284,12 @@ namespace MyThings.Common.Repositories
                         {
                             if (c.ContainerType.Name.Equals(container.ContainerType.Name))
                             {
-                                double cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
-                                payloadTotal += cPayload;
-                                numberOfContainers++;
+                                double? cPayload = MachineLearningRepository.ParseAverageInTime(c, nextEntityDate, TimeSpan.FromHours(1));
+                                if (cPayload.HasValue)
+                                {
+                                    payloadTotal += cPayload.Value;
+                                    numberOfContainers++;
+                                }
                             }
                         }
                         double payload = (Math.Abs(numberOfContainers) <= 0) ? 0 : payloadTotal / numberOfContainers;
@@ -293,9 +314,38 @@ namespace MyThings.Common.Repositories
             group = GetVirtualSensor(group, _sensorRepository);
             if (group.VirtualSensor != null)
             {
+<<<<<<< HEAD
                 //Remove the sensor
                 _sensorRepository.DeleteSensor(group.VirtualSensor);
 
+=======
+                Sensor VirtSensor = _sensorRepository.GetSensorById(group.VirtualSensorIdentifier);
+                if (VirtSensor?.Containers == null) return;
+                List<Container> containers = VirtSensor.Containers;
+
+                //Detach the container from the sensor
+                VirtSensor.Containers = null;
+                _sensorRepository.Update(VirtSensor);
+                _sensorRepository.SaveChanges();
+
+                //Remove all the containers
+                foreach (Container container in containers)
+                {
+                    _containerRepository.Delete(container);
+                }
+                _containerRepository.SaveChanges();
+
+                //Remove the sensor from the group
+                group.VirtualSensor = null;
+                group.VirtualSensorIdentifier = 0;
+                Update(group);
+                SaveChanges();
+
+                //Remove the sensor
+                VirtSensor = _sensorRepository.GetSensorById(VirtSensor.Id);
+                _sensorRepository.DeleteSensor(VirtSensor);
+                
+>>>>>>> refs/remotes/origin/master
                 //Remove all the NoSQL Values
                 TableStorageRepository.RemoveValuesFromTablestorage(group.VirtualSensor.MACAddress);
             }

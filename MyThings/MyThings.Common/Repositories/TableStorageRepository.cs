@@ -239,7 +239,7 @@ namespace MyThings.Common.Repositories
                 this.macaddress = macaddress;
                 this.container = container;
                 this.locationid = locationid;
-                //this.payload = double.Parse(payload, CultureInfo.InvariantCulture);
+                this.payload = double.Parse(payload, CultureInfo.InvariantCulture);
                 this.receivedtimestamp = timestamp;
                 this.Timestamp = DateTime.Now;
 

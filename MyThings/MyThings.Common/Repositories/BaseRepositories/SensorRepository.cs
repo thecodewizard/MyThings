@@ -79,13 +79,14 @@ namespace MyThings.Common.Repositories
                 return
                     (from s in Context.Sensors
                         .Include(s => s.Containers.Select(c => c.ContainerType))
-                     where s.IsVirtual == includeVirtual
+                     where s.IsVirtual == includeVirtual || s.IsVirtual == false
                      orderby s.CreationDate descending
                      select s)
                         .Take(count.Value)
                         .ToList();
-            
-            return All().ToList();
+
+            return
+                (from s in Context.Sensors where s.IsVirtual == includeVirtual || s.IsVirtual == false select s).ToList();
         }
 
         public Sensor GetSensorById(int sensorId)
