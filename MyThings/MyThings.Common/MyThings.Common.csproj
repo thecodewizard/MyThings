@@ -191,11 +191,13 @@
     <Compile Include="Models\NoSQL Entities\NetwerkEntity.cs" />
     <Compile Include="Models\NoSQL Entities\QueueMessageHolder.cs" />
     <Compile Include="Models\Sensor.cs" />
+    <Compile Include="Models\Threshold.cs" />
     <Compile Include="Models\Timeholder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BaseRepositories\ContainerRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\ContainerTypeRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\ErrorRepository.cs" />
+    <Compile Include="Repositories\BaseRepositories\ThresholdRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\GroupRepository.cs" />
     <Compile Include="Repositories\Interfaces\IGenericRepository.cs" />

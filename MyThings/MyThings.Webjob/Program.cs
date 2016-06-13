@@ -23,6 +23,7 @@ namespace DataStorageQueue
         private static readonly SensorRepository _sensorRepository = new SensorRepository();
         private static readonly ContainerRepository _containerRepository = new ContainerRepository();
         private static readonly GroupRepository _groupRepository = new GroupRepository();
+        private static readonly ThresholdRepository _thresholdRepository = new ThresholdRepository();
         private static readonly ErrorRepository _errorRepository = new ErrorRepository();
         private static readonly GenericRepository<Timeholder> _timeholderRepository = new GenericRepository<Timeholder>();       
 
@@ -231,11 +232,17 @@ namespace DataStorageQueue
             }
 
             //Error-Warning Module
+                //Check for Theshold Mismatch
+            switch (_thresholdRepository.VerifyThresholds(container))
+            {
+                case ThresholdRepository.ThresholdVerifications.BetweenValueMismatch:
 
-            //TODO: Implement Threshold
-                //Check voor de huidige container of de waarde overschreden is.
-                    //-> Ja: Resulteerd in MinThresholdWarning of MaxThresholdWarning
-                    //-> Indien containertype battery:
+                    break;
+                case ThresholdRepository.ThresholdVerifications.ExactValueMismatch:
+                    break;
+                case ThresholdRepository.ThresholdVerifications.FrequencyMismatch:
+                    break;
+            }
 
                 //Check for battery Level warnings
             if (container.ContainerType.Name == "Battery level")
