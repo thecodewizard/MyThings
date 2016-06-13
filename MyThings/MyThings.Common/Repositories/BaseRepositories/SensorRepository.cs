@@ -65,18 +65,11 @@ namespace MyThings.Common.Repositories
 
         public override void Delete(Sensor sensor)
         {
-            foreach (Container container in sensor.Containers)
-            {
-                if (Context.Entry<Container>(container).State != EntityState.Unchanged)
-                    Context.Entry<Container>(container).State = EntityState.Unchanged;
-                if (container.ContainerType != null && Context.Entry(container.ContainerType).State != EntityState.Unchanged)
-                    Context.Entry(container.ContainerType).State = EntityState.Unchanged;
-            }
+            ErrorRepository er = new ErrorRepository();
+            List<Error> ErrorsForSensor = (from e in er.GetErrors() where e.SensorId.Equals(sensor.Id) select e).ToList();
+            if(ErrorsForSensor.Any()) er.Context.Error.RemoveRange(ErrorsForSensor);
 
-            if (Context.Entry(sensor).State == EntityState.Detached)
-            {
-                DbSet.Attach(sensor);
-            }
+            Context.Container.RemoveRange(sensor.Containers);
             DbSet.Remove(sensor);
         }
 
@@ -97,7 +90,10 @@ namespace MyThings.Common.Repositories
                         .ToList();
 
             return
-                (from s in Context.Sensors where s.IsVirtual == includeVirtual || s.IsVirtual == false select s).ToList();
+                (from s in Context.Sensors.Include(s => s.Containers.Select(c => c.ContainerType))
+                    where s.IsVirtual == includeVirtual || s.IsVirtual == false
+                    orderby s.CreationDate descending
+                    select s).ToList();
         }
 
         public Sensor GetSensorById(int sensorId)

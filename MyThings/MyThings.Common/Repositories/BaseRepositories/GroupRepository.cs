@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MyThings.Common.Models;
 using System.Data.Entity;
 using System.Globalization;
 using MyThings.Common.Models.NoSQL_Entities;
-using Newtonsoft.Json;
 using Container = MyThings.Common.Models.Container;
 
 namespace MyThings.Common.Repositories
@@ -136,34 +132,10 @@ namespace MyThings.Common.Repositories
                 RemoveVirtualSensor(group);
             }
 
-            //Unbind everything in the group
-            group.Sensors = new List<Sensor>();
-            group.VirtualSensor = null;
-            group.VirtualSensorIdentifier = 0;
-            group.User_Id = "";
-            Update(group);
-            SaveChanges();
-
             //Delete the group
             Delete(group);
             SaveChanges();
         }
-
-        //public Group SaveOrUpdateGroup(Group group)
-        //{
-        //    if (DbSet.Find(group.Id) != null)
-        //    {
-        //        //The group already exists -> Update the group
-        //        Update(group);
-        //    } else
-        //    {
-        //        //The group doesn't exist -> Insert the group
-        //        Insert(group);
-        //    }
-
-        //    SaveChanges();
-        //    return group;
-        //}
 
         #endregion
 
@@ -329,40 +301,16 @@ namespace MyThings.Common.Repositories
         public void RemoveVirtualSensor(Group group)
         {
             SensorRepository _sensorRepository = new SensorRepository();
-            ContainerRepository _containerRepository = new ContainerRepository();
 
             //Check if no virtual sensor exists yet
             group = GetVirtualSensor(group, _sensorRepository);
             if (group.VirtualSensor != null)
             {
-                Sensor VirtSensor = _sensorRepository.GetSensorById(group.VirtualSensorIdentifier);
-                if (VirtSensor?.Containers == null) return;
-                List<Container> containers = VirtSensor.Containers;
-
-                //Detach the container from the sensor
-                VirtSensor.Containers = null;
-                _sensorRepository.Update(VirtSensor);
-                _sensorRepository.SaveChanges();
-
-                //Remove all the containers
-                foreach (Container container in containers)
-                {
-                    _containerRepository.Delete(container);
-                }
-                _containerRepository.SaveChanges();
-
-                //Remove the sensor from the group
-                group.VirtualSensor = null;
-                group.VirtualSensorIdentifier = 0;
-                Update(group);
-                SaveChanges();
-
                 //Remove the sensor
-                VirtSensor = _sensorRepository.GetSensorById(VirtSensor.Id);
-                _sensorRepository.DeleteSensor(VirtSensor);
-                
+                _sensorRepository.DeleteSensor(group.VirtualSensor);
+
                 //Remove all the NoSQL Values
-                TableStorageRepository.RemoveValuesFromTablestorage(VirtSensor.MACAddress);
+                TableStorageRepository.RemoveValuesFromTablestorage(group.VirtualSensor.MACAddress);
             }
         }
 

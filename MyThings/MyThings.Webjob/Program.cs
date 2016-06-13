@@ -23,6 +23,7 @@ namespace DataStorageQueue
         private static readonly SensorRepository _sensorRepository = new SensorRepository();
         private static readonly ContainerRepository _containerRepository = new ContainerRepository();
         private static readonly GroupRepository _groupRepository = new GroupRepository();
+        private static readonly ThresholdRepository _thresholdRepository = new ThresholdRepository();
         private static readonly ErrorRepository _errorRepository = new ErrorRepository();
         private static readonly GenericRepository<Timeholder> _timeholderRepository = new GenericRepository<Timeholder>();       
 
@@ -264,11 +265,8 @@ namespace DataStorageQueue
             }
 
             //Error-Warning Module
-
-            //TODO: Implement Threshold
-                //Check voor de huidige container of de waarde overschreden is.
-                    //-> Ja: Resulteerd in MinThresholdWarning of MaxThresholdWarning
-                    //-> Indien containertype battery:
+                //Check for Theshold Mismatch
+            CheckThresholdsForContainer(sensor, container);
 
                 //Check for battery Level warnings
             if (container.ContainerType.Name == "Battery level")
@@ -341,11 +339,20 @@ namespace DataStorageQueue
                     Error error = Error.NetworkConnectivityError(sensor);
                     _errorRepository.Insert(error);
                 }
+
+                //Check for Threshold Errors
+                if (!_thresholdRepository.VerifyAllThresholds(sensor))
+                {
+                    foreach (Container container in sensor.Containers)
+                    {
+                        CheckThresholdsForContainer(sensor, container);
+                    }
+                }
             }
             _errorRepository.SaveChanges();
         }
 
-        #region CacheLogic
+        #region Helpers & CacheLogic
 
         private static ContainerType GetContainerType(String containerTypeName)
         {
@@ -372,6 +379,29 @@ namespace DataStorageQueue
             //    return dbSensor;
             //}
             //return cacheSensor;
+        }
+
+        private static void CheckThresholdsForContainer(Sensor sensor, Container container)
+        {
+            switch (_thresholdRepository.VerifyThresholds(container))
+            {
+                case ThresholdRepository.ThresholdVerifications.BetweenValueMismatchMINIMUM:
+                    Error minThresholdError = Error.MinThresholdWarning(sensor, container);
+                    _errorRepository.Insert(minThresholdError);
+                    break;
+                case ThresholdRepository.ThresholdVerifications.BetweenValueMismatchMAXIMUM:
+                    Error maxThresholdError = Error.MaxThresholdWarning(sensor, container);
+                    _errorRepository.Insert(maxThresholdError);
+                    break;
+                case ThresholdRepository.ThresholdVerifications.ExactValueMismatch:
+                    Error ExactValueError = Error.GenericWarning(sensor, container, "The exact threshold value is not met!");
+                    _errorRepository.Insert(ExactValueError);
+                    break;
+                case ThresholdRepository.ThresholdVerifications.FrequencyMismatch:
+                    Error FrequencyError = Error.GenericWarning(sensor, container, "The sensor did not reply in the requested time!");
+                    _errorRepository.Insert(FrequencyError);
+                    break;
+            }
         }
 
         #endregion

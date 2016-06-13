@@ -22,6 +22,9 @@ namespace MyThings.Common.Models
 
         public int? SensorId { get; set; }
 
+        public int? ThresholdId { get; set; }
+        public Threshold Threshold { get; set; }
+
         //This is fetched from the NoSql -> Exclude from relational
         [NotMapped]
         public DateTime LastUpdatedTime { get; set; }

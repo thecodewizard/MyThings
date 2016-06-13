@@ -6,9 +6,13 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using MyThings.Common.Helpers;
+using MyThings.Common.Models.FrontEndModels;
+using Newtonsoft.Json;
 
 namespace MyThings.Web.Controllers
 {
+    //TODO: Delete this code
     public class TestController : Controller
     {
         //Define the usermanager
@@ -41,7 +45,16 @@ namespace MyThings.Web.Controllers
             return View();
         }
 
-        //TODO: Delete this code
+        [HttpGet]
+        public string s()
+        {
+            GroupCreator creator = new GroupCreator();
+            creator.autoPinGroup = true;
+            creator.name = "pikachu";
+            creator.sensors = new List<int>() { 1, 2, 3 };
+            return JsonConvert.SerializeObject(creator);
+        }
+
         public ActionResult PinEverything()
         {
             if (User.Identity.IsAuthenticated)
@@ -49,30 +62,31 @@ namespace MyThings.Web.Controllers
                 //This will result in the user specific custom homepage
                 ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
-                List<Pin> pins = _pinRepository.GetPinsForUser(user.Id);
-                foreach(Pin pin in pins) _pinRepository.Delete(pin);
-                _pinRepository.SaveChanges();
+                List<Tile> tiles = new List<Tile>();
+                List<Sensor> sensors = _sensorRepository.GetSensors(null, true);
+                foreach (Sensor sensor in sensors)
+                {
+                    tiles.Add(new Tile() {Pin = new Pin()
+                    {
+                        SavedId = sensor.Id,
+                        SavedType = PinType.Sensor,
+                        UserId = user.Id
+                    } });
 
-                List<Sensor> allSensors = _sensorRepository.GetSensors();
-                List<Container> allContainers = _containerRepository.GetContainers();
-                foreach (Sensor sensor in allSensors)
-                {
-                    Pin pin = new Pin();
-                    pin.SavedId = sensor.Id;
-                    pin.SavedType = PinType.Sensor;
-                    pin.UserId = user.Id;
-                    _pinRepository.Insert(pin);
+                    foreach (Container container in sensor.Containers)
+                    {
+                        tiles.Add(new Tile()
+                        {
+                            Pin = new Pin()
+                            {
+                                SavedId = container.Id,
+                                SavedType = PinType.Container,
+                                UserId = user.Id
+                            }
+                        });
+                    }
                 }
-                _pinRepository.SaveChanges();
-                foreach (Container container in allContainers)
-                {
-                    Pin pin = new Pin();
-                    pin.SavedId = container.Id;
-                    pin.SavedType = PinType.Container;
-                    pin.UserId = user.Id;
-                    _pinRepository.Insert(pin);
-                }
-                _pinRepository.SaveChanges();
+                _pinRepository.UpdateGridsterJson(user.Id, GridsterHelper.TileListToJson(tiles));
             }
 
             return View();
