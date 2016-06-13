@@ -20,5 +20,18 @@ namespace MyThings.Common.Helpers
         {
             return JsonConvert.DeserializeObject<List<Tile>>(json) ?? new List<Tile>();
         }
+
+        public static String PinsToJson(List<Pin> pins)
+        {
+            String json = JsonConvert.SerializeObject(pins);
+
+            if (!String.IsNullOrWhiteSpace(json)) return json;
+            return null;
+        }
+
+        public static List<Pin> JsonToPins(String json)
+        {
+            return JsonConvert.DeserializeObject<List<Pin>>(json) ?? new List<Pin>();
+        }
     }
 }

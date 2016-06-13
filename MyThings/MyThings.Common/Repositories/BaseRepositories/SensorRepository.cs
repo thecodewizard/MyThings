@@ -65,6 +65,10 @@ namespace MyThings.Common.Repositories
 
         public override void Delete(Sensor sensor)
         {
+            ErrorRepository er = new ErrorRepository();
+            List<Error> ErrorsForSensor = (from e in er.GetErrors() where e.SensorId.Equals(sensor.Id) select e).ToList();
+            if(ErrorsForSensor.Any()) er.Context.Error.RemoveRange(ErrorsForSensor);
+
             Context.Container.RemoveRange(sensor.Containers);
             DbSet.Remove(sensor);
         }

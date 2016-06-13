@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
-using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 

@@ -1,35 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
+using MyThings.Common.Helpers;
 using MyThings.Common.Models;
+using MyThings.Common.Models.NoSQL_Entities;
 
 namespace MyThings.Common.Repositories
 {
-    public class PinRepository : GenericRepository<Pin>
+    public class PinRepository
     {
-        #region Functionality Methods
+        #region TableStorage Methods
 
-        public List<Pin> GetPinsForUser(String userId)
+        public GridLayoutEntity GetGridsterJson(String userId)
         {
-            return (from p in Context.Pins where p.UserId == userId select p).ToList();
+            // Retrieve the storage account from the connection string.
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+                ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
+            // Create the table client.
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            // Create the CloudTable object.
+            CloudTable table = tableClient.GetTableReference("UserGridLayout");
+            // Create the table query.
+            TableQuery<GridLayoutEntity> rangeQuery =
+                new TableQuery<GridLayoutEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId)).Take(1);
+
+            // Loop through the results, displaying information about the entity.
+            return table.ExecuteQuery(rangeQuery).FirstOrDefault<GridLayoutEntity>();
         }
 
-        public Pin GetPinForTile(String userID, int tileId)
+        public void UpdateGridsterJson(String userId, String gridJson)
         {
-            return (from p in Context.Pins where p.UserId == userID && p.TileId == tileId select p).FirstOrDefault();
-        }
+            // Retrieve the storage account from the connection string.
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+                ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
 
-        public Pin GetPinById(int pinId)
-        {
-            return GetByID(pinId);
-        }
+            // Create the table client.
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
 
-        public void DeletePin(Pin pin)
-        {
-            Delete(pin);
-            SaveChanges();
+            // Create the CloudTable object.
+            CloudTable table = tableClient.GetTableReference("UserGridLayout");
+
+            // Create a retrieve operation.
+            TableQuery<GridLayoutEntity> rangeQuery =
+                new TableQuery<GridLayoutEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId)).Take(1);
+
+            // Execute the operation.
+            GridLayoutEntity updateEntity = table.ExecuteQuery(rangeQuery).FirstOrDefault<GridLayoutEntity>();
+
+            if (updateEntity != null)
+            {
+                // Change the phone number.
+                updateEntity.GridsterJson = gridJson;
+
+                // Create the Replace TableOperation.
+                TableOperation updateOperation = TableOperation.Replace(updateEntity);
+
+                // Execute the operation.
+                table.Execute(updateOperation);
+            }
         }
 
         #endregion
@@ -79,35 +110,31 @@ namespace MyThings.Common.Repositories
         #endregion
 
         #region Smart Methods
-        public int GetPinId(int valueId, PinType type)
+
+        public List<PinType> GetFoundPinTypesById(String userId, int valueId)
         {
-            return
-                (from p in Context.Pins where p.SavedId == valueId && p.SavedType == type select p.Id).FirstOrDefault();
+            List<Tile> tiles = GridsterHelper.JsonToTileList(GetGridsterJson(userId).GridsterJson);
+            return (from t in tiles select t.Pin.SavedType).Distinct().ToList();
         }
 
-        public List<PinType> GetFoundPinTypesById(int valueId)
+        public bool IsSensorPinned(String userId, int sensorId)
         {
-            return (from p in Context.Pins where p.SavedId == valueId select p.SavedType).ToList();
+            return GetFoundPinTypesById(userId, sensorId).Contains(PinType.Sensor);
         }
 
-        public bool IsSensorPinned(int sensorId)
+        public bool IsContainerPinned(String userId, int containerId)
         {
-            return GetFoundPinTypesById(sensorId).Contains(PinType.Sensor);
+            return GetFoundPinTypesById(userId, containerId).Contains(PinType.Container);
         }
 
-        public bool IsContainerPinned(int containerId)
+        public bool IsGroupPinned(String userId, int groupId)
         {
-            return GetFoundPinTypesById(containerId).Contains(PinType.Container);
+            return GetFoundPinTypesById(userId, groupId).Contains(PinType.Group);
         }
 
-        public bool IsGroupPinned(int groupId)
+        public bool IsErrorPinned(String userId, int errorId)
         {
-            return GetFoundPinTypesById(groupId).Contains(PinType.Group);
-        }
-
-        public bool IsErrorPinned(int errorId)
-        {
-            return GetFoundPinTypesById(errorId).Contains(PinType.Error);
+            return GetFoundPinTypesById(userId, errorId).Contains(PinType.Error);
         }
 
         #endregion

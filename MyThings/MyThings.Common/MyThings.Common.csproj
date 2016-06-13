@@ -172,6 +172,10 @@
     <Compile Include="Migrations\201606121029228_Removed SensorContainers Table.Designer.cs">
       <DependentUpon>201606121029228_Removed SensorContainers Table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606131020565_added thresholds.cs" />
+    <Compile Include="Migrations\201606131020565_added thresholds.Designer.cs">
+      <DependentUpon>201606131020565_added thresholds.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FrontEndModels\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
@@ -189,6 +193,7 @@
     <Compile Include="Models\LegacyModels\ManageViewModels.cs" />
     <Compile Include="Models\NoSQL Entities\ContainerEntity.cs" />
     <Compile Include="Models\NoSQL Entities\NetwerkEntity.cs" />
+    <Compile Include="Models\NoSQL Entities\GridLayoutEntity.cs" />
     <Compile Include="Models\NoSQL Entities\QueueMessageHolder.cs" />
     <Compile Include="Models\Sensor.cs" />
     <Compile Include="Models\Threshold.cs" />
@@ -241,6 +246,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606121029228_Removed SensorContainers Table.resx">
       <DependentUpon>201606121029228_Removed SensorContainers Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606131020565_added thresholds.resx">
+      <DependentUpon>201606131020565_added thresholds.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -14,7 +14,7 @@ namespace MyThings.Common.Repositories
 
         public override IEnumerable<Container> All()
         {
-            return (from c in Context.Container.Include(c => c.ContainerType) orderby c.CreationTime descending select c).ToList();
+            return (from c in Context.Container.Include(c => c.ContainerType).Include(c => c.Threshold) orderby c.CreationTime descending select c).ToList();
         }
 
         public override Container GetByID(object id)
@@ -22,7 +22,7 @@ namespace MyThings.Common.Repositories
             int containerId = -1;
             return !int.TryParse(id.ToString(), out containerId)
                 ? null
-                : (from c in Context.Container.Include(c => c.ContainerType) where c.Id.Equals(containerId) select c).FirstOrDefault();
+                : (from c in Context.Container.Include(c => c.ContainerType).Include(c => c.Threshold) where c.Id.Equals(containerId) select c).FirstOrDefault();
         }
 
         public override Container Insert(Container container)
