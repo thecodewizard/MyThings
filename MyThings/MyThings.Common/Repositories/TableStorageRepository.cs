@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
-using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 
@@ -239,7 +238,7 @@ namespace MyThings.Common.Repositories
                 this.macaddress = macaddress;
                 this.container = container;
                 this.locationid = locationid;
-                //this.payload = double.Parse(payload, CultureInfo.InvariantCulture);
+                this.payload = double.Parse(payload, CultureInfo.InvariantCulture);
                 this.receivedtimestamp = timestamp;
                 this.Timestamp = DateTime.Now;
 

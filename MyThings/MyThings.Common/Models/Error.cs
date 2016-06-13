@@ -112,18 +112,18 @@ namespace MyThings.Common.Models
                 sensor, null);
         }
 
-        public static Error GenericError(Sensor sensor, Container container)
+        public static Error GenericError(Sensor sensor, Container container, String ErrorMessageAppendix)
         {
             return new Error(199, ErrorType.Error, ErrorCategory.Generic, "Error Detected",
-            "An error occured on Sensor " + sensor.Name + " at " + container.Name + "!",
+            "An error occured on Sensor " + sensor.Name + " at " + container.Name + "! " + ErrorMessageAppendix,
             "Check on-site what would cause this message and reboot the sensor. If this does not resolve the issue, contact our supportTeam.",
             sensor, container);
         }
 
-        public static Error GenericWarning(Sensor sensor, Container container)
+        public static Error GenericWarning(Sensor sensor, Container container, String WarningMessageAppendix)
         {
             return new Error(299, ErrorType.Warning, ErrorCategory.Generic, "Warning Triggered",
-                "A warning was triggered on Sensor " + sensor.Name + " at " + container.Name + "!",
+                "A warning was triggered on Sensor " + sensor.Name + " at " + container.Name + "! " + WarningMessageAppendix,
                 "Check on-site what would cause this message and reboot the sensor. If this does not resolve the issue, contact our supportTeam.",
                 sensor, container);
         }

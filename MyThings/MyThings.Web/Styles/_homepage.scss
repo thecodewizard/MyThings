@@ -58,20 +58,31 @@ body{
     text-overflow:ellipsis;   
 }
 
-.itemValue, .itemName, .itemType{
+.itemValue, .itemName, .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime{
     margin: 2px;
 }
 
-.itemValue, .itemType{
+.itemValue, .itemType, .itemValueTimeStampTime, .itemValueTimeStampDate{
     position: absolute;
     text-align: right;
 }
 
+.smallWidget .itemValueTimeStampDate{
+    bottom: 3px;
+    right: 7px;
+    font-size: 0.75em;
+}
+
+.smallWidget .itemValueTimeStampTime{
+    font-size: 0.75em;
+    bottom: 16px;
+    right: 7px;
+}
 
 .smallWidget .itemValue{
-    top: 40%;
+    top: 36%;
     right: 5%;  
-    font-size:$fontsizelarge;
+    font-size: 2.4em;
 }
 
 .smallWidget .itemName{
@@ -86,7 +97,7 @@ body{
 
 
 .largeWidget .itemValue{
-    top: 40%;
+    top: 35%;
     right: 5%;
     font-size:5em;
 }
@@ -101,13 +112,27 @@ body{
     font-size: 1.5em;
 }
 
+.largeWidget .itemValueTimeStampDate{
+    bottom: 5px;
+    right: 7px;
+    font-size: 1.2em;
+}
 
+.largeWidget .itemValueTimeStampTime{
+    bottom: 10%;
+    right: 7px;
+    font-size: 1.2em;
+}
 
 sup{
     font-size: 0.5em;
 }
 
-.customimg, .itemType{
+.customimg{
+    opacity: 0.2;
+}
+
+.itemType, .itemValueTimeStampDate, .itemValueTimeStampTime{
     opacity: 0.4;
 }
 
