@@ -629,7 +629,11 @@ namespace MyThings.Web.Controllers
                         _pinRepository.SaveChanges();
                     }
 
-                    return new HttpResponseMessage(HttpStatusCode.OK);
+                    //Throw a 'Not Allowed' Error
+                    HttpResponseMessage message = new HttpResponseMessage();
+                    message.StatusCode = HttpStatusCode.OK;
+                    message.Content = new StringContent(group.Id.ToString());
+                    return message;
                 }
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }

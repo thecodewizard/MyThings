@@ -98,9 +98,14 @@ namespace MyThings.Common.Repositories
             //Do the check
             if (threshold.BetweenValuesActive)
             {
-                if(threshold.MinValue <= container.CurrentValue.Value &&
-                        threshold.MaxValue >= container.CurrentValue.Value)
-                    return ThresholdVerifications.BetweenValueMismatch;
+                if (threshold.MinValue <= container.CurrentValue.Value &&
+                    threshold.MaxValue >= container.CurrentValue.Value)
+                {
+                    if(threshold.MinValue <= container.CurrentValue.Value)
+                        return ThresholdVerifications.BetweenValueMismatchMINIMUM;
+                    if(threshold.MaxValue >= container.CurrentValue.Value)
+                        return ThresholdVerifications.BetweenValueMismatchMAXIMUM;
+                }
             }
 
             if (threshold.MatchValueActive)
@@ -124,7 +129,7 @@ namespace MyThings.Common.Repositories
 
         public enum ThresholdVerifications
         {
-            PASSED, NULL, BetweenValueMismatch, ExactValueMismatch, FrequencyMismatch
+            PASSED, NULL, BetweenValueMismatchMINIMUM, BetweenValueMismatchMAXIMUM , ExactValueMismatch, FrequencyMismatch
         }
     }
 }

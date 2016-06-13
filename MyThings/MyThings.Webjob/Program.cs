@@ -235,12 +235,21 @@ namespace DataStorageQueue
                 //Check for Theshold Mismatch
             switch (_thresholdRepository.VerifyThresholds(container))
             {
-                case ThresholdRepository.ThresholdVerifications.BetweenValueMismatch:
-
+                case ThresholdRepository.ThresholdVerifications.BetweenValueMismatchMINIMUM:
+                    Error minThresholdError = Error.MinThresholdWarning(sensor, container);
+                    _errorRepository.Insert(minThresholdError);
+                    break;
+                case ThresholdRepository.ThresholdVerifications.BetweenValueMismatchMAXIMUM:
+                    Error maxThresholdError = Error.MaxThresholdWarning(sensor, container);
+                    _errorRepository.Insert(maxThresholdError);
                     break;
                 case ThresholdRepository.ThresholdVerifications.ExactValueMismatch:
+                    Error ExactValueError = Error.GenericWarning(sensor, container, "The exact threshold value is not met!");
+                    _errorRepository.Insert(ExactValueError);
                     break;
                 case ThresholdRepository.ThresholdVerifications.FrequencyMismatch:
+                    Error FrequencyError = Error.GenericWarning(sensor, container, "The sensor did not reply in the requested time!");
+                    _errorRepository.Insert(FrequencyError);
                     break;
             }
 

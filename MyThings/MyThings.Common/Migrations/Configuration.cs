@@ -124,8 +124,8 @@ namespace MyThings.Common.Migrations
             _groupRepository.SaveChanges();
 
             //Make a dummy error
-            Error dummyWarning = Error.GenericWarning(dummySensor, dummyContainer);
-            Error dummyError = Error.GenericError(dummySensor, dummyContainer);
+            Error dummyWarning = Error.GenericWarning(dummySensor, dummyContainer, "");
+            Error dummyError = Error.GenericError(dummySensor, dummyContainer, "");
             _errorRepository.Insert(dummyError);
             _errorRepository.Insert(dummyWarning);
             _errorRepository.SaveChanges();
