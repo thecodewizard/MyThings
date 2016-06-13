@@ -38,7 +38,6 @@ namespace DataStorageQueue
             _timeholderRepository.Update(holder);
             _timeholderRepository.SaveChanges();
 
-
             // Do the onCompletedWork
             Console.Write("Started Grouplogic");
             RunOnceInWebjobStart();
@@ -117,7 +116,7 @@ namespace DataStorageQueue
             foreach (Group group in groups)
             {
                 Sensor virtSensor = _sensorRepository.GetSensorById(group.VirtualSensorIdentifier);
-                if (virtSensor?.Containers == null)
+                if (virtSensor == null || virtSensor.Containers == null)
                 {
                     _groupRepository.DeleteGroup(group); //Remove invalid groups.
                 }
@@ -125,6 +124,7 @@ namespace DataStorageQueue
                 if (group.IsChanged)
                 {
                     //The group has changed -> All the virtual sensors have to be recalculated
+
                     TableStorageRepository.RemoveValuesFromTablestorage(virtSensor.MACAddress);
 
                     // Get the oldest date in the group
@@ -134,29 +134,62 @@ namespace DataStorageQueue
                     {
                         Sensor gS = _sensorRepository.GetSensorById(gSensor.Id);
                         if (oldestDate > gS.CreationDate) oldestDate = gS.CreationDate;
-                        foreach(Container gC in gS.Containers) containers.Add(gC);
+                        foreach (Container gC in gS.Containers) containers.Add(gC);
                     }
 
-                    foreach (Container container in virtSensor.Containers)
+                    List<ContainerType> uniqueContainerTypes = new List<ContainerType>();
+                    foreach (Container c in containers)
                     {
-                        // Insert the First value in tablestorage to keep the system crashing when someone queries the new virt sensor
-                        double payloadTotal = 0;
-                        double numberOfContainers = 0;
-                        foreach (Container c in containers)
-                        {
-                            if (c.ContainerType.Name.Equals(container.ContainerType.Name))
-                            {
-                                double cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
-                                payloadTotal += cPayload;
-                                numberOfContainers++;
-                            }
-                        }
-                        double payload = (Math.Abs(numberOfContainers) <= 0) ? 0 : payloadTotal / numberOfContainers;
-
-                        String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
-                        ContainerEntity entity = new ContainerEntity(virtSensor.Company, container.MACAddress, container.ContainerType.Name, virtSensor.Location, payloadValue, oldestDate.Ticks.ToString(), null);
-                        TableStorageRepository.WriteToVirtualSensorTable(entity, false);
+                        if (!uniqueContainerTypes.Contains(c.ContainerType))
+                            uniqueContainerTypes.Add(c.ContainerType);
                     }
+
+                    List<Container> virtSensorContainers = new List<Container>();
+                    foreach(Container c in virtSensor.Containers) virtSensorContainers.Add(c);
+
+                    foreach (Container container in virtSensorContainers)
+                    {
+                        // Delete depricated containers
+                        if (!uniqueContainerTypes.Contains(container.ContainerType))
+                        {
+                            // Remove the container from the sensor
+                            virtSensor.Containers.Remove(container);
+                            _sensorRepository.Update(virtSensor);
+                            _sensorRepository.SaveChanges();
+
+                            // Delete the container
+                            _containerRepository.DeleteContainer(container);
+                            _containerRepository.SaveChanges();
+                        }
+                        else
+                        {
+                            // Insert the First value in tablestorage to keep the system crashing when someone queries the new virt sensor
+                            double payloadTotal = 0;
+                            double numberOfContainers = 0;
+                            foreach (Container c in containers)
+                            {
+                                if (c.ContainerType.Name.Equals(container.ContainerType.Name))
+                                {
+                                    double? cPayload = MachineLearningRepository.ParseAverageInTime(c, oldestDate, TimeSpan.FromHours(1));
+                                    if (cPayload.HasValue)
+                                    {
+                                        payloadTotal += cPayload.Value;
+                                        numberOfContainers++;
+                                    }
+                                }
+                            }
+                            double payload = (Math.Abs(numberOfContainers) <= 0) ? 0 : payloadTotal / numberOfContainers;
+
+                            String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
+                            ContainerEntity entity = new ContainerEntity(virtSensor.Company, container.MACAddress, container.ContainerType.Name, virtSensor.Location, payloadValue, oldestDate.Ticks.ToString(), null);
+                            TableStorageRepository.WriteToVirtualSensorTable(entity, false);
+                        }
+                    }
+
+                    //Set the 'changed' flag false
+                    group.IsChanged = false;
+                    _groupRepository.Update(group);
+                    _groupRepository.SaveChanges();
                 }
 
                 //Check for new virtual sensor entries
@@ -190,7 +223,7 @@ namespace DataStorageQueue
             {
                 //Make the new sensor
                 sensor = new Sensor();
-                sensor.CreationDate = DateTime.Now;
+                sensor.CreationDate = new DateTime(long.Parse(containerEntity.receivedtimestamp)); //TODO: Replace With DateTime.Now
                 sensor.MACAddress = containerEntity.macaddress;
                 sensor.SensorEntries = 1;
                 sensor.Company = containerEntity.company;
@@ -218,7 +251,7 @@ namespace DataStorageQueue
                 container = new Container();
                 container.Name = containerEntity.macaddress;
                 container.ContainerType = type;
-                container.CreationTime = DateTime.Now;
+                container.CreationTime = new DateTime(long.Parse(containerEntity.receivedtimestamp)); //TODO: Replace With DateTime.Now
                 container.MACAddress = containerEntity.macaddress;
                 container.SensorId = sensor.Id;
                 _containerRepository.Insert(container);
@@ -240,46 +273,20 @@ namespace DataStorageQueue
                 //Check for battery Level warnings
             if (container.ContainerType.Name == "Battery level")
             {
-                //Get all the battery values from last year
-                if (container.History == null)
-                {
-                    container = TableStorageRepository.GetHistory(container, TimeSpan.FromDays(365));
-                }               
-
-                //Calculate when the battery would be empty
-                    //Get the average downgrade per update
-                int count = container.History.Count;
-                double totalDelta = 0;
-                //totalDelta = container.History.Last().Value - container.History.First().Value;
-
-                double previousValue = container.History.Last().Value;
-                List<ContainerValue> invertedHistory = container.History;
-                invertedHistory.Reverse();
-                foreach (ContainerValue value in invertedHistory)
-                {
-                    double delta = previousValue - value.Value;
-                    if(delta > -10) totalDelta += delta;
-                    previousValue = value.Value;
-                }
-
-                //Temp. Results
-                double average = totalDelta/count;
-                TimeSpan lifeTime = DateTime.Now - container.History.Last().Timestamp;
-                long lifeTimeTicks = lifeTime.Ticks;
-                long ticksPerUpdate = lifeTimeTicks/count;
-
-                    //Get prediction
-                int updatesLeft = (int)Math.Floor((containerEntity.payload / average));
-                long ticksToLive = ticksPerUpdate*updatesLeft;
-                TimeSpan timeToLive = TimeSpan.FromTicks(ticksToLive);
-
-                //Give the error
                 if (containerEntity.payload < 5)
                 {
+                    //Get the time to live
+                    TimeSpan timeToLive = MachineLearningRepository.CalculateTimeToLive(container, containerEntity.payload);
+
+                    //Give the error
                     Error error = Error.BatteryCriticalError(sensor, container, timeToLive);
                     _errorRepository.Insert(error);
                 } else if (containerEntity.payload < 15)
-                {
+                {                    
+                    //Get the time to live
+                    TimeSpan timeToLive = MachineLearningRepository.CalculateTimeToLive(container, containerEntity.payload);
+
+                    //Give the error
                     Error error = Error.BatteryWarning(sensor, container, timeToLive);
                     _errorRepository.Insert(error);
                 }

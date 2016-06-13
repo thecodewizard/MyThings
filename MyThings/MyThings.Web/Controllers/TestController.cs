@@ -41,6 +41,7 @@ namespace MyThings.Web.Controllers
             return View();
         }
 
+        //TODO: Delete this code
         public ActionResult PinEverything()
         {
             if (User.Identity.IsAuthenticated)
@@ -52,7 +53,6 @@ namespace MyThings.Web.Controllers
                 foreach(Pin pin in pins) _pinRepository.Delete(pin);
                 _pinRepository.SaveChanges();
 
-                //TODO: Delete this code
                 List<Sensor> allSensors = _sensorRepository.GetSensors();
                 List<Container> allContainers = _containerRepository.GetContainers();
                 foreach (Sensor sensor in allSensors)
