@@ -149,13 +149,15 @@ h2{
     }*/
   .sensorsheadrow{
     font-family:$proximusboldfont;
-      display:table-row;
+    flex-wrap:nowrap;
+      margin:20px;
     padding-bottom:2%;
     background-color:$proximusterdarkblue;
 }
 
 .sensorrows{
-
+    
+    flex-wrap:nowrap;
     height:40px;
     font-family:$proximusregularfont;
     background-color:$proximusterlightblue;

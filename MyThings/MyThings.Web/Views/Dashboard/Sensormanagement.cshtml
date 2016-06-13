@@ -71,7 +71,7 @@
         <tr class="sensorsheadrow">
             <th>ID</th>
             <th>Name</th>
-            <th># Containers</th>
+            <th>#Containers</th>
             <th>Location</th>
             <th></th>
         </tr>
@@ -178,6 +178,7 @@
                 console.log(autocompleteFeed);
                 console.log(allSensorsCount);
 
+
                 function grouplistCreate() {
                     for (var i = 0; i < groups.length && i < 10; i++) {
                         if (groups[i].Sensors == null) {
@@ -209,26 +210,35 @@
                         }
                     }
                     $(".groupdiv")
-                    .append('<div class="grouprectangletile addgrouptile">' +
-                                    '<a href="@Url.Action("Editgroups", "Dashboard")">' +
-                                    '<div class="addgroup">' +
-                                    '+' +
-                                    '</div>' +
-                                    '</a>' +
-                                    '</div>');
+                        .append('<div class="grouprectangletile addgrouptile">' +
+                            '<a>' +
+                            '<div class="addgroup" id="addgroup">' +
+                            '+' +
+                            '</div>' +
+                            '</a>' +
+                            '</div>');
                 }
 
 
+               
+                function addgroupClick() { alert('ok'); 
+                }
+
+
+               /* if ($('.addgroup').onclick) {
+                    alert('ok');
+                }*/
+
                 function searchauto() {
-                    var arr=[];
+                    var arr = [];
                     for (var i = 0; i < autocompleteFeed.length; i++) {
                         arr.push(autocompleteFeed[i]);
                     }
                     $(".searchbardiv")
-                       .autocomplete({ 
-                           source: arr
-                       });
-                  
+                        .autocomplete({
+                            source: arr
+                        });
+
                 }
 
                 function fillSortingbox() {
@@ -272,6 +282,7 @@
                 searchauto();
                 fillSortingbox();
                 sensorlistCreate();
+                $('.addgrouptiles').click = addgroupClick();
                 @*
 
             //Manier 2 - Met eigen objecten
