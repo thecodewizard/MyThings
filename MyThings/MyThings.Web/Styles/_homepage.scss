@@ -51,6 +51,7 @@ body{
 .itemName 
 {
     text-align:center;
+    white-space: nowrap;
 }
 
 .itemName, .itemType{
@@ -58,11 +59,11 @@ body{
     text-overflow:ellipsis;   
 }
 
-.itemValue, .itemName, .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime{
+.itemValue, .itemName, .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime, .itemValueClickBait, .itemValueTwoLines{
     margin: 2px;
 }
 
-.itemValue, .itemType, .itemValueTimeStampTime, .itemValueTimeStampDate{
+.itemValue, .itemType, .itemValueTimeStampTime, .itemValueTimeStampDate, .itemValueClickBait, .itemValueTwoLines{
     position: absolute;
     text-align: right;
 }
@@ -85,6 +86,12 @@ body{
     font-size: 2.4em;
 }
 
+.smallWidget .itemValueClickBait, .smallWidget .itemValueTwoLines{
+    top: 35%;
+    right: 5%;
+    font-size:1em;
+}
+
 .smallWidget .itemName{
 
 }
@@ -100,6 +107,12 @@ body{
     top: 35%;
     right: 5%;
     font-size:5em;
+}
+
+.largeWidget .itemValueClickBait, .largeWidget .itemValueTwoLines{
+    top: 30%;
+    right: 5%;
+    font-size:2.5em;
 }
 
 .largeWidget .itemName{

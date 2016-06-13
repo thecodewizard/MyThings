@@ -63,7 +63,9 @@ namespace MyThings.Web.Controllers
             List<Error> cacheErrors = _errorRepository.GetErrorsForUser(user.Company);
 
             //Go over all the user's pins and fetch their object. Filter the faulty pins
-            foreach (Tile tile in tiles)
+
+            List<Tile> userTiles = (from t in tiles select t).ToList();
+            foreach (Tile tile in userTiles)
             {
                 //Container & sensor values are fetched with ajax. Group and errors are fetched now
                 switch (tile.Pin.SavedType)
