@@ -65,18 +65,7 @@ namespace MyThings.Common.Repositories
 
         public override void Delete(Sensor sensor)
         {
-            foreach (Container container in sensor.Containers)
-            {
-                if (Context.Entry<Container>(container).State != EntityState.Unchanged)
-                    Context.Entry<Container>(container).State = EntityState.Unchanged;
-                if (container.ContainerType != null && Context.Entry(container.ContainerType).State != EntityState.Unchanged)
-                    Context.Entry(container.ContainerType).State = EntityState.Unchanged;
-            }
-
-            if (Context.Entry(sensor).State == EntityState.Detached)
-            {
-                DbSet.Attach(sensor);
-            }
+            Context.Container.RemoveRange(sensor.Containers);
             DbSet.Remove(sensor);
         }
 

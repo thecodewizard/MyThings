@@ -574,16 +574,6 @@ namespace MyThings.Web.Controllers
 
         #region Group Management Methods
 
-        [HttpGet]
-        public string s()
-        {
-            GroupCreator creator = new GroupCreator();
-            creator.autoPinGroup = true;
-            creator.name = "pikachu";
-            creator.sensors = new List<int>() {1, 2, 3};
-            return JsonConvert.SerializeObject(creator);
-        }
-
         [HttpPost]
         public HttpResponseMessage CreateGroup([System.Web.Http.FromBody]GroupCreator groupCreator)
         {
@@ -630,10 +620,10 @@ namespace MyThings.Web.Controllers
                     }
 
                     //Throw a 'Not Allowed' Error
-                    HttpResponseMessage message = new HttpResponseMessage();
-                    message.StatusCode = HttpStatusCode.OK;
-                    message.Content = new StringContent(group.Id.ToString());
-                    return message;
+                    HttpResponseMessage successMessage = new HttpResponseMessage();
+                    successMessage.StatusCode = HttpStatusCode.OK;
+                    successMessage.Content = new StringContent(group.Id.ToString());
+                    return successMessage;
                 }
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }

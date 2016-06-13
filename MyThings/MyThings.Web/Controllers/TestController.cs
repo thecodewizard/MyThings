@@ -6,6 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using MyThings.Common.Models.FrontEndModels;
+using Newtonsoft.Json;
 
 namespace MyThings.Web.Controllers
 {
@@ -39,6 +41,16 @@ namespace MyThings.Web.Controllers
             c =  TableStorageRepository.GetHistory(c, new TimeSpan(24, 0, 0));
 
             return View();
+        }
+
+        [HttpGet]
+        public string s()
+        {
+            GroupCreator creator = new GroupCreator();
+            creator.autoPinGroup = true;
+            creator.name = "pikachu";
+            creator.sensors = new List<int>() { 1, 2, 3 };
+            return JsonConvert.SerializeObject(creator);
         }
 
         public ActionResult PinEverything()

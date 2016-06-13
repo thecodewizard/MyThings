@@ -350,6 +350,12 @@ namespace DataStorageQueue
                     Error error = Error.NetworkConnectivityError(sensor);
                     _errorRepository.Insert(error);
                 }
+
+                //Check for threshold errors
+                if (!_thresholdRepository.VerifyAllThresholds(sensor))
+                {
+                    
+                }
             }
             _errorRepository.SaveChanges();
         }
