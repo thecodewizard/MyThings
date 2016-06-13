@@ -14,7 +14,7 @@ namespace MyThings.Common.Repositories
     {
         #region TableStorage Methods
 
-        public GridLayoutEntity GetGridsterJson(String userId)
+        public GridLayoutEntity GetGridsterJson(String userId, bool recurring = false)
         {
             // Retrieve the storage account from the connection string.
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
@@ -23,12 +23,27 @@ namespace MyThings.Common.Repositories
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             // Create the CloudTable object.
             CloudTable table = tableClient.GetTableReference("UserGridLayout");
+            table.CreateIfNotExists();
+
             // Create the table query.
             TableQuery<GridLayoutEntity> rangeQuery =
                 new TableQuery<GridLayoutEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId)).Take(1);
 
             // Loop through the results, displaying information about the entity.
-            return table.ExecuteQuery(rangeQuery).FirstOrDefault<GridLayoutEntity>();
+            GridLayoutEntity entity = table.ExecuteQuery(rangeQuery).FirstOrDefault<GridLayoutEntity>();
+
+            if (entity == null)
+            {
+                // Create the TableOperation object that inserts the customer entity.
+                TableOperation insertOperation = TableOperation.Insert(new GridLayoutEntity(userId, ""));
+
+                // Execute the insert operation.
+                table.Execute(insertOperation);
+
+                if(!recurring) return GetGridsterJson(userId, true);
+            }
+
+            return entity;
         }
 
         public void UpdateGridsterJson(String userId, String gridJson)

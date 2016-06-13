@@ -176,6 +176,10 @@
     <Compile Include="Migrations\201606131020565_added thresholds.Designer.cs">
       <DependentUpon>201606131020565_added thresholds.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606131349579_Migrated Pins to Tablestorage.cs" />
+    <Compile Include="Migrations\201606131349579_Migrated Pins to Tablestorage.Designer.cs">
+      <DependentUpon>201606131349579_Migrated Pins to Tablestorage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FrontEndModels\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
@@ -249,6 +253,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606131020565_added thresholds.resx">
       <DependentUpon>201606131020565_added thresholds.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606131349579_Migrated Pins to Tablestorage.resx">
+      <DependentUpon>201606131349579_Migrated Pins to Tablestorage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
