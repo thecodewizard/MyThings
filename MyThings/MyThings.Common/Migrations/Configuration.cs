@@ -67,7 +67,7 @@ namespace MyThings.Common.Migrations
             context.Timeholder.Add(holder);
 
             //Generate dummy data for the database
-            //GenerateDummyData(appUser);
+            GenerateDummyData(appUser);
         }
 
         #region DummyDataGenerator

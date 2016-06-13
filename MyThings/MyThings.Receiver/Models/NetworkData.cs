@@ -1,6 +1,6 @@
-﻿
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using System.Collections.Generic;
+
 namespace Proximus_API.Models
 {
     [XmlRoot(ElementName = "Lrr", Namespace = "http://uri.actility.com/lora")]
@@ -56,6 +56,10 @@ namespace Proximus_API.Models
         public string DevLrrCnt { get; set; }
         [XmlElement(ElementName = "Lrrid", Namespace = "http://uri.actility.com/lora")]
         public string Lrrid { get; set; }
+        [XmlElement(ElementName = "LrrLAT", Namespace = "http://uri.actility.com/lora")]
+        public string LrrLAT { get; set; }
+        [XmlElement(ElementName = "LrrLON", Namespace = "http://uri.actility.com/lora")]
+        public string LrrLON { get; set; }
         [XmlElement(ElementName = "Lrrs", Namespace = "http://uri.actility.com/lora")]
         public Lrrs Lrrs { get; set; }
         [XmlElement(ElementName = "CustomerID", Namespace = "http://uri.actility.com/lora")]

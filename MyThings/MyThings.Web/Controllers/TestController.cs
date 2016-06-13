@@ -47,7 +47,11 @@ namespace MyThings.Web.Controllers
             {
                 //This will result in the user specific custom homepage
                 ApplicationUser user = UserManager.FindByName(User.Identity.Name);
-                 
+
+                List<Pin> pins = _pinRepository.GetPinsForUser(user.Id);
+                foreach(Pin pin in pins) _pinRepository.Delete(pin);
+                _pinRepository.SaveChanges();
+
                 //TODO: Delete this code
                 List<Sensor> allSensors = _sensorRepository.GetSensors();
                 List<Container> allContainers = _containerRepository.GetContainers();

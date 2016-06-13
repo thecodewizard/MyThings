@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using MyThings.Common.Helpers;
 using MyThings.Common.Models;
+using MyThings.Common.Models.FrontEndModels;
 using MyThings.Common.Repositories;
 using MyThings.Web.ViewModels;
 using Newtonsoft.Json;
@@ -59,7 +60,7 @@ namespace MyThings.Web.Controllers
 
             //Set up caches to improve efficiency
             List<Sensor> cacheSensors =
-                (from s in _sensorRepository.GetSensors() where s.Company.Equals(user.Company) select s).ToList();
+                (from s in _sensorRepository.GetSensors(null, true) where s.Company.Equals(user.Company) select s).ToList();
             List<Container> cacheContainers = (from c in _containerRepository.GetContainers()
                 where
                     c.SensorId.HasValue && (from s in cacheSensors select s.Id).ToList<int>().Contains(c.SensorId.Value)
@@ -573,23 +574,148 @@ namespace MyThings.Web.Controllers
 
         #region Group Management Methods
 
-        //[HttpPost]
-        //public HttpResponseMessage SaveGroup([FromBody] Group group)
-        //{
-        //    //Insert & Update in 1 method
-        //}
+        [HttpGet]
+        public string s()
+        {
+            GroupCreator creator = new GroupCreator();
+            creator.autoPinGroup = true;
+            creator.name = "pikachu";
+            creator.sensors = new List<int>() {1, 2, 3};
+            return JsonConvert.SerializeObject(creator);
+        }
 
-        //[HttpPost]
-        //public HttpResponseMessage AddSensor(int? groupId, int? sensorId)
-        //{
+        [HttpPost]
+        public HttpResponseMessage CreateGroup([System.Web.Http.FromBody]GroupCreator groupCreator)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (ModelState.IsValid)
+                {
+                    //Fetch the user
+                    ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
-        //}
+                    List<Group> groups = _groupRepository.GetGroupsForUser(user.Id);
+                    foreach(Group g in groups) _groupRepository.Delete(g);
+                    _groupRepository.SaveChanges();
 
-        //[HttpPost]
-        //public HttpResponseMessage RemoveSensor(int? groupId, int? sensorId)
-        //{
+                    //Resolve the sensors
+                    List<Sensor> sensors = new List<Sensor>();
+                    foreach (int sensorId in groupCreator.sensors)
+                    {
+                        Sensor sensor = _sensorRepository.GetSensorById(sensorId);
+                        if(sensor == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+                        sensors.Add(sensor);
+                    }
 
-        //}
+                    //Make the new group
+                    Group group = new Group();
+                    group.Name = groupCreator.name;
+                    group.User_Id = user.Id;
+                    group.Sensors = sensors;
+                    _groupRepository.Insert(group);
+                    _groupRepository.SaveChanges();
+
+                    //Setup a virtual sensor
+                    _groupRepository.CreateVirtualSensor(group);
+
+                    //Autopin if requested
+                    if (groupCreator.autoPinGroup)
+                    {
+                        Pin pin = new Pin();
+                        pin.SavedId = group.Id;
+                        pin.SavedType = PinType.Group;
+                        pin.UserId = user.Id;
+                        _pinRepository.Insert(pin);
+                        _pinRepository.SaveChanges();
+                    }
+
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
+        [HttpPost]
+        public HttpResponseMessage AddSensor(int? groupId, int? sensorId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (groupId.HasValue && sensorId.HasValue)
+                {
+                    int gid = groupId.Value;
+                    int sid = sensorId.Value;
+
+                    if (!_groupRepository.SensorInGroup(gid, sid))
+                    {
+                        Group group = _groupRepository.GetGroupById(gid);
+                        Sensor sensor = _sensorRepository.GetSensorById(sid);
+
+                        if (group != null && sensor != null)
+                        {
+                            group.IsChanged = true;
+                            group.Sensors.Add(sensor);
+                            _groupRepository.Update(group);
+                            _groupRepository.SaveChanges();
+
+                            return new HttpResponseMessage(HttpStatusCode.OK);
+                        }
+                        return new HttpResponseMessage(HttpStatusCode.NotFound);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
+        [HttpPost]
+        public HttpResponseMessage RemoveSensor(int? groupId, int? sensorId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (groupId.HasValue && sensorId.HasValue)
+                {
+                    int gid = groupId.Value;
+                    int sid = sensorId.Value;
+
+                    if (_groupRepository.SensorInGroup(gid, sid))
+                    {
+                        Group group = _groupRepository.GetGroupById(gid);
+                        Sensor sensor = group.Sensors.Find(s => s.Id.Equals(sid));
+
+                        if (group != null && sensor != null)
+                        {
+                            group.IsChanged = true;
+                            group.Sensors.Remove(sensor);
+                            _groupRepository.Update(group);
+                            _groupRepository.SaveChanges();
+
+                            return new HttpResponseMessage(HttpStatusCode.OK);
+                        }
+                        return new HttpResponseMessage(HttpStatusCode.NotFound);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
 
         #endregion
 

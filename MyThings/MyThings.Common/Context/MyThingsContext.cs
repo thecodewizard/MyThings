@@ -26,15 +26,15 @@ namespace MyThings.Common.Context
             base.OnModelCreating(modelBuilder);
 
             //Tussentabellen
-            modelBuilder.Entity<Sensor>()
-                .HasMany(r => r.Containers)
-                .WithMany()
-                .Map( m => 
-                {
-                    m.MapLeftKey("SensorId");
-                    m.MapRightKey("ContainerId");
-                    m.ToTable("SensorContainers");
-                });
+            //modelBuilder.Entity<Sensor>()
+            //    .HasMany(r => r.Containers)
+            //    .WithMany()
+            //    .Map( m => 
+            //    {
+            //        m.MapLeftKey("SensorId");
+            //        m.MapRightKey("ContainerId");
+            //        m.ToTable("SensorContainers");
+            //    });
             modelBuilder.Entity<Group>()
                 .HasMany(r => r.Sensors)
                 .WithMany()

@@ -124,11 +124,11 @@ namespace MyThings.Api.Controllers
         #region GetMultiObject Methods
 
         [HttpGet]
-        public HttpResponseMessage GetSensors(int? count = null)
+        public HttpResponseMessage GetSensors(int? count = null, bool includeVirtual = false)
         {
             if (count.HasValue)
             {
-                List<Sensor> sensors = _sensorRepository.GetSensors(count);
+                List<Sensor> sensors = _sensorRepository.GetSensors(count, includeVirtual);
 
                 if (sensors != null && sensors.Count > 0)
                 {

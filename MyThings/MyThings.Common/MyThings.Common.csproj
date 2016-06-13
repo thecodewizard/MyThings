@@ -164,9 +164,20 @@
     <Compile Include="Migrations\201606101350330_added group userid.Designer.cs">
       <DependentUpon>201606101350330_added group userid.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606120953388_Added Virtual Sensor Fields.cs" />
+    <Compile Include="Migrations\201606120953388_Added Virtual Sensor Fields.Designer.cs">
+      <DependentUpon>201606120953388_Added Virtual Sensor Fields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606121029228_Removed SensorContainers Table.cs" />
+    <Compile Include="Migrations\201606121029228_Removed SensorContainers Table.Designer.cs">
+      <DependentUpon>201606121029228_Removed SensorContainers Table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FrontEndModels\ContainerValue.cs" />
     <Compile Include="Models\ContainerType.cs" />
+    <Compile Include="Models\FrontEndModels\GroupCreator.cs" />
+    <Compile Include="Models\FrontEndModels\LocationJsonModel.cs" />
+    <Compile Include="Models\FrontEndModels\LocationWebhookModel.cs" />
     <Compile Include="Models\FrontEndModels\Pin.cs" />
     <Compile Include="Models\FrontEndModels\Tile.cs" />
     <Compile Include="Models\LegacyModels\AccountViewModels.cs" />
@@ -177,6 +188,7 @@
     <Compile Include="Models\LegacyModels\IdentityModels.cs" />
     <Compile Include="Models\LegacyModels\ManageViewModels.cs" />
     <Compile Include="Models\NoSQL Entities\ContainerEntity.cs" />
+    <Compile Include="Models\NoSQL Entities\NetwerkEntity.cs" />
     <Compile Include="Models\NoSQL Entities\QueueMessageHolder.cs" />
     <Compile Include="Models\Sensor.cs" />
     <Compile Include="Models\Timeholder.cs" />
@@ -189,6 +201,8 @@
     <Compile Include="Repositories\Interfaces\IGenericRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\PinRepository.cs" />
     <Compile Include="Repositories\BaseRepositories\SensorRepository.cs" />
+    <Compile Include="Repositories\MachineLearningRepository.cs" />
+    <Compile Include="Repositories\RemoteRepositories\LocationApiRepository.cs" />
     <Compile Include="Repositories\TableStorageRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +233,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606101350330_added group userid.resx">
       <DependentUpon>201606101350330_added group userid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606120953388_Added Virtual Sensor Fields.resx">
+      <DependentUpon>201606120953388_Added Virtual Sensor Fields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606121029228_Removed SensorContainers Table.resx">
+      <DependentUpon>201606121029228_Removed SensorContainers Table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

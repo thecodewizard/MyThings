@@ -72,22 +72,33 @@ h3 {
   font-family: Proximus-ExtraBold;
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
+.gridsterContainer > .gridster > ul > .tile {
+  background-color: #5C2D91;
+  list-style: none;
+  color: white;
+  overflow: hidden;
+  transition: background-color 0.2s;
+  cursor: pointer; }
+
+.gridsterContainer > .gridster > ul > .tile:hover {
+  background-color: #00bCEe; }
+
+.tile * {
+  transition: 0.2s; }
+
 .tile {
-  background-color: #5c2d91;
+  background-color: #5C2D91;
   list-style: none;
   color: white; }
 
-html, body {
+.homepageBody {
   overflow-x: auto;
   overflow-y: hidden;
-  height: 100vh; }
-
-* {
-  font-family: Proximus-Regular; }
+  height: 100vh;
+  font-family: Proximus-Regular, Helvetica, sans-serif; }
 
 body {
   background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png");
-  overflow-y: hidden;
   background-size: cover; }
 
 .gridsterContainer {
@@ -99,6 +110,73 @@ body {
 .homeTitle {
   color: #fff;
   margin: 20px 0 0 50px; }
+
+.itemName {
+  text-align: center; }
+
+.itemName, .itemType {
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.itemValue, .itemName, .itemType {
+  margin: 2px; }
+
+.itemValue, .itemType {
+  position: absolute;
+  text-align: right; }
+
+.smallWidget .itemValue {
+  top: 40%;
+  right: 5%;
+  font-size: 2.75em; }
+
+.smallWidget .itemType {
+  right: 5%;
+  top: 15%;
+  font-size: 0.8em; }
+
+.largeWidget .itemValue {
+  top: 40%;
+  right: 5%;
+  font-size: 5em; }
+
+.largeWidget .itemName {
+  font-size: 2em; }
+
+.largeWidget .itemType {
+  right: 5%;
+  top: 15%;
+  font-size: 1.5em; }
+
+sup {
+  font-size: 0.5em; }
+
+.customimg, .itemType {
+  opacity: 0.4; }
+
+.customimg {
+  position: absolute; }
+  .customimg.errorimg {
+    max-height: 75%;
+    max-width: 75%;
+    float: right;
+    bottom: 40%;
+    right: -20%; }
+  .customimg.warningimg {
+    max-height: 65%;
+    max-width: 65%;
+    float: right;
+    bottom: 35%;
+    right: -20%; }
+  .customimg.logoutimg {
+    max-height: 95%;
+    max-width: 95%;
+    bottom: -2%; }
+  .customimg.pinimg {
+    max-height: 80%;
+    max-width: 80%;
+    bottom: 0;
+    left: -37%; }
 
 /*$largeblock: 200px;
 $smallblock: 100px;
@@ -382,11 +460,36 @@ h3 {
   font-family: Proximus-ExtraBold;
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
+.colorWrapper {
+  background-color: rgba(255, 255, 255, 0.7);
+  margin: auto; }
+
+@media (min-width: 768px) {
+  .colorWrapper {
+    width: 750px; } }
+
+@media (min-width: 992px) {
+  .colorWrapper {
+    width: 970px; } }
+
+@media (min-width: 1200px) {
+  .colorWrapper {
+    width: 1170px; } }
+
+body {
+  background: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; }
+
 li {
   list-style-type: none; }
 
 footer {
   bottom: unset;
+  color: #FFFFFF;
+  float: right;
   color: #5C2D91;
   float: right; }
 
@@ -401,6 +504,9 @@ h2 {
 
 h3 {
   font-size: 1.2em; }
+
+body {
+  font-family: Proximus-Regular, Helvetica, sans-serif; }
 
 ul {
   padding-left: 4%; }
@@ -468,7 +574,7 @@ h1 {
   margin-bottom: 0px; }
 
 .navoverride {
-  background-color: white;
+  background-color: transparent;
   border: none; }
 
 .buttonoverride {
@@ -626,8 +732,7 @@ h2 {
   text-align: center; }
 
 .searchdiv {
-  max-height: 30px;
-  max-height: 30px; }
+  height: 30px; }
 
 .inputimg {
   width: 30px;
@@ -641,20 +746,81 @@ h2 {
 
 .dropdowntest {
   display: inline;
-  margin-left: 10px; }
+  margin-left: 10px;
+  font-family: Proximus-Regular;
+  padding: 0 4% 0 1%;
+  -webkit-appearance: none;
+  height: 30px;
+  background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg");
+  background-position: 98%;
+  background-repeat: no-repeat; }
 
-form {
+.searchsensorform {
   display: inline-block;
   padding: 0 10% 5% 5%; }
 
+/*.sensormanagementhtml{
+    background-color:white;
+}*/
 .sensorlist {
-  width: 100%;
-  border-spacing: 10px;
-  table-layout: auto; }
+  width: 100%; }
 
+/*
+.sensorsheadrow{
+    
+    display:flex;
+    justify-content:space-around;
+    padding-bottom:2%;
+    background-color:$proximusterdarkblue;
+}
+.sensorrows{
+    background-color:$proximusterlightblue;
+    margin-bottom:10px;
+    align-items:center;
+    flex-grow:0;
+    flex-basis:25%;
+    & a{
+        color:$proximusblack;
+    display:flex;
+    justify-content:space-around;
+    }
+    &:hover .sensorpinimg{
+        display:flex;
+    }
+}
+    */
+/*  .idsensordiv,.namesensordiv,.numbercontainerdiv,.sensorlocationdiv{
+    flex-grow: 0;
+    flex-basis: 25%;
+    margin-left:10px;
+    }*/
 .sensorsheadrow {
+  font-family: Proximus-Bold;
+  display: table-row;
+  padding-bottom: 2%;
   background-color: #c2d3de; }
 
-.sensorsrows {
-  background-color: #E5F1F9; }
+.sensorrows {
+  height: 40px;
+  font-family: Proximus-Regular;
+  background-color: #E5F1F9;
+  margin-bottom: 10px; }
+  .sensorrows a {
+    display: block;
+    color: #000000; }
+  .sensorrows:hover .sensorpinimg {
+    width: 20px;
+    height: 20px; }
+
+/*.sensorpinimg{
+     display:none;
+    max-height:20px;
+    max-width:20px;
+    width:auto;
+    height:auto;
+}
+.pinlink{
+    display:inline;
+    float:right;
+}*/
 

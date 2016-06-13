@@ -10,7 +10,7 @@ namespace MyThings.Common.Models.NoSQL_Entities
 {
     public class ContainerEntity : TableEntity
     {
-        public ContainerEntity(string company, string macaddress, string container, string locationid, string payload, string timestamp)
+        public ContainerEntity(string company, string macaddress, string container, string locationid, string payload, string timestamp, string hexpayload)
         {
             this.PartitionKey = macaddress;
             this.RowKey = container + DateTime.Now.Ticks.ToString();
@@ -19,6 +19,7 @@ namespace MyThings.Common.Models.NoSQL_Entities
             this.container = container;
             this.locationid = locationid;
             this.payload = double.Parse(payload, CultureInfo.InvariantCulture);
+            this.hexpayload = hexpayload;
             this.receivedtimestamp = timestamp;
             this.Timestamp = DateTime.Now;
         }
@@ -29,6 +30,7 @@ namespace MyThings.Common.Models.NoSQL_Entities
         public string container { get; set; }
         public string locationid { get; set; }
         public double payload { get; set; }
+        public string hexpayload { get; set; }
         public string receivedtimestamp { get; set; }
 
     }
