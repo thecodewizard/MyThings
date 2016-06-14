@@ -13,6 +13,7 @@ using MyThings.Common.Models.FrontEndModels;
 using MyThings.Common.Models.NoSQL_Entities;
 using MyThings.Common.Repositories;
 using MyThings.Web.ViewModels;
+using Newtonsoft.Json;
 
 namespace MyThings.Web.Controllers
 {
@@ -34,6 +35,7 @@ namespace MyThings.Web.Controllers
         private readonly GroupRepository _groupRepository = new GroupRepository();
         private readonly ErrorRepository _errorRepository = new ErrorRepository();
         private readonly PinRepository _pinRepository = new PinRepository();
+        private readonly ThresholdRepository _thresholdRepository = new ThresholdRepository();
 
         #region Site Controllers
         [HttpGet]
@@ -152,6 +154,7 @@ namespace MyThings.Web.Controllers
             });
         }
 
+        #region HomeHelpers
         private List<Tile> CheckDefaultTilesForUser(ApplicationUser user, List<Tile> tiles)
         {
             //Check if the user's pin already include the static pins. If not, add them
@@ -187,10 +190,13 @@ namespace MyThings.Web.Controllers
 
             return tiles;
         }
+        #endregion
 
-        public ActionResult Sensormanagement()
+        [HttpGet]
+        [Route("manage")]
+        public ActionResult Sensormanagement(String query = "", int? selectedSensor = null)
         {
-            //This will result in the user specific custom homepage
+            //Get the current user
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
             //Get the first 50 sensors for the user
@@ -212,19 +218,12 @@ namespace MyThings.Web.Controllers
             List<Group> groups = _groupRepository.GetGroupsForUser(user.Id);
 
             //Populate the suggestionlist
-            List<String> suggestionList = new List<string>();
-            foreach (Sensor sensor in sensors)
-            {
-                if(!String.IsNullOrWhiteSpace(sensor.Name) && !suggestionList.Contains(sensor.Name)) suggestionList.Add(sensor.Name);
-                if (!String.IsNullOrWhiteSpace(sensor.Location) && !suggestionList.Contains(sensor.Location))  suggestionList.Add(sensor.Location);
-                foreach (Container container in sensor.Containers)
-                {
-                    if (!String.IsNullOrWhiteSpace(container.Name) && !suggestionList.Contains(container.Name)) suggestionList.Add(container.Name);
-                    if (!String.IsNullOrWhiteSpace(container.ContainerType.Name) && !suggestionList.Contains(container.ContainerType.Name))
-                        suggestionList.Add(container.ContainerType.Name);
-                }    
-            }
+            List<String> suggestionList = SuggestionListHelper.GetSuggestionList();
 
+            //Fill the viewbag
+            ViewBag.SelectedSensor = selectedSensor;
+            ViewBag.Query = query;
+                 
             return View(new SensorManagementViewModel()
             {
                 Sensors = sensors,
@@ -233,6 +232,102 @@ namespace MyThings.Web.Controllers
                 Groups = groups,
                 TotalSensors = sensors.Count,
                 AutoCompleteSuggestionList = suggestionList
+            });
+        }
+
+        [HttpGet]
+        [Route("sensor/{id}")]
+        public ActionResult SensorDetail(int? id)
+        {
+            if (id.HasValue)
+            {
+                //Get the current user
+                ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+                //Get the sensor
+                int sensorId = id.Value;
+                Sensor sensor = _sensorRepository.GetSensorById(sensorId);
+                if (!sensor.Company.Equals(user.Company)) return RedirectToAction("Index");
+
+                //Get the warnings and errors for the sensor
+                List<Error> errorsForSensor = _errorRepository.GetErrorsForUser(user.Id);
+
+                //Fill the viewbag
+                ViewBag.ContainerCount = sensor.Containers.Count;
+                ViewBag.ErrorList =
+                    (from e in errorsForSensor
+                        where e.SensorId.Equals(sensor.Id) && e.Type.Equals(ErrorType.Error)
+                        select e).ToList();
+                ViewBag.WarningList =
+                    (from e in errorsForSensor
+                     where e.SensorId.Equals(sensor.Id) && e.Type.Equals(ErrorType.Warning)
+                     select e).ToList();
+
+                return View(sensor);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("container/{id}")]
+        public ActionResult ContainerDetail(int? id)
+        {
+            if (id.HasValue)
+            {
+                //Get the current user
+                ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+                //Get the container
+                int containerId = id.Value;
+                Container container = _containerRepository.GetContainerById(containerId);
+
+                //Get the parent sensor
+                Sensor sensor = (container.SensorId.HasValue)
+                    ? _sensorRepository.GetSensorById(container.SensorId.Value)
+                    : null;
+                if (sensor != null && !user.Company.Equals(sensor.Company)) return RedirectToAction("Index");
+
+                //Fill the Viewbag
+                ViewBag.ParentSensor = sensor;
+                return View(container);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("error")]
+        public ActionResult ErrorList(int? selectedError = null, bool onlyErrors = false, String query = "",
+            ErrorCategory category = ErrorCategory.All)
+        {
+            //Get the current user
+            ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+            //Get the errors for the user
+            List<Error> allErrors = _errorRepository.GetErrorsForUser(user.Id);
+
+            //Fill the category list for the combobox
+            List<ErrorCategory> errorCategories = Enum.GetValues(typeof(ErrorCategory)).Cast<ErrorCategory>().ToList();
+            List<String> errorCategoryStrings = (from e in errorCategories select e.ToString()).ToList();
+
+            //Fill the auto completion list for the textbox
+            List<String> suggestionList = SuggestionListHelper.GetSuggestionList(true, true, true, true, true, true, true, true, true, true);
+
+            //Fill the viewbag
+            ViewBag.Query = query;
+            ViewBag.SelectedError = selectedError;
+            ViewBag.SelectedCategory = category;
+            ViewBag.ErrorCount = (from e in allErrors where e.Type.Equals(ErrorType.Error) select e).Count();
+            ViewBag.WarningCount = (from e in allErrors where e.Type.Equals(ErrorType.Warning) select e).Count();
+
+            return View(new ErrorListViewModel()
+            {
+                AllErrorsWarnings = allErrors,
+                Errors = (from e in allErrors where e.Type.Equals(ErrorType.Error) select e).ToList(),
+                Warnings = (from e in allErrors where e.Type.Equals(ErrorType.Warning) select e).ToList(),
+                AutoCompleteSuggestionList = suggestionList,
+                ErrorsOnly = onlyErrors,
+                ErrorCategories = errorCategories,
+                ErrorCategoryStrings = errorCategoryStrings
             });
         }
         #endregion
@@ -700,6 +795,114 @@ namespace MyThings.Web.Controllers
                         return new HttpResponseMessage(HttpStatusCode.NotFound);
                     }
                     return new HttpResponseMessage(HttpStatusCode.Conflict);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
+        #endregion
+
+        #region Sensor Management Methods
+
+        [HttpPost]
+        public HttpResponseMessage UpdateSensorName(int? sensorId, String name)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (sensorId.HasValue)
+                {
+                    int Id = sensorId.Value;
+
+                    if (!String.IsNullOrWhiteSpace(name))
+                    {
+                        //Fetch the user
+                        ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+                        Sensor sensor = _sensorRepository.GetSensorById(Id);
+                        if (sensor != null)
+                        {
+                            sensor.Name = name;
+                            _sensorRepository.Update(sensor);
+                            _sensorRepository.SaveChanges();
+
+                            //Return the sensor when successful
+                            HttpResponseMessage success = new HttpResponseMessage();
+                            success.StatusCode = HttpStatusCode.OK;
+                            success.Content = new StringContent(JsonConvert.SerializeObject(sensor));
+                            return success;
+                        }
+                        return new HttpResponseMessage(HttpStatusCode.NotFound);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
+        #endregion
+
+        #region Threshold Management Methods
+
+        [HttpPost]
+        public HttpResponseMessage UpdateThreshold(ThresholdCreator threshold)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (ModelState.IsValid && threshold != null)
+                {
+                    Threshold dbThreshold = _thresholdRepository.GetByID(threshold.Id);
+                    Container container = _containerRepository.GetContainerById(threshold.ContainerId);
+
+                    if (dbThreshold != null && container != null)
+                    {
+                        //Fetch the user
+                        ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+                        if (container.SensorId.HasValue)
+                        {
+                            Sensor sensor = _sensorRepository.GetSensorById(container.SensorId.Value);
+                            if(!sensor.Company.Equals(user.Company)) return new HttpResponseMessage(HttpStatusCode.Forbidden);
+                        }
+                        
+
+                        //Check for changes and save them
+                        if (!dbThreshold.MinValue.Equals(threshold.MinValue) ||
+                            !dbThreshold.MaxValue.Equals(threshold.MaxValue) ||
+                            !dbThreshold.BetweenValuesActive.Equals(threshold.BetweenValuesActive))
+                        {
+                            _thresholdRepository.SetBetweenValueThreshold(container, threshold.MinValue, threshold.MaxValue, threshold.BetweenValuesActive);
+                        }
+
+                        if (!dbThreshold.MatchValue.Equals(threshold.MatchValue) ||
+                            !dbThreshold.MatchValueActive.Equals(threshold.MatchValueActive))
+                        {
+                            _thresholdRepository.SetExactValueThreshold(container, threshold.MatchValue, threshold.MatchValueActive);
+                        }
+
+                        if (!dbThreshold.MinUpdateInterval.Equals(threshold.MinUpdateInterval) ||
+                            !dbThreshold.FrequencyActive.Equals(threshold.FrequencyActive))
+                        {
+                            _thresholdRepository.SetIntervalThreshold(container, threshold.MinUpdateInterval, threshold.FrequencyActive);
+                        }
+
+                        //Return the sensor when successful
+                        HttpResponseMessage success = new HttpResponseMessage();
+                        success.StatusCode = HttpStatusCode.OK;
+                        success.Content = new StringContent(JsonConvert.SerializeObject(_thresholdRepository.GetByID(dbThreshold.Id)));
+                        return success;
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.NotFound);
                 }
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }

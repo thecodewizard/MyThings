@@ -108,7 +108,7 @@ namespace MyThings.Common.Repositories
 
         public List<Group> GetGroupsForUser(String userId)
         {
-            return (from g in Context.Group where g.User_Id.Equals(userId) select g).ToList();
+            return (from g in Context.Group.Include(g => g.Sensors) where g.User_Id.Equals(userId) select g).ToList();
         }
 
         public Group GetGroupById(int groupId)

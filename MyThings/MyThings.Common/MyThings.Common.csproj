@@ -132,6 +132,7 @@
   <ItemGroup>
     <Compile Include="Context\MyThingsContext.cs" />
     <Compile Include="Helpers\GridsterHelper.cs" />
+    <Compile Include="Helpers\SuggestionListHelper.cs" />
     <Compile Include="Migrations\201606051839593_RestoreDatabase.cs" />
     <Compile Include="Migrations\201606051839593_RestoreDatabase.Designer.cs">
       <DependentUpon>201606051839593_RestoreDatabase.cs</DependentUpon>
@@ -187,6 +188,7 @@
     <Compile Include="Models\FrontEndModels\LocationJsonModel.cs" />
     <Compile Include="Models\FrontEndModels\LocationWebhookModel.cs" />
     <Compile Include="Models\FrontEndModels\Pin.cs" />
+    <Compile Include="Models\FrontEndModels\ThresholdCreator.cs" />
     <Compile Include="Models\FrontEndModels\Tile.cs" />
     <Compile Include="Models\LegacyModels\AccountViewModels.cs" />
     <Compile Include="Models\Container.cs" />

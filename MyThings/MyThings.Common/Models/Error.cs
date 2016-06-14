@@ -132,7 +132,7 @@ namespace MyThings.Common.Models
     //Enumerations
     public enum ErrorCategory
     {
-        Threshold, Connectivity, Power, Generic
+        All, Threshold, Connectivity, Power, Generic
     }
 
     public enum ErrorType
