@@ -27,12 +27,20 @@ namespace MyThings.Common.Repositories
 
         public override Error Insert(Error error)
         {
-            if(error.Sensor != null && Context.Entry(error.Sensor).State != EntityState.Unchanged)
-                Context.Entry(error.Sensor).State = EntityState.Unchanged;
-            if(error.Container != null && Context.Entry(error.Container).State != EntityState.Unchanged)
-                Context.Entry(error.Container).State = EntityState.Unchanged;
+            Error prevError = (from e in GetErrors()
+                               where
+                                   (e.SensorId.Equals(error.SensorId) && e.ContainerId.Equals(error.ContainerId) &&
+                                   e.ErrorCode.Equals(error.ErrorCode)) || (DateTime.Now.Subtract(error.Time) < TimeSpan.FromDays(1))
+                               select e).FirstOrDefault();
+            if (prevError == null)
+            {
+                if (error.Sensor != null && Context.Entry(error.Sensor).State != EntityState.Unchanged)
+                    Context.Entry(error.Sensor).State = EntityState.Unchanged;
+                if (error.Container != null && Context.Entry(error.Container).State != EntityState.Unchanged)
+                    Context.Entry(error.Container).State = EntityState.Unchanged;
 
-            Context.Error.Add(error);
+                Context.Error.Add(error);
+            }
             return error;
         }
 
@@ -65,9 +73,9 @@ namespace MyThings.Common.Repositories
             return GetByID(errorId);
         }
 
-        public Error MarkErrorAsReaded(Error error)
+        public Error MarkErrorAsReaded(Error error, bool readed = true)
         {
-            error.Read = true;
+            error.Read = readed;
             Update(error);
             SaveChanges();
             return error;
