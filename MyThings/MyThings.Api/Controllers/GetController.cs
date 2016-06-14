@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using MyThings.Common.Helpers;
 using MyThings.Common.Models;
 using MyThings.Common.Repositories;
 using Newtonsoft.Json;
@@ -126,42 +126,20 @@ namespace MyThings.Api.Controllers
         [HttpGet]
         public HttpResponseMessage GetSensorsOnQuery(String query)
         {
-            List<Sensor> sensors = _sensorRepository.GetSensors();
-            List<Group> groups = _groupRepository.GetGroups();
-            String json = String.Empty;
-            query = query.ToLower();
+            if (!String.IsNullOrWhiteSpace(query)) query = query.ToLower();
+            String json = JsonConvert.SerializeObject(SuggestionListHelper.GetSensorsFromSuggestion(query) ?? new List<Sensor>());
 
-            if (String.IsNullOrWhiteSpace(query))
-            {
-                json = JsonConvert.SerializeObject(sensors);
-            }
-            else
-            {
-                List<Sensor> filteredSensors =
-                    (from s in sensors
-                        where
-                            s.Name.ToLower().Contains(query) || s.Location.ToLower().Contains(query) || s.MACAddress.ToLower().Contains(query) ||
-                            (from c in s.Containers
-                                where !c.Name.ToLower().Contains(query) && c.ContainerType.Name.ToLower().Contains(query)
-                                select c.SensorId).Contains(s.Id)
-                        select s).ToList();
+            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+            message.Content = new StringContent(json);
+            message.Headers.Add("Access-Control-Allow-Origin", "*");
+            return message;
+        }
 
-                foreach (Group group in groups)
-                {
-                    if (group.Name.ToLower().Contains(query))
-                    {
-                        foreach (Sensor sensor in group.Sensors)
-                        {
-                            if (!(from s in filteredSensors select s.Id).ToList<int>().Contains(sensor.Id))
-                            {
-                                filteredSensors.Add(sensor);
-                            }
-                        }
-                    }
-                }
-
-                json = JsonConvert.SerializeObject(filteredSensors);
-            }
+        [HttpGet]
+        public HttpResponseMessage GetErrorsOnQuery(String query)
+        {
+            if(!String.IsNullOrWhiteSpace(query)) query = query.ToLower();
+            String json = JsonConvert.SerializeObject(SuggestionListHelper.GetErrorsFromSuggestion(query) ?? new List<Error>());
 
             HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
             message.Content = new StringContent(json);
