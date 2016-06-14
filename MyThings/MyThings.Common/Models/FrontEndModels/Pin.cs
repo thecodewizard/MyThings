@@ -10,7 +10,9 @@ namespace MyThings.Common.Models
         public int TileId { get; set; }
         public int SavedId { get; set; }
         public PinType SavedType { get; set; }
-        public String SavedTypeString { get; set; }
+        public String SavedTypeString {
+            get { return SavedType.ToString(); }
+        }
     }
 
     public enum PinType
