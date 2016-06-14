@@ -256,8 +256,21 @@
                                     function() {
                                         $('.sensorrows')
                                             .on('click',
-                                                function() {
+                                                function(e) {
                                                     if ($('.newgroup').length) {
+                                                        var name = $('.groupinputtext').val();
+                                                        var sensor = $(e.target).text();
+                                                        var sensors = [];
+                                                        sensors.push(sensor);
+                                                        var group =
+                                                            [
+                                                                {
+                                                                    "name": name,
+                                                                    "sensors": sensors,
+                                                                    "autoPinGroup": false
+                                                                }
+                                                            ];
+
                                                     }
                                                 });
                                     });
@@ -290,7 +303,8 @@
                             function sensorlistCreate() {
                                 for (var i = 0; i < allSensors.length; i++) {
                                     $(".sensorlist")
-                                        .append('<tr class="sensorrows">' +
+                                        .append('<tr class="sensorrows" id="'+
+                                            allSensors[i].Id+'">' +
                                             '<td class="idsensordiv">' +
                                             allSensors[i].MACAddress +
                                             '</td>' +

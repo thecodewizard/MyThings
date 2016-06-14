@@ -205,7 +205,7 @@ namespace MyThings.Web.Controllers
         #endregion
 
         [HttpGet]
-        [Route("manage")]
+        [Route("sensormanagement")]
         public ActionResult Sensormanagement(String query = "", int? selectedSensor = null)
         {
             //Get the current user

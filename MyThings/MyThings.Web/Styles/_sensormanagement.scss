@@ -34,7 +34,7 @@ h2{
 .grouprectangletile{
     float:left;
     width:$largeblock;
-    height:$smallblock;
+    height:125px;
     color: $proximuswhite;
     background-color: $proximusmainblue;
     margin:1%;
@@ -60,17 +60,17 @@ h2{
 }
 .ciphervaluegroup{
     
-    display:inline;
-    margin:2%;
+    display:block;
+    margin:0 0 0 3%;
     font-family:$proximusregularfont;
-    font-size:$fontsizemedium;
+    font-size:$fontsizelarge;
 }
 .sensors{
     display:inline;
     float:right;
     font-family:$proximusregularfont;
     font-size:$fontsizemedium;
-    margin:8% 2% 0;
+    margin:-10% 2% 0;
     overflow:hidden;
 }
 .addgroup{
@@ -78,15 +78,15 @@ h2{
     font-family:$proximusregularfont;
     font-size:$fontsizelarge;
     width:$largeblock;
-    height:$smallblock;
+    height:125px;
     margin: 0 auto;
-    padding: 10%;
+    padding: 15%;
     position: relative;
     text-align:center;
 }
 .newgroup{
     height:125px;
-    width:410px;
+    width:415px;
     font-size:$fontsizesmall;
 }
 .groupinputtext
