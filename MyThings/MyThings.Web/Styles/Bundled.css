@@ -846,4 +846,115 @@ h2 {
     display:inline;
     float:right;
 }*/
+h1 {
+  color: #5C2D91; }
+
+h2 {
+  color: #9C5FB5; }
+
+h3 {
+  color: #D1BBDA; }
+
+@font-face {
+  font-family: Proximus-Regular;
+  src: url("../fonts/Proximus-Regular.ttf") format("truetype"), url("../fonts/Proximus-Regular.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Light;
+  src: url("../fonts/Proximus-Light.ttf") format("truetype"), url("../fonts/Proximus-Light.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-LightItalic;
+  src: url("../fonts/Proximus-LightItalic.ttf") format("truetype"), url("../fonts/Proximus-LightItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-RegularItalic;
+  src: url("../fonts/Proximus-RegularItalic.ttf") format("truetype"), url("../fonts/Proximus-RegularItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Bold;
+  src: url("../fonts/Proximus-Bold.ttf") format("truetype"), url("../fonts/Proximus-Bold.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-BoldItalic;
+  src: url("../fonts/Proximus-BoldItalic.ttf") format("truetype"), url("../fonts/Proximus-BoldItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-ExtraBold;
+  src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
+
+.containerdetail {
+  margin: 0 0 50px 0; }
+
+.detailHolder {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center; }
+
+.detailBlock {
+  display: block;
+  position: relative;
+  margin: 10px;
+  padding-bottom: 33%;
+  overflow: hidden; }
+  .detailBlock.square {
+    width: 30%;
+    height: 0;
+    background: #D1BBDA; }
+    .detailBlock.square:nth-child(2n) {
+      background: #CCCCCC; }
+  .detailBlock.rectangle {
+    width: 60%;
+    height: 0;
+    background: #F2E7F2; }
+    .detailBlock.rectangle:nth-child(2n) {
+      background: #E5F1F9; }
+  .detailBlock .title {
+    color: #5C2D91;
+    font-family: Proximus-Bold;
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 0px;
+    text-align: right;
+    margin: 18px; }
+    .detailBlock .title p {
+      height: 20px; }
+  .detailBlock .value {
+    color: #FFFFFF;
+    font-family: Proximus-Regular;
+    font-size: 10em;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    margin-top: 20px; }
+    .detailBlock .value .sup {
+      font-size: 0.3em;
+      margin-top: -90px; }
+  .detailBlock .tileimg {
+    height: auto;
+    width: auto;
+    max-height: 100%;
+    position: absolute;
+    top: 0;
+    left: -53%; }
+  .detailBlock .containerList {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center; }
+    .detailBlock .containerList li {
+      position: relative;
+      height: 50px;
+      width: calc(100% - 10px);
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center; }
+      .detailBlock .containerList li img {
+        height: 100%;
+        width: auto; }
 

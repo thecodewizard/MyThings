@@ -1,9 +1,223 @@
-﻿@model MyThings.Common.Models.Container
+﻿@using MyThings.Common.Models
+@model MyThings.Common.Models.Container
 
 @{
     ViewBag.Title = "Container";
     ViewBag.Pageid = "containerdetail";
 }
 
-<h2>ContainerDetail</h2>
+<section class="containerdetail">
+    <ul>
+        <li class="breadcrumbs">
+            @Html.ActionLink("Home", "Index", "Dashboard") >
+            @Html.ActionLink("Sensor management", "Sensormanagement", "Dashboard") >
+            @Html.ActionLink("Sensor " + (String) ViewBag.ParentSensor.Name, "SensorDetail", "Dashboard", new {Id = (int) ViewBag.ParentSensor.Id}, null) >
+            @Html.ActionLink(Model.ContainerType.Name + " Container", "ContainerDetail", "Dashboard", new {Id = Model.Id}, null)
+        </li>
+    </ul>
 
+    <h1>@Model.ContainerType.Name Container</h1>
+
+    <section class="detailHolder">
+        <article class="detailBlock square">
+            <div class="" style="display: list-item;">
+                <div>
+                    <img class="tileimg" alt="Temperature" src="http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png">
+                </div>
+
+                <div class="title">
+                    <p>Temperature</p>
+                    <p>16u32 - 16 may 2016</p>
+                </div>
+
+                <div class="value">
+                    <div>23</div>
+                    <span class="sup">°C</span>
+                </div>
+
+                @*<p title="0018B2000000016A" class="itemName">0018B2000000016A</p>
+            <p class="itemType">Temperature</p>
+            <p class="itemValue">23<sup>°C</sup>
+            </p>
+            <p class="itemValueTimeStampTime">09:43:45</p>
+            <p class="itemValueTimeStampDate">11-6-2016</p>*@
+            </div>
+        </article>
+        <article class="detailBlock rectangle">
+            <div class="title">
+                <p>History & Trendanalysis</p>
+            </div>
+        </article>
+        <article class="detailBlock rectangle">
+            <div class="title">
+                <p>Set Threshold Value</p>
+            </div>
+        </article>
+        <article class="detailBlock square">
+            <div class="title">
+                <p>Other containers in sensor</p>
+            </div>
+            <div class="containerList">
+                <ul>
+                    <li>
+                        <img alt="Temperature" src="http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png">
+                        <p>Battery</p>
+                    </li>
+                </ul>
+            </div>
+        </article>
+    </section>
+</section>
+
+
+@section scripts {
+    <script>
+        function refreshTile(tile, tileInfo) {
+            var url;
+            switch (tileInfo.Pin.SavedTypeString) {
+                //Container, Sensor, Error, Group, FixedClock, FixedNavigation, FixedError
+            case "Sensor":
+                url = "";
+                break;
+            case "Container":
+                url = "get/getmostrecentvalue?containerId=";
+                break;
+            case "Error":
+                url = "";
+                break;
+            case "Group":
+                url = "";
+                break;
+            case "FixedError":
+                url = "";
+                break;
+            default:
+            case "FixedClock":
+            case "FixedNavigation":
+                url = "";
+            }
+
+            if (url === "") setTileValue(tile, tileInfo, null, null);
+            else {
+                $.ajax({
+                        url: apiBaseUrl + url + tileInfo.Pin.SavedId,
+                        method: "GET"
+                    })
+                    .done(function(json) {
+                        if (json != null) {
+                            var data = JSON.parse(json);
+                            var value;
+                            if (data.CurrentValue.HexValue) value = data.CurrentValue.HexValue;
+                            else value = data.CurrentValue.Value
+                            setTileValue(tile, tileInfo, value, new Date(Date.parse(data.CurrentValue.Timestamp)));
+                        }
+                    })
+                    .fail(function(json) {
+                        if ($.isFunction(MyThings.logToUser)) {
+                            MyThings.logToUser("Item" +
+                                tileInfo.Pin.SavedTypeString +
+                                " " +
+                                tileInfo.Pin.Id +
+                                " could not be loaded.");
+                            setTileValue(tile, tileInfo, null, null);
+                        }
+                    });
+            }
+        }
+
+        function setTileValue(tile, tileInfo, value, time) {
+
+            var innerHtml = "";
+            console.log(tileInfo.Pin.SavedTypeString);
+
+            switch (tileInfo.Pin.SavedTypeString) {
+                //Container, Sensor, Error, Group, FixedClock, FixedNavigation, FixedError
+            case "Sensor":
+                innerHtml += "Sensor";
+                break;
+            case "Container":
+                var werkContainer = $.grep(pinnedContainers, function (e) { return e.Id === tileInfo.Pin.SavedId; })[0];
+
+                innerHtml +=
+                    "<p title='" +
+                    werkContainer.Name +
+                    "' class='itemName'>" +
+                    werkContainer.Name +
+                    "</p>" +
+                    "<p class='itemType'>" +
+                    werkContainer.ContainerType.Name +
+                    "</p>" +
+                    "<p class='itemValue'>" +
+                    (Math.round(parseFloat(value) * 10) / 10);
+
+                // var containerValue = ;
+                //if(werkContainer.ContainerType.Name !== "Temperature") innerHtml += "TBT";
+
+                switch (werkContainer.ContainerType.Name) {
+                case "Battery level":
+                    innerHtml += "<sup>%</sup></p>" +
+                        "<img class='pinimg customimg' alt='Battery' src='http://loradatagroep9.blob.core.windows.net/proximusimages/battery-icon-white.png' />";
+                    break;
+                case "Temperature":
+                    innerHtml += "<sup>°C</sup></p>" +
+                        "<img class='pinimg customimg' alt='Temperature' src='http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png' />";
+                    break;
+                case "Humidity":
+                    innerHtml += "<sup>%</sup></p>" +
+                        "<img class='pinimg customimg' alt='Humidity' src='http://loradatagroep9.blob.core.windows.net/proximusimages/humidity-icon-white.png' />";
+                    break;
+                case "GPS":
+                    innerHtml += "</p>" +
+                        "<img class='pinimg customimg' alt='Location' src='http://loradatagroep9.blob.core.windows.net/proximusimages/location-icon-white.png' />";
+                    break;
+                case "OnOff": case "Button1":
+
+                    break;
+                case "Luminance":
+                    innerHtml += "</p>" +
+                        "<img class='pinimg customimg' alt='Luminance' src='http://loradatagroep9.blob.core.windows.net/proximusimages/luminance-icon-white.png' />";
+                    break;
+                case "PIR":
+                    innerHtml += "</p>" +
+                        "<img class='pinimg customimg' alt='PIR' src='http://loradatagroep9.blob.core.windows.net/proximusimages/eye-icon-white.png' />";
+                    break;
+                case "Accelerometer":
+                    innerHtml += "</p>" +
+                        "<img class='pinimg customimg' alt='Accelerometer' src='http://loradatagroep9.blob.core.windows.net/proximusimages/accelerometer-icon-white.png' />";
+                    break;
+                case "Simple Metering Current": case "Simple Metering Demand":
+                    innerHtml += "</p>" +
+                        "<img class='pinimg customimg' alt='Simple Metering' src='http://loradatagroep9.blob.core.windows.net/proximusimages/power-icon-white.png' />";
+                    break;
+                default: case "Raw payload":
+                    innerHtml += "</p>" +
+                        "<img class='pinimg customimg' alt='Generic' src='http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x-white.png' />";
+                    break;
+                }
+
+                break;
+            case "Error":
+                innerHtml += "Error";
+                break;
+            case "Group":
+                innerHtml += "Group";
+                break;
+            case "FixedClock":
+                innerHtml += "FixedClock";
+                break;
+            case "FixedNavigation":
+                innerHtml += "FixedNavigation";
+                break;
+            case "FixedError":
+                innerHtml += "ErrFixedErroror";
+                break;
+            default:
+                innerHtml += "Other";
+                break;
+            }
+            if (time) innerHtml += '<p class="itemValueTimeStampTime">' + time.toLocaleTimeString() + '</p><p class="itemValueTimeStampDate">' + time.toLocaleDateString() + '</p>';
+            innerHtml += '<span class="gs-resize-handle gs-resize-handle-both"></span>';
+            tile.html(innerHtml);
+        }
+    </script>
+}

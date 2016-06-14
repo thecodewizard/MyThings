@@ -1,0 +1,108 @@
+﻿@import "_colors.scss";
+@import "_fonts.scss";
+
+body {
+
+}
+
+.containerdetail{
+    margin: 0 0 50px 0;
+}
+
+.detailHolder{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.detailBlock{
+    display: block;
+    position: relative;
+    margin: 10px;
+    padding-bottom: 33%;
+    overflow: hidden;
+
+    &.square{
+        width: 30%;
+        height: 0;
+        background: $proximusterdarkpurple;
+
+        &:nth-child(2n){
+            background: $proximusterlightgray;
+        }
+    }
+
+    &.rectangle{
+        width: 60%;
+        height: 0;
+        background: $proximusterlightpurple;
+
+        &:nth-child(2n){
+            background: $proximusterlightblue;
+        }
+    }
+
+    .title{
+        color: $proximusmainpurple;
+        font-family: $proximusboldfont;
+        font-weight: bold;
+        font-size: $fontsizesmall;
+        line-height: 0px;
+        text-align: right;
+        margin: 18px;
+
+        & p{
+            height: 20px;
+        }
+    }
+
+    .value{
+        color: $proximuswhite;
+        font-family: $proximusregularfont;
+        font-size: 10em;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-end;
+        align-items: center;
+        position: absolute;
+        top: 0; right: 0;
+        height: 100%;
+        width: 100%;
+        margin-top: 20px;
+
+        .sup{
+            font-size: 0.3em;
+            margin-top: -90px;
+        }
+    }
+
+    .tileimg{
+        height: auto;
+        width: auto;
+        max-height: 100%;
+
+        position: absolute;
+        top: 0; left: -53%;
+    }
+
+    .containerList{
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+
+        li{
+            position: relative;
+            height: 50px;
+            width: calc(100% - 10px);
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+
+            img{
+                height: 100%;
+                width: auto;
+            }
+        }
+
+    }
+}
