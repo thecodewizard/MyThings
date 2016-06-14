@@ -29,7 +29,7 @@ h2{
 .groupdiv{
     display:flex;
     flex-wrap:wrap;
-    padding:0 0 5% 2%;
+    padding:0 0 5% 3%;
 }
 .grouprectangletile{
     float:left;
@@ -37,9 +37,12 @@ h2{
     height:$smallblock;
     color: $proximuswhite;
     background-color: $proximusmainblue;
-    margin:2%;
+    margin:1%;
     & a{
     color: $proximuswhite;
+    }
+    &:hover{
+          cursor: pointer;
     }
 }
 .addgrouptile:hover{
@@ -74,8 +77,6 @@ h2{
      display:inline-block;
     font-family:$proximusregularfont;
     font-size:$fontsizelarge;
-}
-.addgroup{
     width:$largeblock;
     height:$smallblock;
     margin: 0 auto;
@@ -83,15 +84,31 @@ h2{
     position: relative;
     text-align:center;
 }
+.newgroup{
+    height:125px;
+    width:410px;
+    font-size:$fontsizesmall;
+}
+.groupinputtext
+{
+    display:block;
+    margin-left:2%;
+    color:$proximusblack;
+    font-size:$fontsizesmall;
+}
+.newgroupbutton{
+    margin-left:2%;
+     color:$proximusblack;
+}
 .searchdiv
 {
-    height:30px;
+    //height:30px;
 }
 .inputimg{
     width:30px;
     height:30px;
     padding:5px;
-    margin-bottom:-5%;
+    margin:0 0 -5% -5%;
     background-color:$proximusmainpurple;
 }
 .searchbardiv{
@@ -166,6 +183,9 @@ h2{
     & a{
     display:block;
     color:$proximusblack;
+    }
+    &:hover{
+      cursor: pointer;
     }
     &:hover .sensorpinimg{
     width:20px;
