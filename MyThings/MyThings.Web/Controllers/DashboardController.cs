@@ -13,6 +13,7 @@ using MyThings.Common.Models.FrontEndModels;
 using MyThings.Common.Models.NoSQL_Entities;
 using MyThings.Common.Repositories;
 using MyThings.Web.ViewModels;
+using Newtonsoft.Json;
 
 namespace MyThings.Web.Controllers
 {
@@ -21,6 +22,7 @@ namespace MyThings.Web.Controllers
     {
         //Define the usermanager
         private ApplicationUserManager _userManager;
+
         public ApplicationUserManager UserManager
         {
             get { return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
@@ -34,8 +36,10 @@ namespace MyThings.Web.Controllers
         private readonly GroupRepository _groupRepository = new GroupRepository();
         private readonly ErrorRepository _errorRepository = new ErrorRepository();
         private readonly PinRepository _pinRepository = new PinRepository();
+        private readonly ThresholdRepository _thresholdRepository = new ThresholdRepository();
 
         #region Site Controllers
+
         [HttpGet]
         public ActionResult Index()
         {
@@ -56,14 +60,17 @@ namespace MyThings.Web.Controllers
             tiles = CheckDefaultTilesForUser(user, tiles);
 
             //Set up caches to improve efficiency
-            List<Sensor> cacheSensors = (from s in _sensorRepository.GetSensors(null, true) where s.Company.Equals(user.Company) select s).ToList();
-            List<Container> cacheContainers = (from c in _containerRepository.GetContainers() where c.SensorId.HasValue && 
-                                               (from s in cacheSensors select s.Id).ToList<int>().Contains(c.SensorId.Value) select c).ToList();
+            List<Sensor> cacheSensors =
+                (from s in _sensorRepository.GetSensors(null, true) where s.Company.Equals(user.Company) select s)
+                    .ToList();
+            List<Container> cacheContainers = (from c in _containerRepository.GetContainers()
+                where c.SensorId.HasValue &&
+                      (from s in cacheSensors select s.Id).ToList<int>().Contains(c.SensorId.Value)
+                select c).ToList();
             List<Group> cacheGroups = _groupRepository.GetGroupsForUser(user.Id);
             List<Error> cacheErrors = _errorRepository.GetErrorsForUser(user.Company);
 
             //Go over all the user's pins and fetch their object. Filter the faulty pins
-
             List<Tile> userTiles = (from t in tiles select t).ToList();
             foreach (Tile tile in userTiles)
             {
@@ -72,7 +79,8 @@ namespace MyThings.Web.Controllers
                 {
                     case PinType.Group:
                         //Give the found group to javascript.
-                        Group group = (from g in cacheGroups where g.Id.Equals(tile.Pin.SavedId) select g).FirstOrDefault();
+                        Group group =
+                            (from g in cacheGroups where g.Id.Equals(tile.Pin.SavedId) select g).FirstOrDefault();
                         if (group != null)
                         {
                             pinnedGroups.Add(group);
@@ -84,7 +92,8 @@ namespace MyThings.Web.Controllers
                         break;
                     case PinType.Error:
                         //Give the found error to javascript.
-                        Error error = (from e in cacheErrors where e.Id.Equals(tile.Pin.SavedId) select e).FirstOrDefault();
+                        Error error =
+                            (from e in cacheErrors where e.Id.Equals(tile.Pin.SavedId) select e).FirstOrDefault();
                         if (error != null)
                         {
                             pinnedErrors.Add(error);
@@ -96,7 +105,8 @@ namespace MyThings.Web.Controllers
                         break;
                     case PinType.Sensor:
                         //Give the found sensor to javascript
-                        Sensor sensor = (from s in cacheSensors where s.Id.Equals(tile.Pin.SavedId) select s).FirstOrDefault();
+                        Sensor sensor =
+                            (from s in cacheSensors where s.Id.Equals(tile.Pin.SavedId) select s).FirstOrDefault();
                         if (sensor != null)
                         {
                             pinnedSensors.Add(sensor);
@@ -108,7 +118,8 @@ namespace MyThings.Web.Controllers
                         break;
                     case PinType.Container:
                         //Give the found container to javascript
-                        Container container = (from c in cacheContainers where c.Id.Equals(tile.Pin.SavedId) select c).FirstOrDefault();
+                        Container container =
+                            (from c in cacheContainers where c.Id.Equals(tile.Pin.SavedId) select c).FirstOrDefault();
                         if (container != null)
                         {
                             pinnedContainers.Add(container);
@@ -135,8 +146,8 @@ namespace MyThings.Web.Controllers
             ViewBag.TotalTileCount = tiles.Count;
             ViewBag.FixedTileCount = 9; //Clock, Warnings, Errors, Logout, 4x Nav, Map
             ViewBag.CustomTileCount = ViewBag.TotalTileCount - ViewBag.FixedTileCount;
-            ViewBag.ErrorCount = (from e in cacheErrors where e.Type == ErrorType.Error select e).Count();
-            ViewBag.WarningCount = (from e in cacheErrors where e.Type == ErrorType.Warning select e).Count();
+            ViewBag.ErrorCount = (from e in cacheErrors where e.Type == ErrorType.Error && e.Read == false select e).Count();
+            ViewBag.WarningCount = (from e in cacheErrors where e.Type == ErrorType.Warning && e.Read == false select e).Count();
 
             //Return the view
             return View(new HomePageViewModel()
@@ -153,16 +164,18 @@ namespace MyThings.Web.Controllers
             });
         }
 
+        #region HomeHelpers
+
         private List<Tile> CheckDefaultTilesForUser(ApplicationUser user, List<Tile> tiles)
         {
             //Check if the user's pin already include the static pins. If not, add them
-                //Check clock
+            //Check clock
             if (!(from t in tiles where t.Pin.SavedType == PinType.FixedClock select t).Any())
             {
                 tiles.Add(new Tile() {Pin = PinRepository.RenderClockPinForUser(user.Id)});
             }
 
-                //Check navigation
+            //Check navigation
             List<Tile> navTiles = (from t in tiles where t.Pin.SavedType == PinType.FixedNavigation select t).ToList();
             if (navTiles.Count() < 6 && navTiles.Any()) //If the count isn't correct, delete all the pins
             {
@@ -174,7 +187,7 @@ namespace MyThings.Web.Controllers
                 foreach (Pin navPin in generatedNavPins) tiles.Add(new Tile() {Pin = navPin});
             }
 
-                //Check errorpins
+            //Check errorpins
             List<Tile> errorTiles = (from t in tiles where t.Pin.SavedType == PinType.FixedError select t).ToList();
             if (errorTiles.Count() < 2 && errorTiles.Any()) //If the count isn't correct, delete all the pins
             {
@@ -189,13 +202,18 @@ namespace MyThings.Web.Controllers
             return tiles;
         }
 
-        public ActionResult Sensormanagement()
+        #endregion
+
+        [HttpGet]
+        [Route("manage")]
+        public ActionResult Sensormanagement(String query = "", int? selectedSensor = null)
         {
-            //This will result in the user specific custom homepage
+            //Get the current user
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
             //Get the first 50 sensors for the user
-            List<Sensor> sensors = (from s in _sensorRepository.GetSensors(50) where s.Company.Equals(user.Company) select s).ToList();
+            List<Sensor> sensors =
+                (from s in _sensorRepository.GetSensors(50) where s.Company.Equals(user.Company) select s).ToList();
 
             //Get the different containertypes for the filtering in the combobox
             List<ContainerType> types = _containerTypeRepository.GetContainerTypes();
@@ -213,18 +231,11 @@ namespace MyThings.Web.Controllers
             List<Group> groups = _groupRepository.GetGroupsForUser(user.Id);
 
             //Populate the suggestionlist
-            List<String> suggestionList = new List<string>();
-            foreach (Sensor sensor in sensors)
-            {
-                if(!String.IsNullOrWhiteSpace(sensor.Name) && !suggestionList.Contains(sensor.Name)) suggestionList.Add(sensor.Name);
-                if (!String.IsNullOrWhiteSpace(sensor.Location) && !suggestionList.Contains(sensor.Location))  suggestionList.Add(sensor.Location);
-                foreach (Container container in sensor.Containers)
-                {
-                    if (!String.IsNullOrWhiteSpace(container.Name) && !suggestionList.Contains(container.Name)) suggestionList.Add(container.Name);
-                    if (!String.IsNullOrWhiteSpace(container.ContainerType.Name) && !suggestionList.Contains(container.ContainerType.Name))
-                        suggestionList.Add(container.ContainerType.Name);
-                }    
-            }
+            List<String> suggestionList = SuggestionListHelper.GetSuggestionList();
+
+            //Fill the viewbag
+            ViewBag.SelectedSensor = selectedSensor;
+            ViewBag.Query = query;
 
             return View(new SensorManagementViewModel()
             {
@@ -236,6 +247,104 @@ namespace MyThings.Web.Controllers
                 AutoCompleteSuggestionList = suggestionList
             });
         }
+
+        [HttpGet]
+        [Route("sensor/{id}")]
+        public ActionResult SensorDetail(int? id)
+        {
+            if (id.HasValue)
+            {
+                //Get the current user
+                ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+                //Get the sensor
+                int sensorId = id.Value;
+                Sensor sensor = _sensorRepository.GetSensorById(sensorId);
+                if (!sensor.Company.Equals(user.Company)) return RedirectToAction("Index");
+
+                //Get the warnings and errors for the sensor
+                List<Error> errorsForSensor = _errorRepository.GetErrorsForUser(user.Id);
+
+                //Fill the viewbag
+                ViewBag.ContainerCount = sensor.Containers.Count;
+                ViewBag.ErrorList =
+                    (from e in errorsForSensor
+                        where e.SensorId.Equals(sensor.Id) && e.Type.Equals(ErrorType.Error)
+                        select e).ToList();
+                ViewBag.WarningList =
+                    (from e in errorsForSensor
+                        where e.SensorId.Equals(sensor.Id) && e.Type.Equals(ErrorType.Warning)
+                        select e).ToList();
+
+                return View(sensor);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("container/{id}")]
+        public ActionResult ContainerDetail(int? id)
+        {
+            if (id.HasValue)
+            {
+                //Get the current user
+                ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+                //Get the container
+                int containerId = id.Value;
+                Container container = _containerRepository.GetContainerById(containerId);
+
+                //Get the parent sensor
+                Sensor sensor = (container.SensorId.HasValue)
+                    ? _sensorRepository.GetSensorById(container.SensorId.Value)
+                    : null;
+                if (sensor != null && !user.Company.Equals(sensor.Company)) return RedirectToAction("Index");
+
+                //Fill the Viewbag
+                ViewBag.ParentSensor = sensor;
+                return View(container);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("error")]
+        public ActionResult ErrorList(int? selectedError = null, bool onlyErrors = false, String query = "",
+            ErrorCategory category = ErrorCategory.All)
+        {
+            //Get the current user
+            ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+            //Get the errors for the user
+            List<Error> allErrors = _errorRepository.GetErrorsForUser(user.Id);
+
+            //Fill the category list for the combobox
+            List<ErrorCategory> errorCategories = Enum.GetValues(typeof(ErrorCategory)).Cast<ErrorCategory>().ToList();
+            List<String> errorCategoryStrings = (from e in errorCategories select e.ToString()).ToList();
+
+            //Fill the auto completion list for the textbox
+            List<String> suggestionList = SuggestionListHelper.GetSuggestionList(true, true, true, true, true, true,
+                true, true, true, true);
+
+            //Fill the viewbag
+            ViewBag.Query = query;
+            ViewBag.SelectedError = selectedError;
+            ViewBag.SelectedCategory = category;
+            ViewBag.ErrorCount = (from e in allErrors where e.Type.Equals(ErrorType.Error) select e).Count();
+            ViewBag.WarningCount = (from e in allErrors where e.Type.Equals(ErrorType.Warning) select e).Count();
+
+            return View(new ErrorListViewModel()
+            {
+                AllErrorsWarnings = allErrors,
+                Errors = (from e in allErrors where e.Type.Equals(ErrorType.Error) select e).ToList(),
+                Warnings = (from e in allErrors where e.Type.Equals(ErrorType.Warning) select e).ToList(),
+                AutoCompleteSuggestionList = suggestionList,
+                ErrorsOnly = onlyErrors,
+                ErrorCategories = errorCategories,
+                ErrorCategoryStrings = errorCategoryStrings
+            });
+        }
+
         #endregion
 
         #region Site API Functionality
@@ -263,6 +372,7 @@ namespace MyThings.Web.Controllers
             message.Content = new StringContent("You must be logged in to perform this operation");
             return message;
         }
+
         #endregion
 
         #region Pin Objects Methods
@@ -279,7 +389,8 @@ namespace MyThings.Web.Controllers
 
                     if (!_pinRepository.IsSensorPinned(user.Id, sensorId.Value))
                     {
-                        List<Tile> tiles = GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
+                        List<Tile> tiles =
+                            GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
                         tiles.Add(new Tile()
                         {
                             Pin = new Pin()
@@ -317,7 +428,8 @@ namespace MyThings.Web.Controllers
 
                     if (!_pinRepository.IsContainerPinned(user.Id, containerId.Value))
                     {
-                        List<Tile> tiles = GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
+                        List<Tile> tiles =
+                            GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
                         tiles.Add(new Tile()
                         {
                             Pin = new Pin()
@@ -356,7 +468,8 @@ namespace MyThings.Web.Controllers
 
                     if (!_pinRepository.IsGroupPinned(user.Id, groupId.Value))
                     {
-                        List<Tile> tiles = GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
+                        List<Tile> tiles =
+                            GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
                         tiles.Add(new Tile()
                         {
                             Pin = new Pin()
@@ -395,7 +508,8 @@ namespace MyThings.Web.Controllers
 
                     if (!_pinRepository.IsErrorPinned(user.Id, errorId.Value))
                     {
-                        List<Tile> tiles = GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
+                        List<Tile> tiles =
+                            GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
                         tiles.Add(new Tile()
                         {
                             Pin = new Pin()
@@ -421,6 +535,7 @@ namespace MyThings.Web.Controllers
             return message;
 
         }
+
         #endregion
 
         #region Unpin Objects Methods
@@ -437,7 +552,8 @@ namespace MyThings.Web.Controllers
 
                     if (_pinRepository.IsSensorPinned(user.Id, sensorId.Value))
                     {
-                        List<Tile> tiles = GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
+                        List<Tile> tiles =
+                            GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
                         Tile tile =
                             (from t in tiles
                                 where t.Pin.SavedId.Equals(sensorId.Value) && t.Pin.SavedType.Equals(PinType.Sensor)
@@ -472,11 +588,13 @@ namespace MyThings.Web.Controllers
 
                     if (_pinRepository.IsContainerPinned(user.Id, containerId.Value))
                     {
-                        List<Tile> tiles = GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
+                        List<Tile> tiles =
+                            GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
                         Tile tile =
                             (from t in tiles
-                             where t.Pin.SavedId.Equals(containerId.Value) && t.Pin.SavedType.Equals(PinType.Container)
-                             select t).FirstOrDefault();
+                                where
+                                    t.Pin.SavedId.Equals(containerId.Value) && t.Pin.SavedType.Equals(PinType.Container)
+                                select t).FirstOrDefault();
                         tiles.Remove(tile);
                         _pinRepository.UpdateGridsterJson(user.Id, GridsterHelper.TileListToJson(tiles));
 
@@ -507,11 +625,12 @@ namespace MyThings.Web.Controllers
 
                     if (_pinRepository.IsGroupPinned(user.Id, groupId.Value))
                     {
-                        List<Tile> tiles = GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
+                        List<Tile> tiles =
+                            GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
                         Tile tile =
                             (from t in tiles
-                             where t.Pin.SavedId.Equals(groupId.Value) && t.Pin.SavedType.Equals(PinType.Group)
-                             select t).FirstOrDefault();
+                                where t.Pin.SavedId.Equals(groupId.Value) && t.Pin.SavedType.Equals(PinType.Group)
+                                select t).FirstOrDefault();
                         tiles.Remove(tile);
                         _pinRepository.UpdateGridsterJson(user.Id, GridsterHelper.TileListToJson(tiles));
 
@@ -542,11 +661,12 @@ namespace MyThings.Web.Controllers
 
                     if (_pinRepository.IsErrorPinned(user.Id, errorId.Value))
                     {
-                        List<Tile> tiles = GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
+                        List<Tile> tiles =
+                            GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
                         Tile tile =
                             (from t in tiles
-                             where t.Pin.SavedId.Equals(errorId.Value) && t.Pin.SavedType.Equals(PinType.Error)
-                             select t).FirstOrDefault();
+                                where t.Pin.SavedId.Equals(errorId.Value) && t.Pin.SavedType.Equals(PinType.Error)
+                                select t).FirstOrDefault();
                         tiles.Remove(tile);
                         _pinRepository.UpdateGridsterJson(user.Id, GridsterHelper.TileListToJson(tiles));
 
@@ -564,12 +684,13 @@ namespace MyThings.Web.Controllers
             message.Content = new StringContent("You must be logged in to perform this operation");
             return message;
         }
+
         #endregion
 
         #region Group Management Methods
 
         [HttpPost]
-        public HttpResponseMessage CreateGroup([System.Web.Http.FromBody]GroupCreator groupCreator)
+        public HttpResponseMessage CreateGroup([System.Web.Http.FromBody] GroupCreator groupCreator)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -583,7 +704,7 @@ namespace MyThings.Web.Controllers
                     foreach (int sensorId in groupCreator.sensors)
                     {
                         Sensor sensor = _sensorRepository.GetSensorById(sensorId);
-                        if(sensor == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+                        if (sensor == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
                         sensors.Add(sensor);
                     }
 
@@ -601,7 +722,8 @@ namespace MyThings.Web.Controllers
                     //Autopin if requested
                     if (groupCreator.autoPinGroup)
                     {
-                        List<Tile> tiles = GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
+                        List<Tile> tiles =
+                            GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
                         tiles.Add(new Tile()
                         {
                             Pin = new Pin()
@@ -714,6 +836,155 @@ namespace MyThings.Web.Controllers
 
         #endregion
 
+        #region Sensor Management Methods
+
+        [HttpPost]
+        public HttpResponseMessage UpdateSensorName(int? sensorId, String name)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (sensorId.HasValue)
+                {
+                    int Id = sensorId.Value;
+
+                    if (!String.IsNullOrWhiteSpace(name))
+                    {
+                        //Fetch the user
+                        ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+                        Sensor sensor = _sensorRepository.GetSensorById(Id);
+                        if (sensor != null)
+                        {
+                            sensor.Name = name;
+                            _sensorRepository.Update(sensor);
+                            _sensorRepository.SaveChanges();
+
+                            //Return the sensor when successful
+                            HttpResponseMessage success = new HttpResponseMessage();
+                            success.StatusCode = HttpStatusCode.OK;
+                            success.Content = new StringContent(JsonConvert.SerializeObject(sensor));
+                            return success;
+                        }
+                        return new HttpResponseMessage(HttpStatusCode.NotFound);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
+        #endregion
+
+        #region Threshold Management Methods
+
+        [HttpPost]
+        public HttpResponseMessage UpdateThreshold(ThresholdCreator threshold)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (ModelState.IsValid && threshold != null)
+                {
+                    Threshold dbThreshold = _thresholdRepository.GetByID(threshold.Id);
+                    Container container = _containerRepository.GetContainerById(threshold.ContainerId);
+
+                    if (dbThreshold != null && container != null)
+                    {
+                        //Fetch the user
+                        ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+                        if (container.SensorId.HasValue)
+                        {
+                            Sensor sensor = _sensorRepository.GetSensorById(container.SensorId.Value);
+                            if (!sensor.Company.Equals(user.Company))
+                                return new HttpResponseMessage(HttpStatusCode.Forbidden);
+                        }
+
+
+                        //Check for changes and save them
+                        if (!dbThreshold.MinValue.Equals(threshold.MinValue) ||
+                            !dbThreshold.MaxValue.Equals(threshold.MaxValue) ||
+                            !dbThreshold.BetweenValuesActive.Equals(threshold.BetweenValuesActive))
+                        {
+                            _thresholdRepository.SetBetweenValueThreshold(container, threshold.MinValue,
+                                threshold.MaxValue, threshold.BetweenValuesActive);
+                        }
+
+                        if (!dbThreshold.MatchValue.Equals(threshold.MatchValue) ||
+                            !dbThreshold.MatchValueActive.Equals(threshold.MatchValueActive))
+                        {
+                            _thresholdRepository.SetExactValueThreshold(container, threshold.MatchValue,
+                                threshold.MatchValueActive);
+                        }
+
+                        if (!dbThreshold.MinUpdateInterval.Equals(threshold.MinUpdateInterval) ||
+                            !dbThreshold.FrequencyActive.Equals(threshold.FrequencyActive))
+                        {
+                            _thresholdRepository.SetIntervalThreshold(container, threshold.MinUpdateInterval,
+                                threshold.FrequencyActive);
+                        }
+
+                        //Return the sensor when successful
+                        HttpResponseMessage success = new HttpResponseMessage();
+                        success.StatusCode = HttpStatusCode.OK;
+                        success.Content =
+                            new StringContent(JsonConvert.SerializeObject(_thresholdRepository.GetByID(dbThreshold.Id)));
+                        return success;
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.NotFound);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
+        #endregion
+
+        #region Error Management Methods
+
+        [HttpPost]
+        public HttpResponseMessage ChangeErrorReadStatus(int? errorId, bool? readstate)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (errorId.HasValue && readstate.HasValue)
+                {
+                    //Fetch the user
+                    ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+                    Error error =
+                        (from e in _errorRepository.GetErrorsForUser(user.Id) where e.Id.Equals(errorId.Value) select e)
+                            .FirstOrDefault();
+
+                    if (error != null)
+                    {
+                        //Check for changes and save them
+                        _errorRepository.MarkErrorAsReaded(error, readstate.Value);
+
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.NotFound);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
         #endregion
     }
+
+    #endregion
 }

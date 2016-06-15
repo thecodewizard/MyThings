@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using MyThings.Common.Helpers;
 using MyThings.Common.Models;
 using MyThings.Common.Repositories;
 using Newtonsoft.Json;
@@ -119,6 +119,34 @@ namespace MyThings.Api.Controllers
 
             return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
+        #endregion
+
+        #region SearchQuery Methods
+
+        [HttpGet]
+        public HttpResponseMessage GetSensorsOnQuery(String query)
+        {
+            if (!String.IsNullOrWhiteSpace(query)) query = query.ToLower();
+            String json = JsonConvert.SerializeObject(SuggestionListHelper.GetSensorsFromSuggestion(query) ?? new List<Sensor>());
+
+            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+            message.Content = new StringContent(json);
+            message.Headers.Add("Access-Control-Allow-Origin", "*");
+            return message;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetErrorsOnQuery(String query)
+        {
+            if(!String.IsNullOrWhiteSpace(query)) query = query.ToLower();
+            String json = JsonConvert.SerializeObject(SuggestionListHelper.GetErrorsFromSuggestion(query) ?? new List<Error>());
+
+            HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
+            message.Content = new StringContent(json);
+            message.Headers.Add("Access-Control-Allow-Origin", "*");
+            return message;
+        }
+
         #endregion
 
         #region GetMultiObject Methods

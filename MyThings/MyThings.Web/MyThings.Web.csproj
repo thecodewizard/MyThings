@@ -219,6 +219,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ErrorListViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\SensorManagementViewModel.cs" />
   </ItemGroup>
@@ -328,6 +329,9 @@
     <Content Include="Views\Dashboard\Sensormanagement.cshtml" />
     <Content Include="Styles\_sensormanagement.scss" />
     <Content Include="Views\Test\PinEverything.cshtml" />
+    <Content Include="Views\Dashboard\SensorDetail.cshtml" />
+    <Content Include="Views\Dashboard\ContainerDetail.cshtml" />
+    <Content Include="Views\Dashboard\ErrorList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

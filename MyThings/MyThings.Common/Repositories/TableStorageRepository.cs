@@ -158,7 +158,7 @@ namespace MyThings.Common.Repositories
             // Create the table client.
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             // Create the CloudTable object.
-            CloudTable table = tableClient.GetTableReference("virtualsensorvalues");
+            CloudTable table = tableClient.GetTableReference("proximusdecodedtable");
             table.CreateIfNotExists();
             // Make the entity
             DecodedEntity entity = new DecodedEntity(raw.company, raw.macaddress, raw.container, raw.locationid, raw.payload.ToString(CultureInfo.InvariantCulture), raw.receivedtimestamp);
@@ -180,7 +180,7 @@ namespace MyThings.Common.Repositories
             // Create the table client.
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             // Create the CloudTable object.
-            CloudTable table = tableClient.GetTableReference("virtualsensorvalues");
+            CloudTable table = tableClient.GetTableReference("proximusdecodedtable");
             // Create the table query.
             TableQuery<ContainerEntity> rangeQuery = new TableQuery<ContainerEntity>().Where(TableQuery.CombineFilters(
                             TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, macAddress), TableOperators.And,
@@ -208,7 +208,7 @@ namespace MyThings.Common.Repositories
             // Create the table client.
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
             // Create the CloudTable object.
-            CloudTable table = tableClient.GetTableReference("virtualsensorvalues");
+            CloudTable table = tableClient.GetTableReference("proximusdecodedtable");
             // Create the table query.
             var rangeQuery = (from entry in table.CreateQuery<ContainerEntity>()
                               where entry.macaddress == macAddress

@@ -10,9 +10,7 @@ namespace MyThings.Common.Models
         public int TileId { get; set; }
         public int SavedId { get; set; }
         public PinType SavedType { get; set; }
-
-        public String SavedTypeString
-        {
+        public String SavedTypeString {
             get { return SavedType.ToString(); }
         }
     }

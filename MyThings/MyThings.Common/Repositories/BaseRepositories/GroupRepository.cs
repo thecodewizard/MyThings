@@ -108,7 +108,7 @@ namespace MyThings.Common.Repositories
 
         public List<Group> GetGroupsForUser(String userId)
         {
-            return (from g in Context.Group where g.User_Id.Equals(userId) select g).ToList();
+            return (from g in Context.Group.Include(g => g.Sensors) where g.User_Id.Equals(userId) select g).ToList();
         }
 
         public Group GetGroupById(int groupId)
@@ -289,7 +289,7 @@ namespace MyThings.Common.Repositories
                         //Write to tablestorage
                         String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
                         ContainerEntity newEntity = new ContainerEntity(VirtSensor.Company, container.MACAddress, container.ContainerType.Name, VirtSensor.Location, payloadValue, nextEntityDate.Ticks.ToString(), null);
-                        TableStorageRepository.WriteToVirtualSensorTable(newEntity, false);
+                        TableStorageRepository.WriteToVirtualSensorTable(newEntity, true);
 
                         //Set the time right.
                         nextEntityDate = nextEntityDate.Add(interval);
