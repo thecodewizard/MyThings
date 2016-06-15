@@ -131,7 +131,10 @@
             </div>
             @Scripts.Render("~/bundles/jquery")
             @Scripts.Render("~/bundles/bootstrap")
-            @Scripts.Render("~/Scripts/gridster")
+            @if (ViewBag.PageId == "containerdetail")
+            {
+                @Scripts.Render("~/Scripts/3djs");
+            }
             @Scripts.Render("~/Scripts/mythings")
             @RenderSection("scripts", required: false)
         </body>
