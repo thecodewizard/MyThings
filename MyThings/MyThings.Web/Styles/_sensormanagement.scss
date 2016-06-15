@@ -88,17 +88,39 @@ h2{
     height:125px;
     width:415px;
     font-size:$fontsizesmall;
+    font-weight:normal;
+}
+.groupinputlabel{
+    display:block;
 }
 .groupinputtext
 {
-    display:block;
+    display:inline-block;
     margin-left:2%;
     color:$proximusblack;
-    font-size:$fontsizesmall;
+}
+.newgrouppintext{
+    margin-left:10%;
+    font-weight:normal;
+}
+.form-control{
+    display:inline-block;
+    width:unset;
+    margin-right:2%;
+    float:right;
+}
+#newgrouppin{
+    display:inline-block;
 }
 .newgroupbutton{
     margin-left:2%;
+    font-weight:normal;
      color:$proximusblack;
+}
+.newgroupbuttontext{
+    padding-top:2%;
+    padding-bottom:2%;
+    font-weight:normal;
 }
 .searchdiv
 {

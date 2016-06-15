@@ -51,7 +51,7 @@
 @using (Html.BeginForm("Sensormanagement", "Dashboard", FormMethod.Get, new { @class = "searchsensorform" }))
 {
             <div class="searchdiv">
-                <input class="searchbardiv ui-autocomplete-input" autocomplete="off" type="search" name="searchsensor" />
+                <input class="searchbardiv ui-autocomplete-input" autocomplete="off" type="search" name="searchsensor" maxlength="127" />
                     <input class="inputimg" type="image" value="submit" src="http://loradatagroep9.blob.core.windows.net/proximusimages/search-icon.svg" />
             </div>
 }
@@ -176,8 +176,8 @@
 
                             //global variables
                             var sensors = [];
-                            var group = [];
-                            var apiBaseUrl = "mythingsapi.azurewebsites.net/api/";
+                            var group;
+                            var apiBaseUrl = "http://localhost:16964/";
 
                             //function to dynamically create the groups on the page
                             function grouplistCreate() {
@@ -199,7 +199,9 @@
                                                 '</div>');
                                     } else {
                                         $(".groupdiv")
-                                            .append('<div class="grouprectangletile">' +
+                                            .append('<div class="grouprectangletile  group' +
+                                                groups[i].Id +
+                                                '">' +
                                                 '<div class="textdivgroup">' +
                                                 groups[i].Name +
                                                 '</div>' +
@@ -231,9 +233,12 @@
                                                         $('.addgrouptile').remove();
                                                         $(".groupdiv")
                                                             .append('<div class="grouprectangletile newgroup">' +
-                                                                '<label for="groupinputtext">Choose a name for the group</label>' +
-                                                                '<input class="groupinputtext" type="text" />' +
-                                                                '<label for="newgroupbutton">Click on the sensors below to put in the group</label>' +
+                                                                '<div class="groupinputlabel">Choose a name for the group</div>' +
+                                                                '<input class="groupinputtext" type="text" maxlength="50" />' +
+                                                                '<select class="form-control selectpin" class="pinchoice">' +
+                                                                '<option name="nopinvalue" value="false">Do not pin</option><option name="pinvalue" value="true">Pin</option>' +
+                                                                '</select>'+
+                                                                '<div class="newgroupbuttontext">Click on the sensors below to put in the group</div>' +
                                                                 '<button type="button" class="newgroupbutton">Finish!</button>' +
                                                                 '</div>');
 
@@ -247,38 +252,44 @@
                                                            '</div>');
                                                     }
                                                 });
-                            
+
                                                 $('.sensorlist').on('click','.sensorrows', function(e) {
                                                     if ($('.newgroup').length) {
-                                                        var name = $('.groupinputtext').val();
-                                                        var sensor = $(e.target).text();
+                                                        var sensor = $(e.target).parent().attr('id');
                                                         sensors.push(sensor);
-                                                        group =
-                                                            [
-                                                                {
-                                                                    "name": name,
-                                                                    "sensors": sensors,
-                                                                    "autoPinGroup": false
-                                                                }
-                                                            ];
                                                     }
                                                 });
 
                             $('.groupdiv')
                                 .on( 'click','.newgroupbutton',function() {
-                                    $('.newgroup').remove();
-                                    $('.addgroup').text("+");
+                                    var name = $('.groupinputtext').val();
+                                    var pinnedgroups = $('.selectpin').val();
+                                    if (pinnedgroups == "true")  pinnedgroups=true;
+                                    if (pinnedgroups == "false") pinnedgroups=false;
+                                    group = 
+                                            {
+                                                "name": name,
+                                                "sensors": sensors,
+                                                "autoPinGroup": pinnedgroups
+                                            };
+
+
                                     //replace alert with json call to url
                                     $.ajax({
-                                        url: apiBaseUrl + "post/createGroup/" + group,
-                                        method: "POST"
+                                        url: apiBaseUrl + "Dashboard/CreateGroup",
+                                        data: JSON.stringify(group),
+                                        method: "POST",
+                                        contentType: "application/json"
+                                    }).done(function (json) {
+                                        console.log('ok');
                                     }).statusCode(function (statuscoderesponse) {
                                         if (statuscoderesponse != null) {
                                             console.log(statuscoderesponse.statusMessage);
-
+                                            console.log('status');
                                         }
                                     });
-
+                                    $('.newgroup').remove();
+                                    $('.addgroup').text("+");
                                     alert(group);
                                     sensors.length=0;
                                     group.length=0;
@@ -353,7 +364,7 @@
 
             *@
                         }).ready(function() {
-                            
+
                         })
                 </script>
             }
