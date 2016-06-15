@@ -53,7 +53,6 @@
             <div class="searchdiv">
                 <input class="searchbardiv ui-autocomplete-input" autocomplete="off" type="search" name="searchsensor" />
                     <input class="inputimg" type="image" value="submit" src="http://loradatagroep9.blob.core.windows.net/proximusimages/search-icon.svg" />
-               
             </div>
 }
 
@@ -175,7 +174,12 @@
                             console.log(autocompleteFeed);
                             console.log(allSensorsCount);
 
+                            //global variables
+                            var sensors = [];
+                            var group = [];
+                            var apiBaseUrl = "mythingsapi.azurewebsites.net/api/";
 
+                            //function to dynamically create the groups on the page
                             function grouplistCreate() {
                                 for (var i = 0; i < groups.length && i < 10; i++) {
                                     if (groups[i].Sensors == null) {
@@ -218,19 +222,13 @@
                                         '</div>');
                             }
 
-
-                            $('.groupdiv')
-                                .on('click',
-                                    function() {
-                                        $('.addgrouptile')
-                                            .on('click',
-                                                function() {
+                            //Here we generate a place for the user to make a new group
+                                    $('.groupdiv').on('click','.addgrouptile',function() {
                                                     if ($('.newgroup').length) {
                                                         $('.newgroup').remove();
+                                                        $('.addgroup').text("+");
                                                     } else {
-
                                                         $('.addgrouptile').remove();
-
                                                         $(".groupdiv")
                                                             .append('<div class="grouprectangletile newgroup">' +
                                                                 '<label for="groupinputtext">Choose a name for the group</label>' +
@@ -243,26 +241,19 @@
                                                             .append('<div class="grouprectangletile addgrouptile">' +
                                                            '<a>' +
                                                            '<div class="addgroup" id="addgroup">' +
-                                                           '+' +
+                                                           '-' +
                                                            '</div>' +
                                                            '</a>' +
                                                            '</div>');
                                                     }
                                                 });
-                                    });
-
-                            $('.sensorlist')
-                                .on('click',
-                                    function() {
-                                        $('.sensorrows')
-                                            .on('click',
-                                                function(e) {
+                            
+                                                $('.sensorlist').on('click','.sensorrows', function(e) {
                                                     if ($('.newgroup').length) {
                                                         var name = $('.groupinputtext').val();
                                                         var sensor = $(e.target).text();
-                                                        var sensors = [];
                                                         sensors.push(sensor);
-                                                        var group =
+                                                        group =
                                                             [
                                                                 {
                                                                     "name": name,
@@ -270,10 +261,28 @@
                                                                     "autoPinGroup": false
                                                                 }
                                                             ];
-
                                                     }
                                                 });
+
+                            $('.groupdiv')
+                                .on( 'click','.newgroupbutton',function() {
+                                    $('.newgroup').remove();
+                                    $('.addgroup').text("+");
+                                    //replace alert with json call to url
+                                    $.ajax({
+                                        url: apiBaseUrl + "post/createGroup/" + group,
+                                        method: "POST"
+                                    }).statusCode(function (statuscoderesponse) {
+                                        if (statuscoderesponse != null) {
+                                            console.log(statuscoderesponse.statusMessage);
+
+                                        }
                                     });
+
+                                    alert(group);
+                                    sensors.length=0;
+                                    group.length=0;
+                                });
 
 
                             function searchauto() {
@@ -343,6 +352,8 @@
             }
 
             *@
+                        }).ready(function() {
+                            
                         })
                 </script>
             }
