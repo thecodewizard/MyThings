@@ -20,7 +20,9 @@
 
     <div class  ="blocksholder">
         <article class="detailblock square">
-            <img class="tileimg" id="containerimg" alt="Temperature" src="http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png"/>
+            <div id="containerimg">
+                <img class="tileimg" alt="Temperature" src="http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png" />
+            </div>
             <div class="title">
                 <p>@Model.ContainerType.Name</p>
             </div>
@@ -38,7 +40,7 @@
             <div class="title">
                 <p>Set Threshold Value</p>
             </div>
-            <div id="thresholdCarousel" class="carousel" data-ride="carousel">
+            <div id="thresholdCarousel" class="carousel" data-interval="false" data-ride="carousel">
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
                     <li data-target="#thresholdCarousel" data-slide-to="0" class="active"></li>
@@ -101,7 +103,13 @@
                                 <h3 class="blue">Hours</h3>
                                 <div class="adjustable">
                                     <div id="hourValue" class="value left">
-                                        <div>@Model.Threshold.MinUpdateInterval.Hours.ToString()</div>
+                                        @if (Model.Threshold == null)
+                                        {
+                                            <div>24</div>
+                                        } else
+                                        {
+                                            <div>@Model.Threshold.MinUpdateInterval.Hours.ToString()</div>
+                                        }
                                         <div style="font-size: 0.6em; align-self: flex-end;">h</div>
                                     </div>
                                     <div class="arrows">
@@ -114,7 +122,13 @@
                                 <h3 class="purple">Minutes</h3>
                                 <div class="adjustable">
                                     <div id="minuteValue" class="value right">
-                                        <div>@Model.Threshold.MinUpdateInterval.Minutes.ToString()</div>
+                                        @if (Model.Threshold == null)
+                                        {
+                                            <div>0</div>
+                                        } else
+                                        {
+                                            <div>@Model.Threshold.MinUpdateInterval.Minutes.ToString()</div>
+                                        }
                                         <div style="font-size: 0.6em; align-self: flex-end;">m</div>
                                     </div>
                                     <div class="arrows">
@@ -162,21 +176,24 @@
 
         $(window).load(function () {
             //Format the data from the model
-            $("#containerimg").html(GetImageSourceForContainer("@Model.ContainerType.Name"));
-            $("#minTempValue").html(GetValueForContainer("@Model.ContainerType.Name", @Model.Threshold.MinValue, true));
-            $("#maxTempValue").html(GetValueForContainer("@Model.ContainerType.Name", @Model.Threshold.MaxValue, true));
-            $("#exactValue").html(GetValueForContainer("@Model.ContainerType.Name", @Model.Threshold.MatchValue, true));
+            $("#containerimg").html(GetImageSourceForContainer("@Model.ContainerType.Name", true));
+            @if (Model.Threshold != null)
+            {
+               @: $("#minTempValue").html(GetValueForContainer("@Model.ContainerType.Name", @Model.Threshold.MinValue, true));
+                           @: $("#maxTempValue").html(GetValueForContainer("@Model.ContainerType.Name", @Model.Threshold.MaxValue, true));
+                           @: $("#exactValue").html(GetValueForContainer("@Model.ContainerType.Name", @Model.Threshold.MatchValue, true));
+                        }
 
             @foreach (Container container in ViewBag.ParentSensor.Containers)
             {
-                @: $("#c_" + @container.Id).html(GetImageSourceForContainer("@Model.ContainerType.Name") + "<p>" + @container.ContainerType.Name + "</p>");
-            }
+                @: $("#c_@container.Id").html(GetImageSourceForContainer("@container.ContainerType.Name", false) + "<p>@container.ContainerType.Name</p>");
+                        }
 
             //Fetch the new data from the server and show it
             getRecentData(@Model.Id,
                 function(value) {
                     $("#recentValueTile").html(GetValueForContainer("@Model.ContainerType.Name", value, false));
-                    $("#containerimg").html(GetImageSourceForContainer("@Model.ContainerType.Name"));
+                    $("#containerimg").html(GetImageSourceForContainer("@Model.ContainerType.Name", true));
                     //$("#hourValue").html("");
                     //$("#minuteValue").html("");
                 });
@@ -184,22 +201,22 @@
             getHistory(@Model.Id,
                 8760,
                 function(data) {
-                    var json = JSON.stringify(data);
-                    console.log(json);
+                    if (data.History != null) {
+                        var json = JSON.stringify(data.History);
+                        var linedata = makeLineData(data.History);
+
+                        var markers = getMarkers();
+
+                        makeChart(linedata, markers);
+                    }
                 });
-            
-
-            var linedata = makeLineData();
-            var markers = getMarkers();
-
-            makeChart(linedata, markers);
         });
 
         function getHistory(containerId, historyHours, historyLoaded) {
             $.ajax({
                 url: apiBaseUrl + "/get/gethistory?containerid=" + containerId + "&historyTimeInHours=" + historyHours,
-                    method: "GET"
-                })
+                method: "GET"
+            })
                 .done(function(json) {
                     if (json != null) {
                         var data = JSON.parse(json);
@@ -218,9 +235,9 @@
 
         function getRecentData(containerId, recentDataLoaded) {
             $.ajax({
-                    url: apiBaseUrl + "/get/getmostrecentvalue?containerid=" + containerId,
-                    method: "GET"
-                })
+                url: apiBaseUrl + "/get/getmostrecentvalue?containerid=" + containerId,
+                method: "GET"
+            })
                 .done(function(json) {
                     if (json != null) {
                         var data = JSON.parse(json);
@@ -242,330 +259,13 @@
 
 
 
-        function makeLineData() {
-            var json =  [
-                {
-                    "date": "2014-08-01",
-                    "pct05": 5350,
-                    "pct25": 6756,
-                    "pct50": 7819,
-                    "pct75": 9284,
-                    "pct95": 13835
-                },
-                {
-                    "date": "2014-08-02",
-                    "pct05": 4439,
-                    "pct25": 5584,
-                    "pct50": 6554,
-                    "pct75": 8016,
-                    "pct95": 12765
-                },
-                {
-                    "date": "2014-08-03",
-                    "pct05": 4247,
-                    "pct25": 5419,
-                    "pct50": 6332,
-                    "pct75": 7754,
-                    "pct95": 12236
-                },
-                {
-                    "date": "2014-08-04",
-                    "pct05": 3293,
-                    "pct25": 4414,
-                    "pct50": 5191,
-                    "pct75": 6491,
-                    "pct95": 10325
-                },
-                {
-                    "date": "2014-08-05",
-                    "pct05": 3942,
-                    "pct25": 5134,
-                    "pct50": 6069,
-                    "pct75": 7501,
-                    "pct95": 11685
-                },
-                {
-                    "date": "2014-08-06",
-                    "pct05": 2744,
-                    "pct25": 5508,
-                    "pct50": 6879,
-                    "pct75": 9221,
-                    "pct95": 17239
-                },
-                {
-                    "date": "2014-08-07",
-                    "pct05": 1807,
-                    "pct25": 3019,
-                    "pct50": 4119,
-                    "pct75": 5656,
-                    "pct95": 8851
-                },
-                {
-                    "date": "2014-08-08",
-                    "pct05": 1855,
-                    "pct25": 3386,
-                    "pct50": 4473,
-                    "pct75": 5915,
-                    "pct95": 10580
-                },
-                {
-                    "date": "2014-08-09",
-                    "pct05": 1830,
-                    "pct25": 3202,
-                    "pct50": 4233,
-                    "pct75": 5559,
-                    "pct95": 8930
-                },
-                {
-                    "date": "2014-08-10",
-                    "pct05": 1828,
-                    "pct25": 3195,
-                    "pct50": 4304,
-                    "pct75": 5482,
-                    "pct95": 9189
-                },
-                {
-                    "date": "2014-08-11",
-                    "pct05": 2246,
-                    "pct25": 3929,
-                    "pct50": 5326,
-                    "pct75": 7077,
-                    "pct95": 11648
-                },
-                {
-                    "date": "2014-08-12",
-                    "pct05": 2051,
-                    "pct25": 3662,
-                    "pct50": 4849,
-                    "pct75": 6194,
-                    "pct95": 10078
-                },
-                {
-                    "date": "2014-08-13",
-                    "pct05": 1700,
-                    "pct25": 3075,
-                    "pct50": 4068,
-                    "pct75": 5259,
-                    "pct95": 9789
-                },
-                {
-                    "date": "2014-08-14",
-                    "pct05": 2161,
-                    "pct25": 3891,
-                    "pct50": 5262,
-                    "pct75": 6924,
-                    "pct95": 11612
-                },
-                {
-                    "date": "2014-08-15",
-                    "pct05": 1765,
-                    "pct25": 3190,
-                    "pct50": 4388,
-                    "pct75": 5822,
-                    "pct95": 9433
-                },
-                {
-                    "date": "2014-08-16",
-                    "pct05": 2036,
-                    "pct25": 3756,
-                    "pct50": 4775,
-                    "pct75": 6158,
-                    "pct95": 9999
-                },
-                {
-                    "date": "2014-08-17",
-                    "pct05": 2079,
-                    "pct25": 3561,
-                    "pct50": 4753,
-                    "pct75": 6124,
-                    "pct95": 9807
-                },
-                {
-                    "date": "2014-08-18",
-                    "pct05": 2108,
-                    "pct25": 3576,
-                    "pct50": 4818,
-                    "pct75": 6344,
-                    "pct95": 10235
-                },
-                {
-                    "date": "2014-08-19",
-                    "pct05": 2143,
-                    "pct25": 3792,
-                    "pct50": 5073,
-                    "pct75": 6772,
-                    "pct95": 11338
-                },
-                {
-                    "date": "2014-08-20",
-                    "pct05": 2086,
-                    "pct25": 3801,
-                    "pct50": 5073,
-                    "pct75": 6688,
-                    "pct95": 12394
-                },
-                {
-                    "date": "2014-08-21",
-                    "pct05": 1767,
-                    "pct25": 3253,
-                    "pct50": 4282,
-                    "pct75": 5563,
-                    "pct95": 9167
-                },
-                {
-                    "date": "2014-08-22",
-                    "pct05": 1756,
-                    "pct25": 3047,
-                    "pct50": 3950,
-                    "pct75": 5006,
-                    "pct95": 7948
-                },
-                {
-                    "date": "2014-08-23",
-                    "pct05": 2123,
-                    "pct25": 3755,
-                    "pct50": 5173,
-                    "pct75": 7243,
-                    "pct95": 12338
-                },
-                {
-                    "date": "2014-08-24",
-                    "pct05": 1967,
-                    "pct25": 3404,
-                    "pct50": 4529,
-                    "pct75": 5970,
-                    "pct95": 9897
-                },
-                {
-                    "date": "2014-08-25",
-                    "pct05": 1537,
-                    "pct25": 2612,
-                    "pct50": 3394,
-                    "pct75": 4279,
-                    "pct95": 7104
-                },
-                {
-                    "date": "2014-08-26",
-                    "pct05": 2182,
-                    "pct25": 3958,
-                    "pct50": 5505,
-                    "pct75": 7642,
-                    "pct95": 12707
-                },
-                {
-                    "date": "2014-08-27",
-                    "pct05": 1932,
-                    "pct25": 3366,
-                    "pct50": 4526,
-                    "pct75": 6086,
-                    "pct95": 9930
-                },
-                {
-                    "date": "2014-08-28",
-                    "pct05": 1268,
-                    "pct25": 2344,
-                    "pct50": 3256,
-                    "pct75": 4215,
-                    "pct95": 6673
-                },
-                {
-                    "date": "2014-08-29",
-                    "pct05": 1225,
-                    "pct25": 2239,
-                    "pct50": 3033,
-                    "pct75": 4111,
-                    "pct95": 7601
-                },
-                {
-                    "date": "2014-08-30",
-                    "pct05": 1393,
-                    "pct25": 2432,
-                    "pct50": 3417,
-                    "pct75": 4710,
-                    "pct95": 8798
-                },
-                {
-                    "date": "2014-08-31",
-                    "pct05": 1175,
-                    "pct25": 2020,
-                    "pct50": 2768,
-                    "pct75": 3889,
-                    "pct95": 7744
-                },
-                {
-                    "date": "2014-09-01",
-                    "pct05": 989,
-                    "pct25": 1655,
-                    "pct50": 2218,
-                    "pct75": 3167,
-                    "pct95": 6018
-                },
-                {
-                    "date": "2014-09-02",
-                    "pct05": 1249,
-                    "pct25": 2069,
-                    "pct50": 2738,
-                    "pct75": 3938,
-                    "pct95": 7574
-                },
-                {
-                    "date": "2014-09-03",
-                    "pct05": 936,
-                    "pct25": 1510,
-                    "pct50": 1968,
-                    "pct75": 2700,
-                    "pct95": 5215
-                },
-                {
-                    "date": "2014-09-04",
-                    "pct05": 1264,
-                    "pct25": 2039,
-                    "pct50": 2657,
-                    "pct75": 3646,
-                    "pct95": 7042
-                },
-                {
-                    "date": "2014-09-05",
-                    "pct05": 1305,
-                    "pct25": 2106,
-                    "pct50": 2745,
-                    "pct75": 3766,
-                    "pct95": 7273
-                },
-                {
-                    "date": "2014-09-06",
-                    "pct05": 798,
-                    "pct25": 1288,
-                    "pct50": 1678,
-                    "pct75": 2303,
-                    "pct95": 4448
-                },
-                {
-                    "date": "2014-09-07",
-                    "pct05": 1314,
-                    "pct25": 2120,
-                    "pct50": 2763,
-                    "pct75": 3791,
-                    "pct95": 7321
-                },
-                {
-                    "date": "2014-09-08",
-                    "pct05": 1042,
-                    "pct25": 1681,
-                    "pct50": 2191,
-                    "pct75": 3007,
-                    "pct95": 5806
-                }
-            ];
+        function makeLineData(json) {
 
             var data = json.map(function (d) {
+                console.log(d);
                 return {
-                    date: parseDate(d.date),
-                    pct05: d.pct05 / 1000,
-                    pct25: d.pct25 / 1000,
-                    pct50: d.pct50 / 1000,
-                    pct75: d.pct75 / 1000,
-                    pct95: d.pct95 / 1000
+                    date: parseDate(d.Timestamp),
+                    pct50: d.Value / 1000
                 };
             });
 
@@ -660,33 +360,38 @@
             }
         }
 
-        function GetImageSourceForContainer(containerTypeName) {
+        function GetImageSourceForContainer(containerTypeName, hasClass) {
+            var c = "";
+            if (hasClass === true) {
+                c = "tileimg";
+            }
+
             switch (containerTypeName) {
                 case "Battery level":
-                    return "<img class='tileimg' alt='Battery' src='http://loradatagroep9.blob.core.windows.net/proximusimages/battery-icon-white.png' />";
+                    return "<img class='"+ c +"' alt='Battery' src='http://loradatagroep9.blob.core.windows.net/proximusimages/battery-icon-white.png' />";
                 case "Temperature":
-                    return "<img class='tileimg' alt='Temperature' src='http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png' />";
+                    return "<img class='"+ c +"' alt='Temperature' src='http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png' />";
                 case "Humidity":
-                    return "<img class='tileimg' alt='Humidity' src='http://loradatagroep9.blob.core.windows.net/proximusimages/humidity-icon-white.png' />";
+                    return "<img class='"+ c +"' alt='Humidity' src='http://loradatagroep9.blob.core.windows.net/proximusimages/humidity-icon-white.png' />";
                 case "GPS":
-                    return "</p><img class='tileimg' alt='Location' src='http://loradatagroep9.blob.core.windows.net/proximusimages/location-icon-white.png' />";
+                    return "</p><img class='"+ c +"' alt='Location' src='http://loradatagroep9.blob.core.windows.net/proximusimages/location-icon-white.png' />";
                 case "OnOff":
                 case "Button1":
                 case "Push Button":
-                    return "<img class='tileimg' alt='Toggle' src='http://loradatagroep9.blob.core.windows.net/proximusimages/toggle-icon-white.png' />";
+                    return "<img class='"+ c +"' alt='Toggle' src='http://loradatagroep9.blob.core.windows.net/proximusimages/toggle-icon-white.png' />";
                 case "Luminance":
-                    return "<img class='tileimg' alt='Luminance' src='http://loradatagroep9.blob.core.windows.net/proximusimages/luminance-icon-white.png' />";
+                    return "<img class='"+ c +"' alt='Luminance' src='http://loradatagroep9.blob.core.windows.net/proximusimages/luminance-icon-white.png' />";
                 case "PIR":
-                    return "<img class='tileimg' alt='PIR' src='http://loradatagroep9.blob.core.windows.net/proximusimages/eye-icon-white.png' />";
+                    return "<img class='"+ c +"' alt='PIR' src='http://loradatagroep9.blob.core.windows.net/proximusimages/eye-icon-white.png' />";
                 case "Accelerometer":
-                    return "<img class='tileimg' alt='Accelerometer' src='http://loradatagroep9.blob.core.windows.net/proximusimages/accelerometer-icon-white.png' />";
+                    return "<img class='"+ c +"' alt='Accelerometer' src='http://loradatagroep9.blob.core.windows.net/proximusimages/accelerometer-icon-white.png' />";
                 case "Simple Metering Current":
                 case "Simple Metering Demand":
-                    return "<img class='tileimg' alt='Simple Metering' src='http://loradatagroep9.blob.core.windows.net/proximusimages/power-icon-white.png' />";
+                    return "<img class='"+ c +"' alt='Simple Metering' src='http://loradatagroep9.blob.core.windows.net/proximusimages/power-icon-white.png' />";
                 default:
                 case "Raw payload":
                 case "Counter":
-                    return "<img class='tileimg' alt='Generic' src='http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x-white.png' />";
+                    return "<img class='"+ c +"' alt='Generic' src='http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x-white.png' />";
             }
         }
 
