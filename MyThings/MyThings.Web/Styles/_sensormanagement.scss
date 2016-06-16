@@ -28,7 +28,20 @@ h2{
             }
      }
 }
-
+.blur{
+    -webkit-filter:blur(5px);
+    -moz-filter:blur(5px);
+    -o-filter:blur(5px);
+    -ms-filter:blur(5px);
+    filter:blur(5px);
+}
+.unblur{
+   /* -webkit-filter:none;
+    -moz-filter:none;
+    -o-filter:none;
+    -ms-filter:none;
+    filter:none;*/
+}
 
 .groupdiv{
     display:flex;
@@ -111,6 +124,17 @@ h2{
     margin-left:10%;
     font-weight:normal;
 }
+
+.editgroupfield{
+    height:125px;
+    width:415px;
+    font-size:$fontsizesmall;
+    font-weight:normal;
+    color:$proximusblack;
+    padding-left:2%;
+    margin: 0 20%;
+}
+
 .form-control{
     display:inline-block;
     width:unset;
@@ -137,6 +161,7 @@ h2{
     padding:1% 0 1% 0;
     font-weight:normal;
 }
+
 .searchdiv
 {
     //height:30px;
@@ -162,35 +187,6 @@ h2{
 .sensorlist{
     width:100%;
 }
-/*
-.sensorsheadrow{
-    
-    display:flex;
-    justify-content:space-around;
-    padding-bottom:2%;
-    background-color:$proximusterdarkblue;
-}
-.sensorrows{
-    background-color:$proximusterlightblue;
-    margin-bottom:10px;
-    align-items:center;
-    flex-grow:0;
-    flex-basis:25%;
-    & a{
-        color:$proximusblack;
-    display:flex;
-    justify-content:space-around;
-    }
-    &:hover .sensorpinimg{
-        display:flex;
-    }
-}
-    */
-  /*  .idsensordiv,.namesensordiv,.numbercontainerdiv,.sensorlocationdiv{
-    flex-grow: 0;
-    flex-basis: 25%;
-    margin-left:10px;
-    }*/
 
   #dialogdiv{ 
       width: 200px;
@@ -240,6 +236,11 @@ h2{
     height:20px;
     opacity:1;
 }
+
+.sensordetails{
+    padding:1% 0 0 4%;
+}
+
 
 /*.sensorpinimg{
      display:none;
