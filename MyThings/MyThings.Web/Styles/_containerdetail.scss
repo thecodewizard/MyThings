@@ -102,6 +102,21 @@
             justify-content: space-around;
             padding: 0 50px;
 
+            &.inactive{
+                display: none;
+            }
+
+            &.title{
+                position: absolute;
+                top: 0;
+                right: 0;
+                align-self: flex-start;
+                height: 20px;
+                margin: 18px;
+                padding: 0;
+                text-align: right;
+            }
+
             .value{
                 position: relative;
                 top: 0; right: 0;
@@ -137,7 +152,7 @@
     .containerlist{
         display: flex;
         flex-flow: column nowrap;
-        justify-content: space-around;
+        justify-content: flex-start;
         align-items: flex-start;
         
         height: 225px;
@@ -146,10 +161,11 @@
         li{
             display: flex;
             flex-flow: row nowrap;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
 
             height: 50px;
+            width: 100%;
             font-family: $proximusregularfont;
             font-size: $fontsizesmall;
             color: $proximusmainpurple;
@@ -159,6 +175,11 @@
                 height: auto;
                 max-height: 50px;
                 max-width: 75px;
+            }
+
+            p {
+                margin: 0 0 0 15px;
+                cursor: pointer;
             }
         }
     }

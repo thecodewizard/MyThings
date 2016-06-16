@@ -18,10 +18,10 @@
 
     <h1>@Model.ContainerType.Name Container</h1>
 
-    <div class  ="blocksholder">
+    <div class="blocksholder">
         <article class="detailblock square">
             <div id="containerimg">
-                <img class="tileimg" alt="Temperature" src="http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png" />
+                <img class="tileimg" alt='Generic' src='http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x-white.png' />
             </div>
             <div class="title">
                 <p>@Model.ContainerType.Name</p>
@@ -37,9 +37,6 @@
             </div>
         </article>
         <article class="detailblock rectangle">
-            <div class="title">
-                <p>Set Threshold Value</p>
-            </div>
             <div id="thresholdCarousel" class="carousel" data-interval="false" data-ride="carousel">
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
@@ -51,7 +48,19 @@
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner" role="listbox" data-interval="false">
                     <div class="item active">
-                        <div>
+                        <div class="title">
+                            @if (Model.Threshold != null && Model.Threshold.BetweenValuesActive)
+                            {
+                                <p>Disable Threshold Values</p>
+                            } else
+                            {
+                                <p>Set Threshold Values</p>
+                            }
+                        </div>
+                        <div class="inactive" id="betweenThresholdHolderInvalid">
+                            <p style="cursor: pointer;">Click to activate the 'Between value' threshold</p>
+                        </div>
+                        <div id="betweenThresholdHolder" class="active">
                             <div>
                                 <h3 class="blue">Minimum</h3>
                                 <div class="adjustable">
@@ -81,7 +90,19 @@
                         </div>
                     </div>
                     <div class="item">
-                        <div>
+                        <div class="title">
+                            @if (Model.Threshold != null && Model.Threshold.MatchValueActive)
+                            {
+                                <p>Disable Exact Threshold Value</p>
+                            } else
+                            {
+                                <p>Set Threshold Value</p>
+                            }
+                        </div>
+                        <div class="inactive">
+                            <p style="cursor: pointer;">Click to activate the 'Exact value' threshold</p>
+                        </div>
+                        <div class="active">
                             <div>
                                 <h3 class="blue">Match Value</h3>
                                 <div class="adjustable">
@@ -98,7 +119,19 @@
                         </div>
                     </div>
                     <div class="item">
-                        <div>
+                        <div class="title">
+                            @if (Model.Threshold != null && Model.Threshold.FrequencyActive)
+                            {
+                                <p>Disable Interval Threshold</p>
+                            } else
+                            {
+                                <p>Set Threshold Interval</p>
+                            }
+                        </div>
+                        <div class="inactive">
+                            <p style="cursor: pointer;">Click to activate the 'Interval' threshold</p>
+                        </div>
+                        <div class="active">
                             <div>
                                 <h3 class="blue">Hours</h3>
                                 <div class="adjustable">
@@ -106,7 +139,8 @@
                                         @if (Model.Threshold == null)
                                         {
                                             <div>24</div>
-                                        } else
+                                        }
+                                        else
                                         {
                                             <div>@Model.Threshold.MinUpdateInterval.Hours.ToString()</div>
                                         }
@@ -125,7 +159,8 @@
                                         @if (Model.Threshold == null)
                                         {
                                             <div>0</div>
-                                        } else
+                                        }
+                                        else
                                         {
                                             <div>@Model.Threshold.MinUpdateInterval.Minutes.ToString()</div>
                                         }
@@ -160,10 +195,13 @@
             <ul class="containerlist">
                 @foreach (Container container in ViewBag.ParentSensor.Containers)
                 {
-                    <li id="c_@container.Id">
-                        <img alt="Temperature" src="http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png"/>
-                        <p>Temperature</p>
-                    </li>
+                    if (!container.Id.Equals(Model.Id))
+                    {
+                        <li id="c_@container.Id">
+                            <img alt='Generic' src='http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x-white.png' />
+                            <p><a href="/container/@container.Id">@container.ContainerType.Name</a></p>
+                        </li>
+                    }
                 }
             </ul>
         </article>
@@ -176,136 +214,217 @@
 
         $(window).load(function () {
             //Format the data from the model
-            $("#containerimg").html(GetImageSourceForContainer("@Model.ContainerType.Name", true));
-            @if (Model.Threshold != null)
-            {
-               @: $("#minTempValue").html(GetValueForContainer("@Model.ContainerType.Name", @Model.Threshold.MinValue, true));
-                           @: $("#maxTempValue").html(GetValueForContainer("@Model.ContainerType.Name", @Model.Threshold.MaxValue, true));
-                           @: $("#exactValue").html(GetValueForContainer("@Model.ContainerType.Name", @Model.Threshold.MatchValue, true));
-                        }
-
             @foreach (Container container in ViewBag.ParentSensor.Containers)
             {
-                @: $("#c_@container.Id").html(GetImageSourceForContainer("@container.ContainerType.Name", false) + "<p>@container.ContainerType.Name</p>");
-                        }
+                if (!container.Id.Equals(Model.Id))
+                {
+                    @: $("#c_@container.Id").html(GetImageSourceForContainer("@container.ContainerType.Name", false) + "<p><a href='/container/@container.Id'>@container.ContainerType.Name</a></p>");
+                }
+            }
 
             //Fetch the new data from the server and show it
             getRecentData(@Model.Id,
-                function(value) {
+                function(value, time) {
                     $("#recentValueTile").html(GetValueForContainer("@Model.ContainerType.Name", value, false));
                     $("#containerimg").html(GetImageSourceForContainer("@Model.ContainerType.Name", true));
-                    //$("#hourValue").html("");
-                    //$("#minuteValue").html("");
+                    $("#containerimg + .title").html("<p>@Model.ContainerType.Name</p><p>" + time.toLocaleString() + "</p>");
                 });
 
             getHistory(@Model.Id,
                 8760,
                 function(data) {
                     if (data.History != null) {
-                        var json = JSON.stringify(data.History);
                         var linedata = makeLineData(data.History);
-
-                        var markers = getMarkers();
+                        var markers = getMarkers(data.History);
 
                         makeChart(linedata, markers);
                     }
                 });
         });
 
-        function getHistory(containerId, historyHours, historyLoaded) {
-            $.ajax({
-                url: apiBaseUrl + "/get/gethistory?containerid=" + containerId + "&historyTimeInHours=" + historyHours,
-                method: "GET"
-            })
-                .done(function(json) {
-                    if (json != null) {
-                        var data = JSON.parse(json);
-                        if ($.isFunction(historyLoaded)) {
-                            historyLoaded(data);
-                        }
-                    }
-                })
-                .fail(function() {
-                    if ($.isFunction(MyThings.logToUser)) {
-                        MyThings.logToUser("Item " + containerId +
-                            " could not be loaded.");
-                    }
-                });
-        }
 
         function getRecentData(containerId, recentDataLoaded) {
             $.ajax({
                 url: apiBaseUrl + "/get/getmostrecentvalue?containerid=" + containerId,
                 method: "GET"
-            })
-                .done(function(json) {
+            }).done(function(json) {
                     if (json != null) {
                         var data = JSON.parse(json);
+
+                        //Get the value
                         var value;
                         if (data.CurrentValue.HexValue) value = data.CurrentValue.HexValue;
                         else value = data.CurrentValue.Value;
 
+                        //Get the date
+                        var date = new Date(data.CurrentValue.Timestamp);
+
                         if ($.isFunction(recentDataLoaded)) {
-                            recentDataLoaded(value);
+                            recentDataLoaded(value, date);
                         }
                     }
-                })
-                .fail(function() {
+                }).fail(function() {
                     if ($.isFunction(MyThings.logToUser)) {
                         MyThings.logToUser("Item " + containerId + " could not be loaded.");
                     }
                 });
         }
 
+        function getHistory(containerId, historyHours, historyLoaded) {
+            $.ajax({
+                url: apiBaseUrl + "/get/gethistory?containerid=" + containerId + "&historyTimeInHours=" + historyHours,
+                method: "GET"
+            }).done(function(json) {
+                    if (json != null) {
+                        var data = JSON.parse(json);
+                        if ($.isFunction(historyLoaded)) {
+                            historyLoaded(data);
+                        }
+                    }
+                }).fail(function() {
+                    if ($.isFunction(MyThings.logToUser)) {
+                        MyThings.logToUser("Item " + containerId + " could not be loaded.");
+                    }
+                });
+        }
 
+        function getContainer(containerId, containerLoaded) {
+            $.ajax({
+                    url: apiBaseUrl +
+                        "/get/getcontainer?containerid=" + containerId,
+                    method: "GET"
+                }).done(function(json) {
+                    if (json != null) {
+                        var data = JSON.parse(json);
+                        if ($.isFunction(containerLoaded)) {
+                            containerLoaded(data);
+                        }
+                    }
+                }).fail(function() {
+                    if ($.isFunction(MyThings.logToUser)) {
+                        MyThings.logToUser("Item " + containerId + " could not be loaded.");
+                    }
+                });
+        }
+
+        function updateThresholds(container) {
+            @*$("#betweenThresholdHolderInvalid p")
+                .click(function() {
+                    activateTheshold(true, @Model.Threshold.MatchValueActive.ToString().ToLower(), @Model.Threshold.FrequencyActive.ToString().ToLower());
+                });*@
+            
+            //Hide if active
+            if (container.Threshold.BetweenValuesActive) {
+                $("#betweenThresholdHolderInvalid").hide();
+                $("#betweenThresholdHolder").removeClass("inactive");
+            } else {
+                $("#betweenThresholdHolderInvalid").show();
+                $("#betweenThresholdHolder").addClass("inactive");
+            }
+
+            $("#minTempValue div").text(container.Threshold.MinValue);
+            $("#maxTempValue div").text(container.Threshold.MaxValue);
+        }
+
+        function activateTheshold(betweenValues, matchValue, interval) {
+            var object = new Object();
+            object.ContainerId = @Model.Id;
+            object.Id = @Model.ThresholdId;
+            object.BetweenValuesActive = betweenValues;
+            object.MatchValueActive = matchValue;
+            object.FrequencyActive = interval;
+            object.MinValue = @Model.Threshold.MinValue;
+            object.MaxValue = @Model.Threshold.MaxValue;
+            object.MatchValue = "@Model.Threshold.MatchValue";
+            object.Hours = @Model.Threshold.MinUpdateInterval.Hours;
+            object.Minutes = @Model.Threshold.MinUpdateInterval.Minutes;
+
+            var json = JSON.stringify(object);
+
+            $.ajax({
+                method: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: siteBaseUrl + "UpdateThreshold",
+                data: json
+            }).done(function() {
+                getContainer(@Model.Id, updateThresholds);
+            }).fail(function() {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("Thresholds could not be saved.");
+                }
+            });
+        }
+
+        function updateTheshold(minValue, maxValue, matchValue, hours, minutes) {
+            var object = new Object();
+            object.ContainerId = @Model.Id;
+            object.Id = @Model.ThresholdId;
+            object.BetweenValuesActive = @Model.Threshold.BetweenValuesActive;
+            object.MatchValueActive = @Model.Threshold.MatchValueActive;
+            object.FrequencyActive = @Model.Threshold.FrequencyActive;
+            object.MinValue = minValue;
+            object.MaxValue = maxValue;
+            object.MatchValue = matchValue;
+            object.Hours = hours;
+            object.Minutes = minutes;
+
+            var json = JSON.stringify(object);
+
+            $.ajax({
+                method: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: siteBaseUrl + "UpdateThreshold",
+                data: json
+            }).done(function(){
+                getContainer(@Model.Id, updateThresholds);
+            }).fail(function() {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("Thresholds could not be saved.");
+                }
+            });
+        }
 
         function makeLineData(json) {
-
             var data = json.map(function (d) {
-                console.log(d);
                 return {
-                    date: parseDate(d.Timestamp),
-                    pct50: d.Value / 1000
+                    date: parseDate(new Date(d.Timestamp).toISOString().slice(0,10)),
+                    value: d.Value
                 };
             });
 
             return data;
         }
 
-        function getMarkers() {
-            var markerData = [
-                {
-                    "date": "2014-08-06",
-                    "type": "History",
-                    "version": ""
-                },
-                {
-                    "date": "2014-08-20",
-                    "type": "History",
-                    "version": ""
-                },
-                {
-                    "date": "2014-08-27",
-                    "type": "Current",
-                    "version": "Value"
-                },
-                {
-                    "date": "2014-09-03",
-                    "type": "History",
-                    "version": ""
-                }
-            ];
+        function getMarkers(json) {
+            var markers = [];
 
-            var markers = markerData.map(function (marker) {
+            var allMarkerdata = json.map(function(d) {
                 return {
-                    date: parseDate(marker.date),
-                    type: marker.type,
-                    version: marker.version
+                    date: parseDate(new Date(d.Timestamp).toISOString().slice(0,10)),
+                    type: "History",
+                    version: d.Value
                 };
             });
 
+            //Select 3 markers in history
+            var current = 0;
+            var count = Math.ceil(allMarkerdata.length / 4);
+            for (var i = 0; i < 3; i++) {
+                current += count;
+                markers.push(allMarkerdata[current]);
+            }
+
+            markers.push({
+                date: parseDate(new Date().toISOString().slice(0, 10)),
+                type: "Current",
+                version: "@Model.ContainerType.Name"
+            });
+
+            markers.reverse();
+
             return markers;
         }
+
 
         function GetValueForContainer(containerTypeName, value, checkNumeric) {
             if (checkNumeric && !$.isNumeric(value)) return "<div>N/A</div>";
@@ -318,9 +437,9 @@
                 case "Humidity":
                     return "<div>" + (Math.round(parseFloat(value) * 10) / 10) + "</div><span class='sup'>%</span>";
                 case "GPS":
-                    var innerHtml = "";
+                    var ih = "";
                     if (!$.isNumeric(value)) {
-                        innerHtml += "<div>" +
+                        ih += "<div>" +
                             (Math.round(parseFloat(value.split(" | ")[0]
                                         .substring(0, value.split(" | ")[0].length - 2)
                                         .replace(".", "")
@@ -336,10 +455,10 @@
                                 10000) +
                             " B";
                     } else {
-                        innerHtml += "<div>No Details available.</div>";
+                        ih += "<div>No Details available.</div>";
                     }
-                    innerHtml += "</div>";
-                    return innerHtml;
+                    ih += "</div>";
+                    return ih;
                 case "OnOff":
                 case "Button1":
                 case "Push Button":
@@ -374,7 +493,7 @@
                 case "Humidity":
                     return "<img class='"+ c +"' alt='Humidity' src='http://loradatagroep9.blob.core.windows.net/proximusimages/humidity-icon-white.png' />";
                 case "GPS":
-                    return "</p><img class='"+ c +"' alt='Location' src='http://loradatagroep9.blob.core.windows.net/proximusimages/location-icon-white.png' />";
+                    return "<img class='"+ c +"' alt='Location' src='http://loradatagroep9.blob.core.windows.net/proximusimages/location-icon-white.png' />";
                 case "OnOff":
                 case "Button1":
                 case "Push Button":
@@ -394,8 +513,6 @@
                     return "<img class='"+ c +"' alt='Generic' src='http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x-white.png' />";
             }
         }
-
-
 
 
         //The functions for the graph
@@ -421,21 +538,23 @@
         }
 
         function drawPaths(svg, data, x, y) {
-            var highestValue = "";
+            var highestValue = 0;
             for (var i = 0; i < data.count; i++) {
-
+                if (data.value > highestValue) {
+                    highestValue = data.value;
+                }
             }
 
             var medianLine = d3.svg.line()
               .interpolate('basis')
               .x(function (d) { return x(d.date); })
-              .y(function (d) { return y(d.pct50); });
+              .y(function (d) { return y(d.value); });
 
             var lowerInnerArea = d3.svg.area()
               .interpolate('basis')
               .x(function (d) { return x(d.date) || 1; })
-              .y0(function (d) { return y(d.pct50); })
-              .y1(10000);
+              .y0(function (d) { return y(d.value); })
+              .y1(highestValue + 10000);
 
             svg.datum(data);
 
@@ -511,7 +630,7 @@
             var x = d3.time.scale().range([0, chartWidth])
                       .domain(d3.extent(data, function (d) { return d.date; })),
                 y = d3.scale.linear().range([chartHeight, 0])
-                      .domain([0, d3.max(data, function (d) { return d.pct95; })]);
+                      .domain([0, d3.max(data, function (d) { return d.value; })]);
 
             var xAxis = d3.svg.axis().scale(x).orient('bottom')
                           .innerTickSize(-chartHeight).outerTickSize(0).tickPadding(10),

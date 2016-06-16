@@ -956,6 +956,17 @@ h3 {
       align-items: center;
       justify-content: space-around;
       padding: 0 50px; }
+      .detailblock #thresholdCarousel .item > div.inactive {
+        display: none; }
+      .detailblock #thresholdCarousel .item > div.title {
+        position: absolute;
+        top: 0;
+        right: 0;
+        align-self: flex-start;
+        height: 20px;
+        margin: 18px;
+        padding: 0;
+        text-align: right; }
       .detailblock #thresholdCarousel .item > div .value {
         position: relative;
         top: 0;
@@ -979,16 +990,17 @@ h3 {
   .detailblock .containerlist {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: flex-start;
     height: 225px;
     width: 100%; }
     .detailblock .containerlist li {
       display: flex;
       flex-flow: row nowrap;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       height: 50px;
+      width: 100%;
       font-family: Proximus-Regular;
       font-size: 1.2em;
       color: #5C2D91; }
@@ -997,6 +1009,9 @@ h3 {
         height: auto;
         max-height: 50px;
         max-width: 75px; }
+      .detailblock .containerlist li p {
+        margin: 0 0 0 15px;
+        cursor: pointer; }
 
 .blue {
   color: #00bCEe; }
