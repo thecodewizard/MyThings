@@ -179,7 +179,7 @@ namespace MyThings.Web.Controllers
             List<Tile> navTiles = (from t in tiles where t.Pin.SavedType == PinType.FixedNavigation select t).ToList();
             if (navTiles.Count() < 6 && navTiles.Any()) //If the count isn't correct, delete all the pins
             {
-                foreach (Tile navTile in navTiles) navTiles.Remove(navTile);
+                foreach (Tile navTile in navTiles) tiles.Remove(navTile);
             }
             if (!(from t in tiles where t.Pin.SavedType == PinType.FixedNavigation select t).Any())
             {
@@ -205,7 +205,7 @@ namespace MyThings.Web.Controllers
         #endregion
 
         [HttpGet]
-        [Route("manage")]
+        [Route("sensormanagement")]
         public ActionResult Sensormanagement(String query = "", int? selectedSensor = null)
         {
             //Get the current user
@@ -260,6 +260,7 @@ namespace MyThings.Web.Controllers
                 //Get the sensor
                 int sensorId = id.Value;
                 Sensor sensor = _sensorRepository.GetSensorById(sensorId);
+                if (sensor == null) return RedirectToAction("Index");
                 if (!sensor.Company.Equals(user.Company)) return RedirectToAction("Index");
 
                 //Get the warnings and errors for the sensor
@@ -293,12 +294,28 @@ namespace MyThings.Web.Controllers
                 //Get the container
                 int containerId = id.Value;
                 Container container = _containerRepository.GetContainerById(containerId);
+                if (container == null) return RedirectToAction("Index");
 
                 //Get the parent sensor
                 Sensor sensor = (container.SensorId.HasValue)
                     ? _sensorRepository.GetSensorById(container.SensorId.Value)
                     : null;
-                if (sensor != null && !user.Company.Equals(sensor.Company)) return RedirectToAction("Index");
+                if (sensor == null || !user.Company.Equals(sensor.Company)) return RedirectToAction("Index");
+
+                //Create a new threshold the container
+                if (container.Threshold == null)
+                {
+                    container.Threshold = new Threshold()
+                    {
+                        BetweenValuesActive = false,
+                        FrequencyActive = false,
+                        MatchValueActive = false,
+                        MatchValue = "",
+                        MinUpdateInterval = TimeSpan.FromHours(23)
+                    };
+                    _containerRepository.Update(container);
+                    _containerRepository.SaveChanges();
+                }
 
                 //Fill the Viewbag
                 ViewBag.ParentSensor = sensor;
@@ -903,7 +920,6 @@ namespace MyThings.Web.Controllers
                             if (!sensor.Company.Equals(user.Company))
                                 return new HttpResponseMessage(HttpStatusCode.Forbidden);
                         }
-
 
                         //Check for changes and save them
                         if (!dbThreshold.MinValue.Equals(threshold.MinValue) ||

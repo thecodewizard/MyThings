@@ -224,7 +224,7 @@ namespace DataStorageQueue
             {
                 //Make the new sensor
                 sensor = new Sensor();
-                sensor.CreationDate = new DateTime(long.Parse(containerEntity.receivedtimestamp)); //TODO: Replace With DateTime.Now
+                sensor.CreationDate = DateTime.Now;
                 sensor.MACAddress = containerEntity.macaddress;
                 sensor.SensorEntries = 1;
                 sensor.Company = containerEntity.company;
@@ -252,7 +252,7 @@ namespace DataStorageQueue
                 container = new Container();
                 container.Name = containerEntity.macaddress;
                 container.ContainerType = type;
-                container.CreationTime = new DateTime(long.Parse(containerEntity.receivedtimestamp)); //TODO: Replace With DateTime.Now
+                container.CreationTime = DateTime.Now;
                 container.MACAddress = containerEntity.macaddress;
                 container.SensorId = sensor.Id;
                 _containerRepository.Insert(container);

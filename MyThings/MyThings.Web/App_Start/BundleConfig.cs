@@ -39,6 +39,9 @@ namespace MyThings.Web
 
             bundles.Add(new ScriptBundle("~/Scripts/gridster").Include(
                     "~/Scripts/jquery.gridster.min.js"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/3djs").Include(
+                    "~/Scripts/d3.min.js"));
         }
     }
 }

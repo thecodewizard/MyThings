@@ -949,4 +949,228 @@ h2 {
     display:inline;
     float:right;
 }*/
+h1 {
+  color: #5C2D91; }
+
+h2 {
+  color: #9C5FB5; }
+
+h3 {
+  color: #D1BBDA; }
+
+@font-face {
+  font-family: Proximus-Regular;
+  src: url("../fonts/Proximus-Regular.ttf") format("truetype"), url("../fonts/Proximus-Regular.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Light;
+  src: url("../fonts/Proximus-Light.ttf") format("truetype"), url("../fonts/Proximus-Light.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-LightItalic;
+  src: url("../fonts/Proximus-LightItalic.ttf") format("truetype"), url("../fonts/Proximus-LightItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-RegularItalic;
+  src: url("../fonts/Proximus-RegularItalic.ttf") format("truetype"), url("../fonts/Proximus-RegularItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Bold;
+  src: url("../fonts/Proximus-Bold.ttf") format("truetype"), url("../fonts/Proximus-Bold.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-BoldItalic;
+  src: url("../fonts/Proximus-BoldItalic.ttf") format("truetype"), url("../fonts/Proximus-BoldItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-ExtraBold;
+  src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
+
+.containerdetail {
+  margin: 0 0 50px 0; }
+
+.blocksholder {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around; }
+
+.detailblock {
+  display: block;
+  position: relative;
+  margin: 10px;
+  padding-bottom: calc(33% - 10px);
+  overflow: hidden; }
+  .detailblock.square {
+    width: calc(33% - 20px);
+    height: 0;
+    background: #D1BBDA; }
+    .detailblock.square:nth-child(2n) {
+      background: #CCCCCC; }
+  .detailblock.rectangle {
+    width: calc(66% - 20px);
+    height: 0;
+    background: #F2E7F2; }
+    .detailblock.rectangle:nth-child(2n) {
+      background: #E5F1F9; }
+  .detailblock .tileimg {
+    height: auto;
+    width: auto;
+    max-height: 100%;
+    position: absolute;
+    top: 0;
+    left: -50%; }
+  .detailblock .title {
+    color: #5C2D91;
+    font-family: Proximus-Bold;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: right;
+    margin: 18px; }
+    .detailblock .title p {
+      height: 20px;
+      margin: 0 0 5px; }
+  .detailblock .value {
+    color: #FFFFFF;
+    font-family: Proximus-Light;
+    font-size: 8em;
+    position: absolute;
+    bottom: 8%;
+    right: 10%;
+    display: flex;
+    flex-flow: row nowrap; }
+    .detailblock .value .sup {
+      font-size: 40px;
+      margin-left: -25px; }
+  .detailblock #thresholdCarousel {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0; }
+    .detailblock #thresholdCarousel .carousel-control {
+      background-image: none; }
+    .detailblock #thresholdCarousel h3 {
+      text-align: right;
+      font-size: 2em; }
+    .detailblock #thresholdCarousel .item > div {
+      height: 300px;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 50px; }
+      .detailblock #thresholdCarousel .item > div.inactive {
+        display: none; }
+      .detailblock #thresholdCarousel .item > div.title {
+        position: absolute;
+        top: 0;
+        right: 0;
+        align-self: flex-start;
+        height: 20px;
+        margin: 18px;
+        padding: 0;
+        text-align: right; }
+      .detailblock #thresholdCarousel .item > div .value {
+        position: relative;
+        top: 0;
+        right: 0; }
+        .detailblock #thresholdCarousel .item > div .value.left * {
+          color: #00bCEe; }
+        .detailblock #thresholdCarousel .item > div .value.right * {
+          color: #5C2D91; }
+      .detailblock #thresholdCarousel .item > div .adjustable {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center; }
+        .detailblock #thresholdCarousel .item > div .adjustable > .arrows {
+          display: flex;
+          flex-flow: column nowrap;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          width: 100%; }
+  .detailblock .containerlist {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 225px;
+    width: 100%; }
+    .detailblock .containerlist li {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center;
+      height: 50px;
+      width: 100%;
+      font-family: Proximus-Regular;
+      font-size: 1.2em;
+      color: #5C2D91; }
+      .detailblock .containerlist li img {
+        width: auto;
+        height: auto;
+        max-height: 50px;
+        max-width: 75px; }
+      .detailblock .containerlist li p {
+        margin: 0 0 0 15px;
+        cursor: pointer; }
+
+.blue {
+  color: #00bCEe; }
+
+.purple {
+  color: #5C2D91; }
+
+#chart {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0; }
+  #chart .axis path,
+  #chart .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges; }
+  #chart .axis text {
+    fill: #000; }
+  #chart .axis .tick line {
+    stroke: rgba(0, 0, 0, 0.1); }
+  #chart .area {
+    stroke-width: 1; }
+  #chart .area.outer,
+  #chart .legend .outer {
+    fill: rgba(230, 230, 255, 0.8);
+    stroke: rgba(216, 216, 255, 0.8); }
+  #chart .area.inner,
+  #chart .legend .inner {
+    fill: rgba(0, 115, 207, 0.8);
+    stroke: rgba(0, 115, 207, 0.8); }
+  #chart .median-line,
+  #chart .legend .median-line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 3; }
+  #chart .legend .legend-bg {
+    fill: rgba(0, 0, 0, 0.5);
+    stroke: rgba(0, 0, 0, 0.5); }
+  #chart .marker.history .marker-bg,
+  #chart .marker.history path {
+    fill: rgba(0, 188, 238, 0.8);
+    stroke: rgba(0, 188, 238, 0.8);
+    stroke-width: 3; }
+  #chart .marker.current .marker-bg,
+  #chart .marker.current path {
+    fill: rgba(92, 45, 145, 0.8);
+    stroke: rgba(92, 45, 145, 0.8);
+    stroke-width: 3; }
+  #chart .marker path {
+    fill: none; }
+  #chart .legend text,
+  #chart .marker text {
+    fill: #fff;
+    font-weight: bold; }
+  #chart .marker text {
+    text-anchor: middle; }
 

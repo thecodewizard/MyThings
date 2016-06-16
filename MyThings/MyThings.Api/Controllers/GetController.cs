@@ -24,7 +24,7 @@ namespace MyThings.Api.Controllers
 
         #region GetSingleObject Methods
         [HttpGet]
-        public HttpResponseMessage GetSensor(int? sensorId = null)
+        public HttpResponseMessage GetSensor(int? sensorId = null, bool updateValues = false)
         {
             if (sensorId.HasValue)
             {
@@ -34,6 +34,14 @@ namespace MyThings.Api.Controllers
 
                 if (sensor != null)
                 {
+                    if (updateValues)
+                    {
+                        for (int i = 0; i < sensor.Containers.Count; i++)
+                        {
+                            sensor.Containers[i] = TableStorageRepository.UpdateValue(sensor.Containers[i]);
+                        }
+                    }
+
                     String json = JsonConvert.SerializeObject(sensor);
 
                     HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
