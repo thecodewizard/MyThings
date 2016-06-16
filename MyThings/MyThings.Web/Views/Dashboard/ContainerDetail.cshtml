@@ -46,7 +46,7 @@
                 </ol>
 
                 <!-- Wrapper for slides -->
-                <div class="carousel-inner" role="listbox" data-interval="false">
+                <div class="carousel-inner" style="height: 100%;" role="listbox" data-interval="false">
                     <div class="item active">
                         <div class="title">
                             @if (Model.Threshold != null && Model.Threshold.BetweenValuesActive)
@@ -621,8 +621,10 @@
         }
 
         function makeChart(data, markers) {
-            var svgWidth = 600,
-                svgHeight = 300,
+            var chart = $("#chart");
+
+            var svgWidth = chart.width(),
+                svgHeight = chart.height(),
                 margin = { top: 20, right: 20, bottom: 40, left: 40 },
                 chartWidth = svgWidth - margin.left - margin.right,
                 chartHeight = svgHeight - margin.top - margin.bottom;

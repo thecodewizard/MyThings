@@ -1052,8 +1052,10 @@ h3 {
     .detailblock #thresholdCarousel h3 {
       text-align: right;
       font-size: 2em; }
+    .detailblock #thresholdCarousel .item {
+      height: 100%; }
     .detailblock #thresholdCarousel .item > div {
-      height: 300px;
+      height: 100%;
       display: flex;
       flex-flow: row nowrap;
       align-items: center;
@@ -1173,4 +1175,271 @@ h3 {
     font-weight: bold; }
   #chart .marker text {
     text-anchor: middle; }
+
+h1 {
+  color: #5C2D91; }
+
+h2 {
+  color: #9C5FB5; }
+
+h3 {
+  color: #D1BBDA; }
+
+@font-face {
+  font-family: Proximus-Regular;
+  src: url("../fonts/Proximus-Regular.ttf") format("truetype"), url("../fonts/Proximus-Regular.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Light;
+  src: url("../fonts/Proximus-Light.ttf") format("truetype"), url("../fonts/Proximus-Light.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-LightItalic;
+  src: url("../fonts/Proximus-LightItalic.ttf") format("truetype"), url("../fonts/Proximus-LightItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-RegularItalic;
+  src: url("../fonts/Proximus-RegularItalic.ttf") format("truetype"), url("../fonts/Proximus-RegularItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Bold;
+  src: url("../fonts/Proximus-Bold.ttf") format("truetype"), url("../fonts/Proximus-Bold.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-BoldItalic;
+  src: url("../fonts/Proximus-BoldItalic.ttf") format("truetype"), url("../fonts/Proximus-BoldItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-ExtraBold;
+  src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
+
+body .sensordetail {
+  padding: 50px; }
+
+body .rotated {
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg); }
+
+body #sensorcontainers > div > div {
+  display: flex;
+  flex-flow: row wrap; }
+  body #sensorcontainers > div > div .tile {
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer; }
+  body #sensorcontainers > div > div h2 {
+    color: #5C2D91; }
+
+body #techdetailholder .techtitle {
+  padding: 2px 25px 10px 25px;
+  background-color: #D1BBDA; }
+  body #techdetailholder .techtitle h3 {
+    color: #9C5FB5; }
+
+body #techdetailholder .techbody {
+  background-color: #F2E7F2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap; }
+  body #techdetailholder .techbody .maininfo {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 20px 5px;
+    width: 75%;
+    height: 100%; }
+    body #techdetailholder .techbody .maininfo > div {
+      display: flex;
+      flex-flow: row wrap; }
+      body #techdetailholder .techbody .maininfo > div p {
+        padding: 0 10px; }
+  body #techdetailholder .techbody .actionlinks {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 20px 5px;
+    width: 25%;
+    height: 100%; }
+    body #techdetailholder .techbody .actionlinks div {
+      margin: 10px 0; }
+    body #techdetailholder .techbody .actionlinks img {
+      height: 35px; }
+
+body #mapsholder {
+  position: relative;
+  height: 100%;
+  width: 100%; }
+  body #mapsholder #map {
+    position: relative;
+    min-height: 500px;
+    min-width: 800px;
+    height: 100%;
+    width: 100%;
+    background-color: #CCC; }
+
+body #sensorcontainers > div .gridsterContainer > .gridster > ul > .tile {
+  background-color: #5C2D91;
+  list-style: none;
+  color: white;
+  overflow: hidden;
+  transition: background-color 0.2s;
+  cursor: pointer; }
+
+body #sensorcontainers > div .gridsterContainer > .gridster > ul > .tile:hover {
+  background-color: #00bCEe; }
+
+body #sensorcontainers > div .gridsterContainer > .gridster > ul > .unhoverable:hover {
+  background-color: #5C2D91;
+  cursor: initial; }
+
+body #sensorcontainers > div .tile * {
+  transition: 0.2s; }
+
+body #sensorcontainers > div .tile {
+  background-color: #5C2D91;
+  list-style: none;
+  color: white; }
+
+body #sensorcontainers > div .homepageBody {
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 100vh;
+  font-family: Proximus-Regular, Helvetica, sans-serif; }
+
+body #sensorcontainers > div body {
+  background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png");
+  background-size: cover; }
+
+body #sensorcontainers > div .gridsterContainer {
+  padding: 30px 50px 50px 50px;
+  min-height: 100%;
+  height: 100%;
+  margin: 0 auto -20px; }
+
+body #sensorcontainers > div .homeTitle {
+  color: #fff;
+  margin: 20px 0 0 50px; }
+
+body #sensorcontainers > div .itemName {
+  text-align: center;
+  white-space: nowrap; }
+
+body #sensorcontainers > div .itemName, body #sensorcontainers > div .itemType {
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+body #sensorcontainers > div .itemValue, body #sensorcontainers > div .itemName, body #sensorcontainers > div .countValue, body #sensorcontainers > div .itemType, body #sensorcontainers > div .itemValueTimeStampDate, body #sensorcontainers > div .itemValueTimeStampTime, body #sensorcontainers > div .itemValueClickBait, body #sensorcontainers > div .itemValueTwoLines {
+  margin: 2px; }
+
+body #sensorcontainers > div .itemValue, body #sensorcontainers > div .itemType, body #sensorcontainers > div .itemValueTimeStampTime, body #sensorcontainers > div .itemValueTimeStampDate, body #sensorcontainers > div .itemValueClickBait, body #sensorcontainers > div .itemValueTwoLines {
+  position: absolute;
+  text-align: right; }
+
+body #sensorcontainers > div .smallWidget .countValue {
+  font-size: 4em; }
+
+body #sensorcontainers > div .smallWidget .itemValueTimeStampDate {
+  bottom: 3px;
+  right: 7px;
+  font-size: 0.75em; }
+
+body #sensorcontainers > div .smallWidget .itemValueTimeStampTime {
+  font-size: 0.75em;
+  bottom: 16px;
+  right: 7px; }
+
+body #sensorcontainers > div .smallWidget .itemValue {
+  top: 36%;
+  right: 5%;
+  font-size: 2.4em; }
+
+body #sensorcontainers > div .smallWidget .itemValueClickBait, body #sensorcontainers > div .smallWidget .itemValueTwoLines {
+  top: 35%;
+  right: 5%;
+  font-size: 1em; }
+
+body #sensorcontainers > div .smallWidget .itemType {
+  right: 5%;
+  top: 15%;
+  font-size: 0.8em; }
+
+body #sensorcontainers > div .largeWidget .countValue {
+  font-size: 6em;
+  left: 5%; }
+
+body #sensorcontainers > div .largeWidget .itemValue {
+  top: 35%;
+  right: 5%;
+  font-size: 5em; }
+
+body #sensorcontainers > div .largeWidget .itemValueClickBait, body #sensorcontainers > div .largeWidget .itemValueTwoLines {
+  top: 30%;
+  right: 5%;
+  font-size: 2.5em; }
+
+body #sensorcontainers > div .largeWidget .itemName {
+  font-size: 2em; }
+
+body #sensorcontainers > div .largeWidget .itemType {
+  right: 5%;
+  top: 15%;
+  font-size: 1.5em; }
+
+body #sensorcontainers > div .largeWidget .itemValueTimeStampDate {
+  bottom: 5px;
+  right: 7px;
+  font-size: 1.2em; }
+
+body #sensorcontainers > div .largeWidget .itemValueTimeStampTime {
+  bottom: 10%;
+  right: 7px;
+  font-size: 1.2em; }
+
+body #sensorcontainers > div sup {
+  font-size: 0.5em; }
+
+body #sensorcontainers > div .customimg {
+  opacity: 0.2; }
+
+body #sensorcontainers > div .itemType, body #sensorcontainers > div .itemValueTimeStampDate, body #sensorcontainers > div .itemValueTimeStampTime {
+  opacity: 0.4; }
+
+body #sensorcontainers > div .noFade {
+  opacity: 0.9; }
+
+body #sensorcontainers > div .customimg {
+  position: absolute; }
+  body #sensorcontainers > div .customimg.warningimg {
+    max-height: 70%;
+    max-width: 70%;
+    bottom: -10%;
+    right: -20%; }
+  body #sensorcontainers > div .customimg.errorimg {
+    max-height: 80%;
+    max-width: 80%;
+    bottom: -5%;
+    right: -20%; }
+  body #sensorcontainers > div .customimg.groupimg {
+    max-height: 80%;
+    max-width: 80%;
+    bottom: -5%;
+    right: -20%; }
+  body #sensorcontainers > div .customimg.logoutimg {
+    max-height: 95%;
+    max-width: 95%;
+    bottom: -2%; }
+  body #sensorcontainers > div .customimg.pinimg {
+    max-height: 80%;
+    max-width: 80%;
+    bottom: 0;
+    left: -37%; }
+  body #sensorcontainers > div .customimg.navimg {
+    max-height: 100%;
+    max-width: 100%; }
+
+body #sensorcontainers > div .hidden {
+  display: none; }
 
