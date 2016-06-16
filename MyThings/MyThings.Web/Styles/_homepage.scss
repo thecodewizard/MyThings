@@ -14,6 +14,11 @@
     background-color: $proximusmainblue;
 }
 
+.gridsterContainer > .gridster > ul > .unhoverable:hover{
+    background-color: $proximusmainpurple;
+    cursor: initial;
+}
+
 .tile *{
     transition: 0.2s;
 }
@@ -51,6 +56,7 @@ body{
 .itemName 
 {
     text-align:center;
+    white-space: nowrap;
 }
 
 .itemName, .itemType{
@@ -58,13 +64,17 @@ body{
     text-overflow:ellipsis;   
 }
 
-.itemValue, .itemName, .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime{
+.itemValue, .itemName, .countValue, .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime, .itemValueClickBait, .itemValueTwoLines{
     margin: 2px;
 }
 
-.itemValue, .itemType, .itemValueTimeStampTime, .itemValueTimeStampDate{
+.itemValue, .itemType, .itemValueTimeStampTime, .itemValueTimeStampDate, .itemValueClickBait, .itemValueTwoLines{
     position: absolute;
     text-align: right;
+}
+
+.smallWidget .countValue{
+    font-size:4em;
 }
 
 .smallWidget .itemValueTimeStampDate{
@@ -85,6 +95,12 @@ body{
     font-size: 2.4em;
 }
 
+.smallWidget .itemValueClickBait, .smallWidget .itemValueTwoLines{
+    top: 35%;
+    right: 5%;
+    font-size:1em;
+}
+
 .smallWidget .itemName{
 
 }
@@ -95,11 +111,21 @@ body{
     font-size: 0.8em;
 }
 
+.largeWidget .countValue{
+    font-size:$fontsizehuge;
+    left: 5%;
+}
 
 .largeWidget .itemValue{
     top: 35%;
     right: 5%;
     font-size:5em;
+}
+
+.largeWidget .itemValueClickBait, .largeWidget .itemValueTwoLines{
+    top: 30%;
+    right: 5%;
+    font-size:2.5em;
 }
 
 .largeWidget .itemName{
@@ -136,25 +162,32 @@ sup{
     opacity: 0.4;
 }
 
+.noFade{
+    opacity: 0.9;
+}
+
 .customimg
 {
     position:absolute;
 
-    &.errorimg 
-    {
-    max-height:75%;
-    max-width:75%;
-    float: right;
-    bottom: 40%;
+    &.warningimg{
+    max-height: 70%;
+    max-width: 70%;
+    bottom: -10%;
     right: -20%;
     }
 
-    &.warningimg 
-    {
-    max-height:65%;
-    max-width:65%;
-    float: right;
-    bottom: 35%;
+    &.errorimg{
+    max-height: 80%;
+    max-width: 80%;
+    bottom: -5%;
+    right: -20%;
+    }
+
+    &.groupimg{
+    max-height: 80%;
+    max-width: 80%;
+    bottom: -5%;
     right: -20%;
     }
 
@@ -171,8 +204,88 @@ sup{
     bottom: 0;
     left: -37%;
     }
-
+    &.navimg{
+        max-height:100%;
+        max-width: 100%;
+    }
 }
+
+.hidden{
+    display: none;
+}
+//clock css
+.clock {
+  border-radius: 50%;
+  background: #fff url(http://loradatagroep9.blob.core.windows.net/proximusimages/ios_clock.svg) no-repeat center;
+  background-size: 87%;
+  height: 90%;
+  position: absolute;
+  width: 90%;
+  margin: 5%;
+}
+.clock.simple:after {
+  background: #000;
+  border-radius: 50%;
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 5%;
+  height: 5%;
+  z-index: 10;
+}
+.minutes-container, .hours-container, .seconds-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.hours {
+  background: #000;
+  height: 20%;
+  left: 48.75%;
+  position: absolute;
+  top: 30%;
+  transform-origin: 50% 100%;
+  width: 2.5%;
+}
+.minutes {
+  background: #000;
+  height: 40%;
+  left: 49%;
+  position: absolute;
+  top: 10%;
+  transform-origin: 50% 100%;
+  width: 2%;
+}
+.seconds {
+  background: #000;
+  height: 45%;
+  left: 49.5%;
+  position: absolute;
+  top: 14%;
+  transform-origin: 50% 80%;
+  width: 1%;
+  z-index: 8;
+}
+@keyframes rotate {
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+.hours-container {
+  animation: rotate 43200s infinite linear;
+}
+.minutes-container {
+  transition: transform 0.3s cubic-bezier(.4,2.08,.55,.44);
+}
+.seconds-container {  
+  transition: transform 0.2s cubic-bezier(.4,2.08,.55,.44);
+}
+
+//end clock
 /*$largeblock: 200px;
 $smallblock: 100px;
 $fontsizelarge: 6em;
@@ -256,7 +369,7 @@ $fontsizestiny: 0.85em;
     font-size:$fontsizesmall;
     text-align:center;
 }
-.ciphervalue
+.countValue
 {
     margin:0 10px;
     font-size:$fontsizehuge;
