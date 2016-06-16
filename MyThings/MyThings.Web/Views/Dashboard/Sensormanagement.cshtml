@@ -17,7 +17,7 @@
         <h2>Groups</h2>
     </li>
     <li class="editgroup">
-        @Html.ActionLink("Edit", "Editgroups", "Dashboard")
+        <div type="button" class="editbutton">Edit</div>
     </li>
 </ul>
 
@@ -72,79 +72,8 @@
                     <th>Location</th>
                     <th></th>
                 </tr>
-                <tr>
-                    @*<tr class="sensorrows">
-                            <td class="idsensordiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">1B81111DA35AEG</a> </td>
-                            <td class="namesensordiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">1B81111DA35AEG</a> </td>
-                            <td class="numbercontainerdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">35</a> </td>
-                            <td class="sensorlocationdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">West Flanders, Belgium</a> </td>
-                            <td class="sensorpinimg"><a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "5")"><img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" /></a> </td>
-                        </tr>
-                        <tr class="sensorrows">
-                            <td class="idsensordiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">1B811GHDA35AG</a> </td>
-                            <td><a href="@Url.Action("SensorDetail", "Dashboard", "5")">Proxsensor20</a> </td>
-                            <td class="numbercontainerdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">7</a> </td>
-                            <td class="sensorlocationdiv"><a href="@Url.Action("SensorDetail", "Dashboard", "5")">Antwerp, Belgium</a> </td>
-                            <td class="sensorpinimg"><a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "5")"><img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" /></a> </td>
-                        </tr>*@
-                </tr>
             </table>
 
-            <div>
-                @*<div class="sensorlist table">
-                    <div class="sensorsheadrow table-row">
-                        <div>ID</div>
-                        <div>Name</div>
-                        <div># Containers</div>
-                        <div>Location</div>
-                    </div>*@
-
-                @*Sensor pin on same line, but can't click on the pin*@
-                @*<div class="sensorrows">
-                        <a href="@Url.Action("SensorDetail", "Dashboard", "5")">
-                            <div class="idsensordiv">1B81111DA35AEG </div>
-                            <div class="namesensordiv">1B81111DA35AEG</div>
-                            <div class="numbercontainerdiv">35</div>
-                            <div class="sensorlocationdiv">West Flanders, Belgium</div>
-                            <img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg"/>
-                        </a>
-                    </div>*@
-                @* Sensor pin on line below, but CAN click on the pin *@
-                @*<div class="sensorrows">
-                            <a href="@Url.Action("SensorDetail", "Dashboard", "5")">
-                                <div class="idsensordiv">1B81111DA35AEG </div>
-                                <div class="namesensordiv">1B81111DA35AEG</div>
-                                <div class="numbercontainerdiv">35</div>
-                                <div class="sensorlocationdiv">West Flanders, Belgium</div>
-                            </a>
-                            <a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "5")">
-                                <img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" />
-                            </a>
-                        </div>
-                        <div class="sensorrows">
-                            <a href="@Url.Action("SensorDetail", "Dashboard", "2")">
-                                <div class="idsensordiv">1B811GHDA35AG</div>
-                                <div class="namesensordiv">Proxsensor20</div>
-                                <div class="numbercontainerdiv">7</div>
-                                <div class="sensorlocationdiv">Antwerp, Belgium</div>
-                            </a>
-                            <a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "5")">
-                                <img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" />
-                            </a>
-                        </div>
-                        <div class="sensorrows">
-                            <a href="@Url.Action("SensorDetail", "Dashboard", "2")">
-                                <div class="idsensordiv">1B811GHDA35AG</div>
-                                <div class="namesensordiv">Proxsensor20</div>
-                                <div class="numbercontainerdiv">16</div>
-                                <div class="sensorlocationdiv">Antwerp, Belgium</div>
-                            </a>
-                            <a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "5")">
-                                <img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" />
-                            </a>
-                        </div>
-                    </div>*@
-            </div>
             <br />
 
             @section scripts{
@@ -202,7 +131,8 @@
                                             .append('<div class="grouprectangletile  group' +
                                                 groups[i].Id +
                                                 '">' +
-                                                '<div class="textdivgroup">' +
+                                                '<div class="textdivgroup itemName" title="' +
+                                                groups[i].Name+'">' +
                                                 groups[i].Name +
                                                 '</div>' +
                                                 '<div class="ciphervaluegroup">' +
@@ -253,17 +183,39 @@
                                                     }
                                                 });
 
+                            //click on an item in the sensorlist
                                                 $('.sensorlist').on('click','.sensorrows', function(e) {
                                                     if ($('.newgroup').length) {
                                                         var sensor = $(e.target).parent().attr('id');
                                                         sensors.push(sensor);
                                                         $('<div id="dialogdiv" class="ui-front" title="Sensor added">Added the sensor to group</div>')
-                                                            .insertBefore($('.dialogrule')).dialog({autoOpen:false});
+                                                            .insertBefore($('.dialogrule'))
+                                                            .dialog({ autoOpen: false });
                                                         $('#dialogdiv').dialog("open");
-                                                         setTimeout(function(){ $('#dialogdiv').dialog("close");},1000);
+                                                        setTimeout(function() { $('#dialogdiv').dialog("close"); },
+                                                            1000);
+                                                    } else {
+                                                        //get details from sensors
+                                                        $('<div class="sensordetails">' +
+                                                                '<div>Extra details' +
+                                                                '</div>' +
+                                                                '<div class="sensordetailname">Name:' +
+                                                                '</div>' + 
+                                                                '<div class="sensordetailcompany">Company:' +
+                                                                '</div>' +
+                                                                '<div class="sensordetaillocation">Location:' +
+                                                                '</div>' +
+                                                                '<div class="sensordetailcreation">CreationDate:' +
+                                                                '</div>' +
+                                                                '<div class="sensordetailentries">SensorEntries:' +
+                                                                '</div>' +
+                                                                '<div class="sensordetailcontainers">Containers:' +
+                                                                '</div>' +
+                                                                '</div>')
+                                                            .insertAfter($('.sensorlist'));
                                                     }
                                                 });
-
+                            //Click on the button to create a new group
                             $('.groupdiv')
                                 .on( 'click','.newgroupbutton',function() {
                                     var name = $('.groupinputtext').val();
@@ -298,27 +250,56 @@
                                     group.length=0;
                                 });
 
+                            //Click on the pinimage to pin a sensor
                             $('.sensorlist').on('click','.sensorpinimg', function(e) {
                                 var sensorId = parseInt($(e.target).parent().attr('id'));
                                 var pinSensor = { "sensorId": sensorId };
-
-                                $.ajax({
-                                    url: apiBaseUrl + "Dashboard/PinSensor",
-                                    data: JSON.stringify(pinSensor),
-                                    method: "POST",
-                                    contentType: "application/json"
-                                }).done(function (json) {
-                                   // console.log('sensor was pinned');
-                                }).done(function (json){console.log('sensor failed');}).statusCode(function (statuscoderesponse) {
-                                    if (statuscoderesponse != null) {
-                                        console.log(statuscoderesponse.statusMessage);
-                                        console.log('status');
-                                    }
-                                });
-                                alert(sensorId);
+                               /* var partOfArray=false;
+                                for (var i = 0; i < pinnedSensors.length; i++) {
+                                    if (pinnedSensors[i].Id==sensorId)
+                                        partOfArray = true;
+                                }*/
+                               
+                                        $.ajax({
+                                                url: apiBaseUrl + "Dashboard/UnpinSensor",
+                                                data: JSON.stringify(pinSensor),
+                                                method: "POST",
+                                                contentType: "application/json"
+                                            })
+                                            .done(function(json) {
+                                                // console.log('sensor was pinned');
+                                            })
+                                            .done(function(json) { console.log('sensor failed'); })
+                                            .statusCode(function(statuscoderesponse) {
+                                                if (statuscoderesponse != null) {
+                                                    console.log(statuscoderesponse.statusMessage);
+                                                    console.log('status');
+                                                }
+                                            });
                             });
 
-
+                            //Click on the pinimage to unpin a sensor
+                            $('.sensorlist').on('click','.sensornotpinimg',
+                                    function(e) {
+                                        var sensorId = parseInt($(e.target).parent().attr('id'));
+                                        var pinSensor = { "sensorId": sensorId };
+                                        $.ajax({
+                                            url: apiBaseUrl + "Dashboard/PinSensor",
+                                            data: JSON.stringify(pinSensor),
+                                            method: "POST",
+                                            contentType: "application/json"
+                                        })
+                                        .done(function(json) {
+                                            console.log('sensor was unpinned');
+                                        })
+                                        .done(function(json) { console.log('sensor failed'); })
+                                        .statusCode(function(statuscoderesponse) {
+                                            if (statuscoderesponse != null) {
+                                                console.log(statuscoderesponse.statusMessage);
+                                                console.log('status');
+                                            }
+                                        });
+                                    });
 
                             function searchauto() {
                                 var arr = [];
@@ -332,6 +313,7 @@
 
                             }
 
+                            //dropdown with ways to sort the sensorlist
                             function fillSortingbox() {
                                 $(".dropdowntest").append('<option value="">Pick a sorting method</option>');
                                 for (var i = 0; i < comboboxContainerTypes.length; i++) {
@@ -344,29 +326,158 @@
                                 }
                             }
 
+                            //on startup
                             function sensorlistCreate() {
+                                var allSensorIds = [];
+                                var pinnedSensorIds = [];
                                 for (var i = 0; i < allSensors.length; i++) {
-                                    $(".sensorlist")
-                                        .append('<tr class="sensorrows" id="'+
-                                            allSensors[i].Id+'">' +
-                                            '<td class="idsensordiv">' +
-                                            allSensors[i].MACAddress +
-                                            '</td>' +
-                                            '<td class="namesensordiv">' +
-                                            allSensors[i].Name +
-                                            '</td>' +
-                                            '<td class="numbercontainerdiv">' +
-                                            allSensors[i].SensorEntries +
-                                            '</td>' +
-                                            '<td class="sensorlocationdiv">' +
-                                            allSensors[i].Location +
-                                            '</td>' +
-                                            '<td class="sensorpinimgtd"  id="'+
-                                            allSensors[i].Id+'">' +
-                                            '<img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" />' +
-                                            '</td>' +
-                                            '</tr>');
+                                    allSensorIds.push(allSensors[i].Id);}
+                                     for (var j = 0; j < pinnedSensors.length; j++) {
+                                         pinnedSensorIds.push(pinnedSensors[j].Id);
+                                 }
+                                 allSensorIds = allSensorIds.reduce(function(prev, value) {
+                                    var isDuplicate = false;
+                                    for (var l = 0; l < pinnedSensorIds.length; l++) {
+                                        if (value == pinnedSensorIds[l]) {
+                                            isDuplicate = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isDuplicate) {
+                                        prev.push(value);
+                                    }
+                                    return prev;
+                                 },[]);
+
+                                 for (var n = 0; n < allSensors.length; n++) {
+                                     if (isInArray(allSensors[n].Id, allSensorIds)) {
+                                         $(".sensorlist")
+                                             .append('<tr class="sensorrows" id="' +
+                                                 allSensors[n].Id +
+                                                 '">' +
+                                                 '<td class="idsensordiv">' +
+                                                 allSensors[n].MACAddress +
+                                                 '</td>' +
+                                                 '<td class="namesensordiv">' +
+                                                 allSensors[n].Name +
+                                                 '</td>' +
+                                                 '<td class="numbercontainerdiv">' +
+                                                 allSensors[n].SensorEntries +
+                                                 '</td>' +
+                                                 '<td class="sensorlocationdiv">' +
+                                                 allSensors[n].Location +
+                                                 '</td>' +
+                                                 '<td class="sensorpinimgtd"  id="' +
+                                                 allSensors[n].Id +
+                                                 '">' +
+                                                 '<img class="sensornotpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" />' +
+                                                 '</td>' +
+                                                 '</tr>');
+                                     } else {
+                                         $(".sensorlist")
+                          .append('<tr class="sensorrows" id="'+
+                              allSensors[n].Id+'">' +
+                              '<td class="idsensordiv">' +
+                              allSensors[n].MACAddress +
+                              '</td>' +
+                              '<td class="namesensordiv">' +
+                              allSensors[n].Name +
+                              '</td>' +
+                              '<td class="numbercontainerdiv">' +
+                              allSensors[n].SensorEntries +
+                              '</td>' +
+                              '<td class="sensorlocationdiv">' +
+                              allSensors[n].Location +
+                              '</td>' +
+                              '<td class="sensorpinimgtd"  id="'+
+                              allSensors[n].Id+'">' +
+                              '<img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" />' +
+                              '</td>' +
+                              '</tr>');
+                                     }
+                                 }      
+                                        
+                            }
+
+                            //sort on userinput
+                            function sensorlistPinSort() {
+                                var allSensorIds = [];
+                                var pinnedSensorIds = [];
+                                for (var i = 0; i < allSensors.length; i++) {
+                                    allSensorIds.push(allSensors[i].Id);}
+                                for (var j = 0; j < pinnedSensors.length; j++) {
+                                    pinnedSensorIds.push(pinnedSensors[j].Id);
                                 }
+                                allSensorIds = allSensorIds.reduce(function(prev, value) {
+                                    var isDuplicate = false;
+                                    for (var l = 0; l < pinnedSensorIds.length; l++) {
+                                        if (value == pinnedSensorIds[l]) {
+                                            isDuplicate = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isDuplicate) {
+                                        prev.push(value);
+                                    }
+                                    return prev;
+                                },[]);
+
+                                for (var m = 0; m < allSensors.length; m++) {
+                                    if (!isInArray(allSensors[m].Id,allSensorIds)){
+                                        $(".sensorlist")
+                                .append('<tr class="sensorrows" id="'+
+                                    allSensors[m].Id+'">' +
+                                    '<td class="idsensordiv">' +
+                                    allSensors[m].MACAddress +
+                                    '</td>' +
+                                    '<td class="namesensordiv">' +
+                                    allSensors[m].Name +
+                                    '</td>' +
+                                    '<td class="numbercontainerdiv">' +
+                                    allSensors[m].SensorEntries +
+                                    '</td>' +
+                                    '<td class="sensorlocationdiv">' +
+                                    allSensors[m].Location +
+                                    '</td>' +
+                                    '<td class="sensorpinimgtd"  id="'+
+                                    allSensors[m].Id+'">' +
+                                    '<img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" />' +
+                                    '</td>' +
+                                    '</tr>');
+                                    }
+                                }
+
+                                for (var n = 0; n < allSensors.length; n++) {
+                                    if (isInArray(allSensors[n].Id,allSensorIds)) {
+                                        $(".sensorlist")
+                                                  .append('<tr class="sensorrows" id="'+
+                                                      allSensors[n].Id+'">' +
+                                                      '<td class="idsensordiv">' +
+                                                      allSensors[n].MACAddress +
+                                                      '</td>' +
+                                                      '<td class="namesensordiv">' +
+                                                      allSensors[n].Name +
+                                                      '</td>' +
+                                                      '<td class="numbercontainerdiv">' +
+                                                      allSensors[n].SensorEntries +
+                                                      '</td>' +
+                                                      '<td class="sensorlocationdiv">' +
+                                                      allSensors[n].Location +
+                                                      '</td>' +
+                                                      '<td class="sensorpinimgtd"  id="'+
+                                                      allSensors[n].Id+'">' +
+                                                      '<img class="sensornotpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" />' +
+                                                      '</td>' +
+                                                      '</tr>');
+                                    }
+                                }      
+                                        
+                            }
+
+                           
+
+                            function isInArray(value, array) {
+                                return array.indexOf(value) > -1;
                             }
 
                             grouplistCreate();

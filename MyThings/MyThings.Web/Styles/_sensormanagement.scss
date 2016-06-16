@@ -13,7 +13,9 @@ h2{
      display:inline;
          padding:2%;
          margin:auto;
-     & a{
+     & .editbutton{
+         cursor:pointer;
+          display:inline;
          font-family:$proximusregularfont;
          font-size:$fontsizesmall;
          color:$proximuswhite;
@@ -26,6 +28,8 @@ h2{
             }
      }
 }
+
+
 .groupdiv{
     display:flex;
     flex-wrap:wrap;
@@ -218,7 +222,7 @@ h2{
       cursor: pointer;
       background-color:$proximusterdarkblue;
     }
-    &:hover .sensorpinimg{
+    &:hover .sensornotpinimg{
     width:20px;
     height:20px;
     opacity:1;
@@ -226,10 +230,15 @@ h2{
 }
 
 
-.sensorpinimg{
+.sensornotpinimg{
     width:20px;
     height:20px;
     opacity:0;
+}
+.sensorpinimg{
+    width:20px;
+    height:20px;
+    opacity:1;
 }
 
 /*.sensorpinimg{
