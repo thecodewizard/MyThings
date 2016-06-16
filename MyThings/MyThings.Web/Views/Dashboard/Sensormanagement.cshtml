@@ -40,7 +40,7 @@
         </div>*@
 </div>
 
-<hr class="purpleHr" />
+<hr class="purpleHr dialogrule" />
 
 <ul class="sensorul">
     <li class="editgroup">
@@ -235,11 +235,11 @@
                                                             .append('<div class="grouprectangletile newgroup">' +
                                                                 '<div class="groupinputlabel">Choose a name for the group</div>' +
                                                                 '<input class="groupinputtext" type="text" maxlength="50" />' +
-                                                                '<select class="form-control selectpin" class="pinchoice">' +
+                                                                '<select class="selectpin" class="pinchoice">' +
                                                                 '<option name="nopinvalue" value="false">Do not pin</option><option name="pinvalue" value="true">Pin</option>' +
                                                                 '</select>'+
                                                                 '<div class="newgroupbuttontext">Click on the sensors below to put in the group</div>' +
-                                                                '<button type="button" class="newgroupbutton">Finish!</button>' +
+                                                                '<div type="button" class="newgroupbutton">Confirm group</div>' +
                                                                 '</div>');
 
                                                         $(".groupdiv")
@@ -257,6 +257,10 @@
                                                     if ($('.newgroup').length) {
                                                         var sensor = $(e.target).parent().attr('id');
                                                         sensors.push(sensor);
+                                                        $('<div id="dialogdiv" class="ui-front" title="Sensor added">Added the sensor to group</div>')
+                                                            .insertBefore($('.dialogrule')).dialog({autoOpen:false});
+                                                        $('#dialogdiv').dialog("open");
+                                                         setTimeout(function(){ $('#dialogdiv').dialog("close");},1000);
                                                     }
                                                 });
 
@@ -274,7 +278,7 @@
                                             };
 
 
-                                    //replace alert with json call to url
+                                    //json call to url
                                     $.ajax({
                                         url: apiBaseUrl + "Dashboard/CreateGroup",
                                         data: JSON.stringify(group),
@@ -290,10 +294,30 @@
                                     });
                                     $('.newgroup').remove();
                                     $('.addgroup').text("+");
-                                    alert(group);
                                     sensors.length=0;
                                     group.length=0;
                                 });
+
+                            $('.sensorlist').on('click','.sensorpinimg', function(e) {
+                                var sensorId = parseInt($(e.target).parent().attr('id'));
+                                var pinSensor = { "sensorId": sensorId };
+
+                                $.ajax({
+                                    url: apiBaseUrl + "Dashboard/PinSensor",
+                                    data: JSON.stringify(pinSensor),
+                                    method: "POST",
+                                    contentType: "application/json"
+                                }).done(function (json) {
+                                   // console.log('sensor was pinned');
+                                }).done(function (json){console.log('sensor failed');}).statusCode(function (statuscoderesponse) {
+                                    if (statuscoderesponse != null) {
+                                        console.log(statuscoderesponse.statusMessage);
+                                        console.log('status');
+                                    }
+                                });
+                                alert(sensorId);
+                            });
+
 
 
                             function searchauto() {
@@ -337,10 +361,9 @@
                                             '<td class="sensorlocationdiv">' +
                                             allSensors[i].Location +
                                             '</td>' +
-                                            '<td class="sensorpinimg">' +
-                                            '<a class="pinlink" href="@Url.Action("PinGroup", "Dashboard", "3")">' +
+                                            '<td class="sensorpinimgtd"  id="'+
+                                            allSensors[i].Id+'">' +
                                             '<img class="sensorpinimg" alt="pin icon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/pin-black-icon.svg" />' +
-                                            '</a> ' +
                                             '</td>' +
                                             '</tr>');
                                 }
@@ -363,8 +386,6 @@
             }
 
             *@
-                        }).ready(function() {
-
                         })
                 </script>
             }

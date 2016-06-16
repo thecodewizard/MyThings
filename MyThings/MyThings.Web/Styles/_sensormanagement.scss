@@ -38,6 +38,7 @@ h2{
     color: $proximuswhite;
     background-color: $proximusmainblue;
     margin:1%;
+    opacity:0.8;
     & a{
     color: $proximuswhite;
     }
@@ -89,6 +90,8 @@ h2{
     width:415px;
     font-size:$fontsizesmall;
     font-weight:normal;
+    color:$proximusblack;
+    padding-left:2%;
 }
 .groupinputlabel{
     display:block;
@@ -96,8 +99,9 @@ h2{
 .groupinputtext
 {
     display:inline-block;
-    margin-left:2%;
+    margin:1% 0 0 2%;
     color:$proximusblack;
+
 }
 .newgrouppintext{
     margin-left:10%;
@@ -113,13 +117,20 @@ h2{
     display:inline-block;
 }
 .newgroupbutton{
-    margin-left:2%;
-    font-weight:normal;
+    margin-right:10%;
      color:$proximusblack;
+         font-family:$proximusregularfont;
+         font-size:$fontsizesmall;
+         padding:0.5% 1%;
+     background-color:$proximusterlightpurple;
+     float:right;
+     &:hover{
+         color:$proximusblack;
+         background-color:$proximusterdarkpurple;
+            }
 }
 .newgroupbuttontext{
-    padding-top:2%;
-    padding-bottom:2%;
+    padding:1% 0 1% 0;
     font-weight:normal;
 }
 .searchdiv
@@ -136,17 +147,7 @@ h2{
 .searchbardiv{
     height:30px;
 }
-.dropdowntest{
-    display:inline;
-    margin-left:10px;
-    font-family:$proximusregularfont;
-    padding:0 4% 0 1%;
-    -webkit-appearance: none; 
-    height:30px;
-    background-image:url("http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg");
-    background-position:98%;
-    background-repeat:no-repeat;
-}
+
 .searchsensorform{
     display:inline-block;
     padding: 0 10% 5% 5%;
@@ -186,6 +187,13 @@ h2{
     flex-basis: 25%;
     margin-left:10px;
     }*/
+
+  #dialogdiv{ 
+      width: 200px;
+    height:25px;
+    text-align:center;
+    margin: auto;
+  }
   .sensorsheadrow{
     font-family:$proximusboldfont;
     flex-wrap:nowrap;
@@ -208,12 +216,22 @@ h2{
     }
     &:hover{
       cursor: pointer;
+      background-color:$proximusterdarkblue;
     }
     &:hover .sensorpinimg{
     width:20px;
     height:20px;
+    opacity:1;
     }
 }
+
+
+.sensorpinimg{
+    width:20px;
+    height:20px;
+    opacity:0;
+}
+
 /*.sensorpinimg{
      display:none;
     max-height:20px;
