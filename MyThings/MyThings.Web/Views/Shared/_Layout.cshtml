@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="http://www.proximus.be/resources/cdn/brand/logos/favicon.ico" type="image/x-icon" />
     <title>@ViewBag.Title - MyThings Dashboard</title>
     @if(ViewBag.PageId != "Home")
     {
@@ -16,6 +16,9 @@
 
     @if (ViewBag.PageId != "Home")
     {
+        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "hidden" }))
+        { @Html.AntiForgeryToken() }
+
         <body>
             <div class="colorWrapper">
                 <nav class="navbar navbar-inverse container navoverride navbar-fixed-top" style="background: #b4b5b7;">
@@ -32,46 +35,47 @@
                             <div class="navbar-collapse collapse icons">
                                 <ul class="nav navbar-nav">
                                     <li>
-                                        <a class="headerMargin" href="">
+                                        <a class="headerMargin" href="http://www.proximus.be/">
                                             <div class="imghelper">
                                                 <img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x.png" alt="Proximus Home" title="Proximus Home">
                                             </div><p class="navtext">Proximus Home</p>
                                         </a>
                                     </li>
                                     <li><div class="interDiv"></div></li>
-                                    <li>
-                                        <a class="headerMargin" href="">
-                                            <div class="imghelper">
-                                                <img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/home-icon.png" alt="MyThings Home" title="MyThings Home">
-                                            </div><p class="navtext">Proximus Home</p>
+                                    <li>                                    
+                                        <a class="headerMargin" href="@Url.Action("Index", "Dashboard")">
+                                            <div class='imghelper'>
+                                                <img height='45px' src='http://loradatagroep9.blob.core.windows.net/proximusimages/home-icon.png'
+                                                     alt='MyThings Home' title='MyThings Home'>
+                                            </div><p class='navtext'>MyThings Home</p>
                                         </a>
                                     </li>
                                     <li><div class="interDiv"></div></li>
                                     <li>
-                                        <a class="headerMargin" href="">
+                                        <a class="headerMargin" href="@Url.Action("Sensormanagement", "Dashboard")">
                                             <div class="imghelper">
                                                 @if (ViewBag.PageId == "list")
                                         {
-                                                    <img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/sensor-list-icon-active.png" alt="List Sensors" title="List Sensors">
+                                                    <img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/sensor-list-icon-active.png" alt="Sensor Management" title="Sensor Management">
                                         }
-                                        else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/sensor-list-icon.png" alt="List Sensors" title="List Sensors">}
-                                            </div><p class="navtext">Proximus Home</p>
+                                        else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/sensor-list-icon.png" alt="Sensor Management" title="Sensor Management">}
+                                            </div><p class="navtext">Sensor Management</p>
                                         </a>
                                     </li>
                                     <li><div class="interDiv"></div></li>
                                     <li>
-                                        <a class="headerMargin" href="">
+                                        <a class="headerMargin" href="@Url.Action("ErrorList", "Dashboard")">
                                             <div class="imghelper">
                                                 @if (ViewBag.PageId == "error")
-                                        {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-list-icon-active.png" alt="Error List" title="Error List">
+                                        {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-list-icon-active.png" alt="Errors and Warningst" title="Errors and Warnings">
                                         }
-                                        else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-list-icon.png" alt="Error List" title="Error List">}
-                                            </div><p class="navtext">Proximus Home</p>
+                                        else {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/error-list-icon.png" alt="Errors and Warnings" title="Errors and Warnings">}
+                                            </div><p class="navtext">Errors and Warnings</p>
                                         </a>
                                     </li>
                                     <li><div class="interDiv"></div></li>
                                     <li>
-                                        <a class="headerMargin" href="">
+                                        <a class="headerMargin" href="@Url.Action("Index", "Dashboard")">
                                             <div class="imghelper">
                                                 @if (ViewBag.PageId == "support")
                                         {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/support-icon-active.png" alt="Support" title="Support">
@@ -82,7 +86,7 @@
                                     </li>
                                     <li><div class="interDiv"></div></li>
                                     <li>
-                                        <a class="headerMargin" href="">
+                                        <a class="headerMargin" href="@Url.Action("Index", "Dashboard")">
                                             <div class="imghelper">
                                                 @if (ViewBag.PageId == "invoice")
                                         {<img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/invoice-icon-active.png" alt="Invoice" title="Invoice">
@@ -93,15 +97,15 @@
                                     </li>
                                     <li><div class="interDiv"></div></li>
                                     <li>
-                                        <a class="headerMargin" href="">
+                                        <a class="headerMargin" href="" id="logout">
                                             <div class="imghelper">
                                                 <img height="45px" src="http://loradatagroep9.blob.core.windows.net/proximusimages/door-icon-fat.png" alt="Logout" title="Logout">
-                                            </div><p class="navtext">Proximus Home</p>
+                                            </div>
+                                            <p class="navtext">Logout</p>
                                         </a>
                                     </li>
 
                                 </ul>
-                                @*@Html.Partial("_LoginPartial")*@
                                 <ul class="nav navbar-nav navbar-right right">
                                     <li><h1>MyThings</h1></li>
                                     <li>
@@ -137,6 +141,13 @@
             }
             @Scripts.Render("~/Scripts/mythings")
             @RenderSection("scripts", required: false)
+        <script type="text/javascript">
+            $("#logout")
+                .click(function (e) {
+                    e.preventDefault();
+                    document.getElementById('logoutForm').submit();
+                });
+        </script>
         </body>
     }
     else
