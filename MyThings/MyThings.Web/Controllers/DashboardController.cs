@@ -177,9 +177,9 @@ namespace MyThings.Web.Controllers
 
             //Check navigation
             List<Tile> navTiles = (from t in tiles where t.Pin.SavedType == PinType.FixedNavigation select t).ToList();
-            if (navTiles.Count() < 6 && navTiles.Any()) //If the count isn't correct, delete all the pins
+            if (navTiles.Count() != 4 && navTiles.Any()) //If the count isn't correct, delete all the pins
             {
-                foreach (Tile navTile in navTiles) navTiles.Remove(navTile);
+                foreach (Tile navTile in navTiles) tiles.Remove(navTile);
             }
             if (!(from t in tiles where t.Pin.SavedType == PinType.FixedNavigation select t).Any())
             {
