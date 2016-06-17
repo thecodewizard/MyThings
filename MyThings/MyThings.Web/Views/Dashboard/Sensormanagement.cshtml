@@ -242,6 +242,55 @@
                                 //get details from sensors
                                 // webApiBaseUrl
 
+                                for (var i = 0; i < allSensors.length; i++) {
+                                    if (sensor == allSensors[i].Id) {
+                                        var sensorcontainer = allSensors[i].Containers;
+                                       
+                                        if (!$('.sensordetails').length) {
+                                            $('<div class="sensordetails">' +
+                                                    '<h2>Extra details' +
+                                                    '</h2>' +
+                                                    '<div class="sensordetailcompany">Company:' +
+                                                    allSensors[i].Company +
+                                                    '</div>' +
+                                                    '<div class="sensordetaillocation">Location:' +
+                                                    allSensors[i].Location +
+                                                    '</div>' +
+                                                    '<div class="sensordetaillocation">BasestationLat:' +
+                                                    allSensors[i].Lat +
+                                                    '</div>' +
+                                                    '<div class="sensordetaillocation">BasestationLng:' +
+                                                    allSensors[i].Lng +
+                                                    '</div>' +
+                                                    '<div class="sensordetailcreation">CreationDate:' +
+                                                    allSensors[i].CreationDate +
+                                                    '</div>' +
+                                                    '</div>')
+                                                .insertAfter($(e.target).parent());
+                                            for (var j = 0; j < sensorcontainer.length; j++) {
+                                                $('<div class="sensordetailcontainers">' +
+                                                    '<h2 class="sensordetailcontainer">Container: ' +
+                                                        sensorcontainer[j].ContainerType.Name +
+                                                        '</h2>' +
+                                                        '<div class="containertype">Containertype: ' +
+                                                        sensorcontainer[j].ContainerType.Name +
+                                                        '</div><div class="creationtime">Creationtime: ' +
+                                                        sensorcontainer[j].CreationTime +
+                                                        '</div><div class="lasttime">LastUpdatedTime: ' +
+                                                        sensorcontainer[j].LastUpdatedTime +
+                                                        '</div>'+
+                                                        '</div>')
+                                                    .insertAfter($('.sensordetails'));
+                                            }
+                                        } else {
+                                            ($('.sensordetails').remove());
+                                            ($('.sensordetailcontainers').remove());
+                                        }
+                                       
+                                    }
+                                }
+
+                            /*
                                 $.ajax({
                                     url: webApiBaseUrl + "Get/GetSensor?sensorId=" + sensor,
                                     method: "GET"
@@ -268,7 +317,7 @@
                                     }
                                 });
                                 console.log(sensorvalues);
-                                if (sensorvalues.length< 0 && !$('.sensordetails').length) {
+                                if (sensorvalues.length> 0 && !$('.sensordetails').length) {
                                     $('<div class="sensordetails">' +
                                             '<h2>Extra details' +
                                             '</h2>' +
@@ -298,7 +347,7 @@
                                             '</div>' +
                                             '</div>')
                                         .insertAfter($(e.target).parent());
-                                } else ($('.sensordetails').remove());
+                                } else ($('.sensordetails').remove());*/
                             }
                         }
                     });
