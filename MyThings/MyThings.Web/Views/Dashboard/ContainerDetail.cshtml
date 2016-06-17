@@ -16,7 +16,26 @@
         </li>
     </ul>
 
-    <h1>@Model.ContainerType.Name Container</h1>
+    <div class="titleholder">
+        <h1>@Model.ContainerType.Name Container</h1>
+        @if(ViewBag.IsPinned == true)
+        {
+            <div id="unpinbutton" type="button" class="pinbutton button">
+                Unpin Container
+            </div>
+            <div id="pinbutton" type="button" class="pinbutton button unpin invisible">
+                Pin Container
+            </div>
+        } else
+        {
+            <div id="unpinbutton" type="button" class="pinbutton button">
+                Unpin Container
+            </div>
+            <div id="pinbutton" type="button" class="pinbutton button unpin invisible">
+                Pin Container
+            </div>
+        }
+    </div>
 
     <div class="blocksholder">
         <article class="detailblock square">
@@ -213,6 +232,9 @@
         parseDate = d3.time.format('%Y-%m-%d').parse;
 
         $(window).load(function () {
+            //Set the pin buttons
+            setPinButton(@ViewBag.IsPinned.ToString().ToLower());
+
             //Format the data from the model
             @foreach (Container container in ViewBag.ParentSensor.Containers)
             {
@@ -242,6 +264,43 @@
                 });
         });
 
+        function setPinButton(isPinned) {
+            var pinbutton = $("#pinbutton");
+            var unpinbutton = $("#unpinbutton");
+
+            pinbutton.unbind();
+            unpinbutton.unbind();
+
+            if (isPinned === true) {
+                if (!pinbutton.hasClass("invisible")) {
+                    pinbutton.addClass("invisible");
+                }
+                if (unpinbutton.hasClass("invisible")) {
+                    unpinbutton.removeClass("invisible");
+                }
+
+                unpinbutton.click(function() {
+                    unpinContainer(setPinButton);
+                    if (!unpinbutton.hasClass("invisible")) {
+                        unpinbutton.addClass("invisible");
+                    }
+                });
+            } else {
+                if (pinbutton.hasClass("invisible")) {
+                    pinbutton.removeClass("invisible");
+                }
+                if (!unpinbutton.hasClass("invisible")) {
+                    unpinbutton.addClass("invisible");
+                }
+
+                pinbutton.click(function() {
+                    pinContainer(setPinButton);
+                    if (!pinbutton.hasClass("invisible")) {
+                        pinbutton.addClass("invisible");
+                    }
+                });
+            }
+        }
 
         function getRecentData(containerId, recentDataLoaded) {
             $.ajax({
@@ -377,6 +436,38 @@
                 data: json
             }).done(function(){
                 getContainer(@Model.Id, updateThresholds);
+            }).fail(function() {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("Thresholds could not be saved.");
+                }
+            });
+        }
+
+        function pinContainer(containerPinned) {
+            $.ajax({
+                method: 'POST',
+                url: siteBaseUrl + "PinContainer",
+                data: {"containerId": @Model.Id}
+            }).done(function(){
+                if ($.isFunction(containerPinned)) {
+                    containerPinned(true);
+                }
+            }).fail(function() {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("Thresholds could not be saved.");
+                }
+            });
+        }
+
+        function unpinContainer(containerPinned) {
+            $.ajax({
+                method: 'POST',
+                url: siteBaseUrl + "UnpinContainer",
+                data: {"containerId": @Model.Id}
+            }).done(function(){
+                if ($.isFunction(containerPinned)) {
+                    containerPinned(false);
+                }
             }).fail(function() {
                 if ($.isFunction(MyThings.logToUser)) {
                     MyThings.logToUser("Thresholds could not be saved.");

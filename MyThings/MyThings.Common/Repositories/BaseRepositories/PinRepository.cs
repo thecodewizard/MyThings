@@ -129,7 +129,7 @@ namespace MyThings.Common.Repositories
         public List<PinType> GetFoundPinTypesById(String userId, int valueId)
         {
             List<Tile> tiles = GridsterHelper.JsonToTileList(GetGridsterJson(userId).GridsterJson);
-            return (from t in tiles select t.Pin.SavedType).Distinct().ToList();
+            return (from t in tiles where t.Pin.SavedId.Equals(valueId) select t.Pin.SavedType).Distinct().ToList();
         }
 
         public bool IsSensorPinned(String userId, int sensorId)

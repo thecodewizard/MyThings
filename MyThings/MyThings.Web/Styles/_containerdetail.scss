@@ -3,6 +3,46 @@
 
 .containerdetail {
     margin: 0 0 50px 0;
+    position: relative;
+
+    .invisible{
+        display: none;
+    }
+
+    .button{
+        background: $proximusmainpurple;
+        position: absolute;
+        right: 15px;
+        bottom: -10px;
+        display: block;
+        width: 150px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        color: white;
+        margin: 20px 0 15px;
+        cursor: pointer;
+
+        &.unpin{
+            background: none;
+            color: $proximusblack;
+            font-family: $proximusboldfont;
+            border: 2px $proximusmainpurple solid;
+            line-height: 25px;
+        }
+    }
+
+    .titleholder{
+        position: relative;
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        
+    }
+
+    h1{
+        margin: 0 50px;
+    }
 }
 
 .blocksholder {
