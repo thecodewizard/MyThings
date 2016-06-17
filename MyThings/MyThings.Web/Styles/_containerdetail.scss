@@ -94,8 +94,12 @@
             font-size: $fontsizemedium;
         }
 
+        .item{
+            height: 100%;
+        }
+
         .item > div{
-            height: 300px;
+            height: 100%;
             display: flex;
             flex-flow: row nowrap;
             align-items: center;

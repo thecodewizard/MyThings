@@ -177,7 +177,7 @@ namespace MyThings.Web.Controllers
 
             //Check navigation
             List<Tile> navTiles = (from t in tiles where t.Pin.SavedType == PinType.FixedNavigation select t).ToList();
-            if (navTiles.Count() < 6 && navTiles.Any()) //If the count isn't correct, delete all the pins
+            if (navTiles.Count() != 4 && navTiles.Any()) //If the count isn't correct, delete all the pins
             {
                 foreach (Tile navTile in navTiles) tiles.Remove(navTile);
             }
@@ -206,7 +206,7 @@ namespace MyThings.Web.Controllers
 
         [HttpGet]
         [Route("sensormanagement")]
-        public ActionResult Sensormanagement(String query = "", int? selectedSensor = null)
+        public ActionResult Sensormanagement(String query = "", int? selectedSensor = null, int? selectedGroup = null)
         {
             //Get the current user
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
@@ -234,6 +234,7 @@ namespace MyThings.Web.Controllers
             List<String> suggestionList = SuggestionListHelper.GetSuggestionList();
 
             //Fill the viewbag
+            ViewBag.SelectedGroup = selectedGroup;
             ViewBag.SelectedSensor = selectedSensor;
             ViewBag.Query = query;
 

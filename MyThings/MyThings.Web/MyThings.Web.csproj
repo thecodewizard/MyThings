@@ -334,6 +334,7 @@
     <Content Include="Views\Dashboard\ContainerDetail.cshtml" />
     <Content Include="Views\Dashboard\ErrorList.cshtml" />
     <Content Include="Styles\_containerdetail.scss" />
+    <Content Include="Styles\_sensordetail.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
