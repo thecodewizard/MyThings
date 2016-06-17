@@ -280,7 +280,7 @@
                 }
 
                 unpinbutton.click(function() {
-                    unpinContainer(setPinButton);
+                    unpinContainer(@Model.Id, setPinButton);
                     if (!unpinbutton.hasClass("invisible")) {
                         unpinbutton.addClass("invisible");
                     }
@@ -454,23 +454,23 @@
                 }
             }).fail(function() {
                 if ($.isFunction(MyThings.logToUser)) {
-                    MyThings.logToUser("Thresholds could not be saved.");
+                    MyThings.logToUser("Cannot pin this sensor");
                 }
             });
         }
 
-        function unpinContainer(containerPinned) {
+        function unpinContainer(containerId, onContainerPinned) {
             $.ajax({
                 method: 'POST',
                 url: siteBaseUrl + "UnpinContainer",
-                data: {"containerId": @Model.Id}
+                data: {"containerId": containerId}
             }).done(function(){
-                if ($.isFunction(containerPinned)) {
-                    containerPinned(false);
+                if ($.isFunction(onContainerPinned)) {
+                    onContainerPinned(false);
                 }
             }).fail(function() {
                 if ($.isFunction(MyThings.logToUser)) {
-                    MyThings.logToUser("Thresholds could not be saved.");
+                    MyThings.logToUser("Cannot Unpin this sensor.");
                 }
             });
         }
