@@ -18,7 +18,7 @@
 
     <div class="titleholder">
         <h1>@Model.ContainerType.Name Container</h1>
-        @if (ViewBag.IsPinned == true)
+        @if(ViewBag.IsPinned == true)
         {
             <div id="unpinbutton" type="button" class="pinbutton button">
                 Unpin Container
@@ -28,10 +28,10 @@
             </div>
         } else
         {
-            <div id="pinbutton" type="button" class="pinbutton button invisible">
+            <div id="unpinbutton" type="button" class="pinbutton button">
                 Unpin Container
             </div>
-            <div id="unpinbutton" type="button" class="pinbutton button unpin">
+            <div id="pinbutton" type="button" class="pinbutton button unpin invisible">
                 Pin Container
             </div>
         }
@@ -281,6 +281,9 @@
 
                 unpinbutton.click(function() {
                     unpinContainer(setPinButton);
+                    if (!unpinbutton.hasClass("invisible")) {
+                        unpinbutton.addClass("invisible");
+                    }
                 });
             } else {
                 if (pinbutton.hasClass("invisible")) {
@@ -292,6 +295,9 @@
 
                 pinbutton.click(function() {
                     pinContainer(setPinButton);
+                    if (!pinbutton.hasClass("invisible")) {
+                        pinbutton.addClass("invisible");
+                    }
                 });
             }
         }
