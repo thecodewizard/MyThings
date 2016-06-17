@@ -987,7 +987,36 @@ h3 {
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
 .containerdetail {
-  margin: 0 0 50px 0; }
+  margin: 0 0 50px 0;
+  position: relative; }
+  .containerdetail .invisible {
+    display: none; }
+  .containerdetail .button {
+    background: #5C2D91;
+    position: absolute;
+    right: 15px;
+    bottom: -10px;
+    display: block;
+    width: 150px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    margin: 20px 0 15px;
+    cursor: pointer; }
+    .containerdetail .button.unpin {
+      background: none;
+      color: #000000;
+      font-family: Proximus-Bold;
+      border: 2px #5C2D91 solid;
+      line-height: 25px; }
+  .containerdetail .titleholder {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center; }
+  .containerdetail h1 {
+    margin: 0 50px; }
 
 .blocksholder {
   display: flex;
@@ -1220,6 +1249,10 @@ body .sensordetail {
     margin: 50px 0; }
     body .sensordetail article > h2 {
       margin-bottom: 15px; }
+  body .sensordetail .invisible {
+    display: none; }
+  body .sensordetail #sensornameinput {
+    width: 50%; }
 
 body .rotated {
   transform: rotate(-90deg);

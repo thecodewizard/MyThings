@@ -11,18 +11,42 @@ namespace MyThings.Common.Repositories
     public class ContainerRepository : GenericRepository<Container>
     {
         #region GenericRepository - Eager Loading Adaptations
+        private List<Sensor> cacheSensors = new List<Sensor>();
+        private SensorRepository _sensorRepository = new SensorRepository();
 
         public override IEnumerable<Container> All()
         {
-            return (from c in Context.Container.Include(c => c.ContainerType).Include(c => c.Threshold) orderby c.CreationTime descending select c).ToList();
+            List<Container> containers = (from c in Context.Container.Include(c => c.ContainerType).Include(c => c.Threshold) orderby c.CreationTime descending select c).ToList();
+
+            foreach (Container container in containers)
+            {
+                Sensor sensor = (from s in cacheSensors where s.Id.Equals(container.Id) select s).FirstOrDefault();
+                if (sensor == null) sensor = _sensorRepository.GetSensorById(container.SensorId.Value);
+
+                if (sensor != null)
+                {
+                    container.Name = sensor.Name;
+                }
+            }
+            return containers;
         }
 
         public override Container GetByID(object id)
         {
             int containerId = -1;
-            return !int.TryParse(id.ToString(), out containerId)
+            Container container = !int.TryParse(id.ToString(), out containerId)
                 ? null
                 : (from c in Context.Container.Include(c => c.ContainerType).Include(c => c.Threshold) where c.Id.Equals(containerId) select c).FirstOrDefault();
+
+            if (container == null) return null;
+            Sensor sensor = (from s in cacheSensors where s.Id.Equals(container.Id) select s).FirstOrDefault();
+            if (sensor == null) sensor = _sensorRepository.GetSensorById(container.SensorId.Value);
+
+            if (sensor != null)
+            {
+                container.Name = sensor.Name;
+            }
+            return container;
         }
 
         public override Container Insert(Container container)
