@@ -61,12 +61,14 @@ h2{
     }
     &:hover{
           cursor: pointer;
+           background-color: $proximusterdarkblue;
+             color: $proximusmainpurple;
     }
 }
 .addgrouptile:hover{
     background-color: $proximusterdarkblue;
     & a{
-    color: initial;
+    color: $proximusmainpurple;
     }
 }
 .textdivgroup{
@@ -126,6 +128,8 @@ h2{
 }
 
 .editgroupfield{
+    position: absolute;
+    z-index: 9001;
     height:125px;
     width:415px;
     font-size:$fontsizesmall;
@@ -238,9 +242,15 @@ h2{
 }
 
 .sensordetails{
+    display: block;
     padding:1% 0 0 4%;
+    padding-bottom:5%;
 }
-
+.sensordetailcontainers{
+    display:  block;
+     padding:1% 0 0 4%;
+    padding-bottom:10%;
+}
 
 /*.sensorpinimg{
      display:none;
