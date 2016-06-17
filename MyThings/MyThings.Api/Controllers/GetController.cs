@@ -273,7 +273,6 @@ namespace MyThings.Api.Controllers
 
         #region Group Management Methods
 
-
         [HttpGet]
         public HttpResponseMessage GroupHasSensor(int? groupId = null, int? sensorId = null)
         {
@@ -287,9 +286,19 @@ namespace MyThings.Api.Controllers
                 {
                     bool sensorInGroup = _groupRepository.SensorInGroup(groupID, sensorID);
                     if (sensorInGroup)
-                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    {
+                        HttpResponseMessage success = new HttpResponseMessage(HttpStatusCode.OK);
+                        success.Content = new StringContent(JsonConvert.SerializeObject(true));
+                        success.Headers.Add("Access-Control-Allow-Origin", "*");
+                        return success;
+                    }
                     else
-                        return new HttpResponseMessage(HttpStatusCode.NotFound);
+                    {
+                        HttpResponseMessage notfound = new HttpResponseMessage(HttpStatusCode.OK);
+                        notfound.Content = new StringContent(JsonConvert.SerializeObject(false));
+                        notfound.Headers.Add("Access-Control-Allow-Origin", "*");
+                        return notfound;
+                    }
                 }
 
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);

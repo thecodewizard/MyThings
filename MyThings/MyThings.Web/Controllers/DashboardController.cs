@@ -206,7 +206,7 @@ namespace MyThings.Web.Controllers
 
         [HttpGet]
         [Route("sensormanagement")]
-        public ActionResult Sensormanagement(String query = "", int? selectedSensor = null)
+        public ActionResult Sensormanagement(String query = "", int? selectedSensor = null, int? selectedGroup = null)
         {
             //Get the current user
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
@@ -234,6 +234,7 @@ namespace MyThings.Web.Controllers
             List<String> suggestionList = SuggestionListHelper.GetSuggestionList();
 
             //Fill the viewbag
+            ViewBag.SelectedGroup = selectedGroup;
             ViewBag.SelectedSensor = selectedSensor;
             ViewBag.Query = query;
 

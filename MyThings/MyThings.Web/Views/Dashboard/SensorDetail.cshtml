@@ -12,7 +12,7 @@
         <li class="breadcrumbs">
             @Html.ActionLink("Home", "Index", "Dashboard") >
             @Html.ActionLink("Sensor management", "Sensormanagement", "Dashboard") >
-            @Html.ActionLink("Sensor " + (String) Model.Name, "SensorDetail", "Dashboard", new {Id = Model.Id}, null)
+            @Html.ActionLink("Sensor " + (String)Model.Name, "SensorDetail", "Dashboard", new { Id = Model.Id }, null)
         </li>
     </ul>
 
@@ -20,7 +20,7 @@
         @foreach (Error error in ViewBag.ErrorList)
         {
             <div class="errorimg">
-                <img alt="error icon" src="https://loradatagroep9.blob.core.windows.net/proximusimages/error-icon.png"/>
+                <img alt="error icon" src="https://loradatagroep9.blob.core.windows.net/proximusimages/error-icon.png" />
             </div>
             <div class="errormessage">
                 <h3 class="errortitle">@error.Title</h3>
@@ -32,7 +32,7 @@
         @foreach (Error warning in ViewBag.WarningList)
         {
             <div class="errorimg">
-                <img alt="warning icon" src="https://loradatagroep9.blob.core.windows.net/proximusimages/warning-icon.png"/>
+                <img alt="warning icon" src="https://loradatagroep9.blob.core.windows.net/proximusimages/warning-icon.png" />
             </div>
             <div class="errormessage">
                 <h3 class="errortitle">@warning.Title</h3>
@@ -62,8 +62,9 @@
     <article id="techdetailholder">
         <h2>Technical Details</h2>
         <div class="techtitle">
-            <h3>Sensor @Model.Name</h3>
-            <span class="hyperlink">(Edit sensorname)</span>
+            <h3 id="sensorname">Sensor @Model.Name</h3>
+            <input type="text" class="invisible" name="sensornameinput" id="sensornameinput" title="sensor name" value="@Model.Name" />
+            <span id="editname" class="hyperlink">(Edit sensorname)</span>
         </div>
         <div class="techbody">
             <div class="maininfo">
@@ -90,11 +91,11 @@
             </div>
             <div class="actionlinks">
                 <div>
-                    <img class="rotated" src="https://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg"/>
-                    <a href="#">Error List</a>
+                    <img class="rotated" src="https://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg" />
+                    <a href="/error">Error List</a>
                 </div>
                 <div>
-                    <img class="rotated" src="https://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg"/>
+                    <img class="rotated" src="https://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg" />
                     <a href="#">Support</a>
                 </div>
             </div>
@@ -103,7 +104,7 @@
 
     <article id="mapsholder">
         <h2>MapView</h2>
-        <br/>
+        <br />
         <div class="subscribesection">
             <h4>Subscribe to this sensor</h4>
             <p>Do you want to receive emails when a sensor updates it's location?</p>
@@ -115,25 +116,90 @@
 </section>
 
 @section scripts{
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1NHEa44joIKQcLzHd2cxLuqLHAA3Oc8o&callback=initMap"></script>
-        <script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1NHEa44joIKQcLzHd2cxLuqLHAA3Oc8o&callback=initMap"></script>
+    <script>
+        nameEditModeActive = false;
+
         $(window).load(function () {
+            initChangeName();
+
             var containers = @Html.Raw(JsonConvert.SerializeObject(Model.Containers));
             refreshTiles(containers);
 
             google.maps.event.trigger(map, "resize");
         });
 
+        function initChangeName() {
+            $("#editname").unbind();
+            $("#editname").text("(Edit sensorname)");
+            $("#editname").click(function() {
+                nameEditMode();
+            });
+        }
+
+        function nameEditMode() {
+            if (nameEditModeActive === true) return;
+            nameEditModeActive = true;
+
+            //Re assign the edit button
+            $("#editname").unbind();
+            $("#editname").text("Apply");
+            $("#editname")
+                .click(function() {
+                    changeSensorName(@Model.Id,
+                        $("#sensornameinput").val(),
+                        function(newName) {
+                            $("#sensorname").text("Sensor " + newName);
+                        });
+                    exitNameEditMode();
+                });
+
+            //Hide the name and show the input
+            var sensorname = $("#sensorname");
+            if (!sensorname.hasClass("invisible")) {
+                sensorname.addClass("invisible");
+            }
+
+            var sensorinput = $("#sensornameinput");
+            if (sensorinput.hasClass("invisible")) {
+                sensorinput.removeClass("invisible");
+            }
+
+            //Select the input
+            $("#sensornameinput").select();
+        }
+
+        function exitNameEditMode() {
+            if (nameEditModeActive === false) return;
+            nameEditModeActive = false;
+
+            //Re assign the edit button
+            initChangeName();
+
+            //Hide the name and show the input
+            var sensorname = $("#sensorname");
+            if (sensorname.hasClass("invisible")) {
+                sensorname.removeClass("invisible");
+            }
+
+            var sensorinput = $("#sensornameinput");
+            if (!sensorinput.hasClass("invisible")) {
+                sensorinput.addClass("invisible");
+            }
+        }
+
         function initMap() {
             var mapDiv = document.getElementById('map');
-            var map = new google.maps.Map(mapDiv, {
-                center: {lat: 50.8315525, lng: 3.2553671},
+            var map = new google.maps.Map(mapDiv,
+            {
+                center: { lat: 50.8315525, lng: 3.2553671 },
                 zoom: 8
             });
 
-            $(window).resize(function() {
-                google.maps.event.trigger(map, "resize");
-            });
+            $(window)
+                .resize(function() {
+                    google.maps.event.trigger(map, "resize");
+                });
         }
 
         function refreshTiles(containers) {
@@ -142,9 +208,10 @@
                 function(i, e) {
                     var container = containers[i];
 
-                    $(e).click(function() {
+                    $(e)
+                        .click(function() {
                             window.location.href = "/container/" + container.Id;
-                    });
+                        });
 
                     getRecentData(container.Id,
                         function(value, time) {
@@ -156,119 +223,125 @@
 
         function getRecentData(containerId, recentDataLoaded) {
             $.ajax({
-                url: apiBaseUrl + "/get/getmostrecentvalue?containerid=" + containerId,
-                method: "GET"
-            }).done(function (json) {
-                if (json != null) {
-                    var data = JSON.parse(json);
+                    url: apiBaseUrl + "/get/getmostrecentvalue?containerid=" + containerId,
+                    method: "GET"
+                })
+                .done(function(json) {
+                    if (json != null) {
+                        var data = JSON.parse(json);
 
-                    //Get the value
-                    var value;
-                    if (data.CurrentValue.HexValue) value = data.CurrentValue.HexValue;
-                    else value = data.CurrentValue.Value;
+                        //Get the value
+                        var value;
+                        if (data.CurrentValue.HexValue) value = data.CurrentValue.HexValue;
+                        else value = data.CurrentValue.Value;
 
-                    //Get the date
-                    var date = new Date(data.CurrentValue.Timestamp);
+                        //Get the date
+                        var date = new Date(data.CurrentValue.Timestamp);
 
-                    if ($.isFunction(recentDataLoaded)) {
-                        recentDataLoaded(value, date);
+                        if ($.isFunction(recentDataLoaded)) {
+                            recentDataLoaded(value, date);
+                        }
                     }
-                }
-            }).fail(function () {
-                if ($.isFunction(MyThings.logToUser)) {
-                    MyThings.logToUser("Item " + containerId + " could not be loaded.");
-                }
-            });
+                })
+                .fail(function() {
+                    if ($.isFunction(MyThings.logToUser)) {
+                        MyThings.logToUser("Item " + containerId + " could not be loaded.");
+                    }
+                });
         }
 
         function setTileValue(tile, container, value, time) {
             var innerHtml = "";
-            innerHtml += "<p title='" + container.Name + "' class='itemName'>" +
-                container.Name + "</p><p class='itemType'>" +
-                container.ContainerType.Name + "</p>";
+            innerHtml += "<p title='" +
+                container.Name +
+                "' class='itemName'>" +
+                container.Name +
+                "</p><p class='itemType'>" +
+                container.ContainerType.Name +
+                "</p>";
 
             switch (container.ContainerType.Name) {
-                case "Battery level":
-                    innerHtml +=
-                        "<p class='itemValue'>" +
-                        (Math.round(parseFloat(value) * 10) / 10) +
-                        "<sup>%</sup></p>" +
-                        "<img class='pinimg customimg' alt='Battery' src='http://loradatagroep9.blob.core.windows.net/proximusimages/battery-icon-white.png' />";
-                    break;
-                case "Temperature":
-                    innerHtml += "<p class='itemValue'>" +
-                        (Math.round(parseFloat(value) * 10) / 10) +
-                        "<sup>°C</sup></p>" +
-                        "<img class='pinimg customimg' alt='Temperature' src='http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png' />";
-                    break;
-                case "Humidity":
-                    innerHtml += "<p class='itemValue'>" +
-                        (Math.round(parseFloat(value) * 10) / 10) +
-                        "<sup>%</sup></p>" +
-                        "<img class='pinimg customimg' alt='Humidity' src='http://loradatagroep9.blob.core.windows.net/proximusimages/humidity-icon-white.png' />";
-                    break;
-                case "GPS":
-                    if (!$.isNumeric(value)) {
-                        innerHtml += "<p class='itemValueTwoLines'>" +
-                            (Math.round(parseFloat(value.split(" | ")[0]
-                                        .substring(0, value.split(" | ")[0].length - 2)
-                                        .replace(".", "")
-                                        .replace(" ", ".")) *
-                                    10000) /
-                                10000) +
-                            " N</br>" +
-                            (Math.round(parseFloat(value.split(" | ")[1]
-                                        .substring(0, value.split(" | ")[1].length - 2)
-                                        .replace(".", "")
-                                        .replace(" ", ".")) *
-                                    10000) /
-                                10000) +
-                            " B";
-                    } else {
-                        innerHtml += "<p class='itemValueClickBait'>Click for details";
-                    }
-                    innerHtml +=
-                        "</p><img class='pinimg customimg' alt='Location' src='http://loradatagroep9.blob.core.windows.net/proximusimages/location-icon-white.png' />";
-                    break;
-                case "OnOff":
-                case "Button1":
-                case "Push Button":
-                    innerHtml += "<p class='itemValue'>" +
-                        (Math.round(parseFloat(value) * 10) / 10) +
-                        "</p>" +
-                        "<img class='pinimg customimg' alt='Toggle' src='http://loradatagroep9.blob.core.windows.net/proximusimages/toggle-icon-white.png' />";
-                    break;
-                case "Luminance":
-                    innerHtml += "<p class='itemValue'>" +
-                        (Math.round(parseFloat(value) * 10) / 10) +
-                        "</p>" +
-                        "<img class='pinimg customimg' alt='Luminance' src='http://loradatagroep9.blob.core.windows.net/proximusimages/luminance-icon-white.png' />";
-                    break;
-                case "PIR":
-                    innerHtml += "<p class='itemValue'>" +
-                        (Math.round(parseFloat(value) * 10) / 10) +
-                        "</p>" +
-                        "<img class='pinimg customimg' alt='PIR' src='http://loradatagroep9.blob.core.windows.net/proximusimages/eye-icon-white.png' />";
-                    break;
-                case "Accelerometer":
-                    innerHtml += "<p class='itemValue'>" +
-                        (Math.round(parseFloat(value) * 10) / 10) +
-                        "</p>" +
-                        "<img class='pinimg customimg' alt='Accelerometer' src='http://loradatagroep9.blob.core.windows.net/proximusimages/accelerometer-icon-white.png' />";
-                    break;
-                case "Simple Metering Current":
-                case "Simple Metering Demand":
-                    innerHtml += "<p class='itemValue'>" +
-                        (Math.round(parseFloat(value) * 10) / 10) +
-                        "</p>" +
-                        "<img class='pinimg customimg' alt='Simple Metering' src='http://loradatagroep9.blob.core.windows.net/proximusimages/power-icon-white.png' />";
-                    break;
-                default:
-                case "Raw payload":
-                case "Counter":
-                    innerHtml += "<p class='itemValueClickBait'>Click for details</p>" +
-                        "<img class='pinimg customimg' alt='Generic' src='http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x-white.png' />";
-                    break;
+            case "Battery level":
+                innerHtml +=
+                    "<p class='itemValue'>" +
+                    (Math.round(parseFloat(value) * 10) / 10) +
+                    "<sup>%</sup></p>" +
+                    "<img class='pinimg customimg' alt='Battery' src='http://loradatagroep9.blob.core.windows.net/proximusimages/battery-icon-white.png' />";
+                break;
+            case "Temperature":
+                innerHtml += "<p class='itemValue'>" +
+                    (Math.round(parseFloat(value) * 10) / 10) +
+                    "<sup>°C</sup></p>" +
+                    "<img class='pinimg customimg' alt='Temperature' src='http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png' />";
+                break;
+            case "Humidity":
+                innerHtml += "<p class='itemValue'>" +
+                    (Math.round(parseFloat(value) * 10) / 10) +
+                    "<sup>%</sup></p>" +
+                    "<img class='pinimg customimg' alt='Humidity' src='http://loradatagroep9.blob.core.windows.net/proximusimages/humidity-icon-white.png' />";
+                break;
+            case "GPS":
+                if (!$.isNumeric(value)) {
+                    innerHtml += "<p class='itemValueTwoLines'>" +
+                        (Math.round(parseFloat(value.split(" | ")[0]
+                                    .substring(0, value.split(" | ")[0].length - 2)
+                                    .replace(".", "")
+                                    .replace(" ", ".")) *
+                                10000) /
+                            10000) +
+                        " N</br>" +
+                        (Math.round(parseFloat(value.split(" | ")[1]
+                                    .substring(0, value.split(" | ")[1].length - 2)
+                                    .replace(".", "")
+                                    .replace(" ", ".")) *
+                                10000) /
+                            10000) +
+                        " B";
+                } else {
+                    innerHtml += "<p class='itemValueClickBait'>Click for details";
+                }
+                innerHtml +=
+                    "</p><img class='pinimg customimg' alt='Location' src='http://loradatagroep9.blob.core.windows.net/proximusimages/location-icon-white.png' />";
+                break;
+            case "OnOff":
+            case "Button1":
+            case "Push Button":
+                innerHtml += "<p class='itemValue'>" +
+                    (Math.round(parseFloat(value) * 10) / 10) +
+                    "</p>" +
+                    "<img class='pinimg customimg' alt='Toggle' src='http://loradatagroep9.blob.core.windows.net/proximusimages/toggle-icon-white.png' />";
+                break;
+            case "Luminance":
+                innerHtml += "<p class='itemValue'>" +
+                    (Math.round(parseFloat(value) * 10) / 10) +
+                    "</p>" +
+                    "<img class='pinimg customimg' alt='Luminance' src='http://loradatagroep9.blob.core.windows.net/proximusimages/luminance-icon-white.png' />";
+                break;
+            case "PIR":
+                innerHtml += "<p class='itemValue'>" +
+                    (Math.round(parseFloat(value) * 10) / 10) +
+                    "</p>" +
+                    "<img class='pinimg customimg' alt='PIR' src='http://loradatagroep9.blob.core.windows.net/proximusimages/eye-icon-white.png' />";
+                break;
+            case "Accelerometer":
+                innerHtml += "<p class='itemValue'>" +
+                    (Math.round(parseFloat(value) * 10) / 10) +
+                    "</p>" +
+                    "<img class='pinimg customimg' alt='Accelerometer' src='http://loradatagroep9.blob.core.windows.net/proximusimages/accelerometer-icon-white.png' />";
+                break;
+            case "Simple Metering Current":
+            case "Simple Metering Demand":
+                innerHtml += "<p class='itemValue'>" +
+                    (Math.round(parseFloat(value) * 10) / 10) +
+                    "</p>" +
+                    "<img class='pinimg customimg' alt='Simple Metering' src='http://loradatagroep9.blob.core.windows.net/proximusimages/power-icon-white.png' />";
+                break;
+            default:
+            case "Raw payload":
+            case "Counter":
+                innerHtml += "<p class='itemValueClickBait'>Click for details</p>" +
+                    "<img class='pinimg customimg' alt='Generic' src='http://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x-white.png' />";
+                break;
             }
 
             if (time)
@@ -280,6 +353,49 @@
             innerHtml += '<span class="gs-resize-handle gs-resize-handle-both"></span>';
             console.log(tile);
             $(tile).html(innerHtml);
+        }
+
+        function changeSensorName(sensorId, name, nameChanged) {
+            var postObj = new Object();
+            postObj.sensorId = sensorId;
+            postObj.name = name;
+            nameChanged(name);
+
+            $.ajax({
+                method: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: siteBaseUrl + "UpdateSensorName",
+                data: JSON.stringify(postObj)
+            }).done(function(json) {
+                if (json == null) {
+                    if ($.isFunction(nameChanged)) {
+                        nameChanged(name);
+                    }
+                } else {
+                    getSensor(sensorId, function(json) {
+                        var sensor = JSON.parse(json);
+                        if (sensor.hasOwnProperty("Name") && sensor.Name != null && $.isFunction(nameChanged)) {
+                            nameChanged(sensor.Name);
+                        }
+                    });
+                }
+            }).fail(function() {
+                if ($.isFunction(MyThings.logToUser)) {
+                    MyThings.logToUser("Thresholds could not be saved.");
+                }
+            });
+        }
+
+        function getSensor(sensorId, callback) {
+            $.ajax({
+                    url: apiBaseUrl + "/get/getsensor?sensorid=" + sensorId,
+                    method: "GET"
+                })
+                .done(function(json) {
+                    if (json != null) {
+                        callback(sensorId);
+                    }
+                });
         }
 
     </script>
