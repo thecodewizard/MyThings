@@ -320,6 +320,7 @@ namespace MyThings.Web.Controllers
 
                 //Fill the Viewbag
                 ViewBag.ParentSensor = sensor;
+                ViewBag.IsPinned = _pinRepository.IsContainerPinned(user.Id, container.Id);
                 return View(container);
             }
             return RedirectToAction("Index");
