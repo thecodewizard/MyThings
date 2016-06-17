@@ -19,7 +19,7 @@
     cursor: initial;
 }
 
-.tile *{
+.tile *, #confirm, #cancel{
     transition: 0.2s;
 }
 
@@ -29,9 +29,28 @@
     color: white;
 }
 
+.tileLink{
+    width: 100%;
+    height: 100%
+}
+
+.unpin{
+    left: -5%;
+    bottom: 0;
+}
+
+.smallWidget .unpin{
+    max-height: 20%;
+    max-width: 20%;
+}
+
+.largeWidget .unpin{
+    max-height: 20%;
+    max-width: 20%;
+}
+
 .homepageBody{
     overflow-x: auto;
-    overflow-y: hidden;
     height: 100vh;
      font-family: $proximusregularfont,$basicfonts;
 }
@@ -53,28 +72,135 @@ body{
     margin: 20px 0 0 50px;
 }
 
-.itemName 
-{
+.itemName, .SensorContainerType {
     text-align:center;
     white-space: nowrap;
 }
 
-.itemName, .itemType{
+.itemName, .itemType, .SensorContainerType{
     overflow: hidden;
     text-overflow:ellipsis;   
 }
 
-.itemValue, .itemName, .countValue, .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime, .itemValueClickBait, .itemValueTwoLines{
-    margin: 2px;
+.next, .previous{
+    opacity: 0.6;
 }
 
-.itemValue, .itemType, .itemValueTimeStampTime, .itemValueTimeStampDate, .itemValueClickBait, .itemValueTwoLines{
-    position: absolute;
+.next{
+    max-height:20%;
+    max-width: 20%;
+    top: 45%;
+    right: 2%;
+}
+
+.previous{
+    left:5px;
+    top: 45%;
+    max-height:20%;
+    max-width: 20%;
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.sensorContainer{
+    top: 20%;
+    left: 4%;
+    height: 80%;
+    width: 90%;
+}
+
+.SensorContainerType{
+    bottom: 10%; 
+    width: 100%;
+}
+
+.sensorContainer > * {
+}
+
+.sensorContainerValue{
+    width: 100%;
+}
+
+.smallWidget .sensorContainerValue{
+    top: 27%;
+    font-size: $fontsizesmall;
+    text-align:center;
+}
+
+.largeWidget .sensorContainerValue{
+    top: 27%;
+    font-size: $fontsizelarge;
+    text-align:center;
+}
+
+.smallWidget .SensorContainerType{
+    font-size: 0.75em
+}
+
+.smallWidget .sensorContainer > .itemValueTwoLinesSensor{
+    text-align: center;
+    font-size: 0.9em;
+    top: 25%;
+}
+
+.largeWidget .SensorContainerType{
+    font-size: $fontsizesmall;
+}
+
+.largeWidget .sensorContainer > .itemValueTwoLinesSensor{
+    text-align: center;
+    font-size: $fontsizemedium;
+    top: 25%;
+}
+
+.itemValueTwoLinesSensor{
+    left: 3.5%;
+    width: 90%
+}
+
+.bottomBarWrapper{
+   
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   min-height:55px;
+   width:100%;
+   background:#030e1f;
+   color: white;
+   text-align: center;
+}
+
+#confirm, #cancel{
+    cursor: pointer;
+    padding: 7px;
+    margin: 5px 5px 5px 10px;
+    border: 2px solid white;
+}
+
+#confirm:hover, #cancel:hover{
+    color: $proximusmainblue;
+    border: 2px solid $proximusmainblue;
+}
+
+
+
+.itemValue, .unpin, .itemValueTwoLinesSensor, .sensorContainerValue, .SensorContainerType ,.sensorContainer, .next, .previous, .itemName, .countValue, .valueMeaning, .countValue, .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime, .itemValueClickBait, .itemValueTwoLines{
+    margin: 2px;
+
+}
+
+.itemValue, .itemType, .countValue, .valueMeaning, .itemValueTimeStampTime, .itemValueTimeStampDate, .itemValueClickBait, .itemValueTwoLines{
     text-align: right;
+}
+
+.itemValue, .unpin, .itemValueTwoLinesSensor, .sensorContainerValue, .SensorContainerType, .sensorContainer, .next, .previous, .itemType, .countValue, .valueMeaning, .itemValueTimeStampTime, .itemValueTimeStampDate, .itemValueClickBait, .itemValueTwoLines{
+    position: absolute;
 }
 
 .smallWidget .countValue{
     font-size:4em;
+    left: 5%;
 }
 
 .smallWidget .itemValueTimeStampDate{
@@ -111,9 +237,23 @@ body{
     font-size: 0.8em;
 }
 
+.smallWidget .valueMeaning{
+    left: 5%;
+    top: 72%;
+    font-size: 0.8em;
+}
+
 .largeWidget .countValue{
     font-size:$fontsizehuge;
+    top: 20%;
     left: 5%;
+}
+
+
+.largeWidget .valueMeaning{
+    font-size:$fontsizelarge;
+    left: 5%;
+    top: 58%;
 }
 
 .largeWidget .itemValue{
@@ -185,10 +325,10 @@ sup{
     }
 
     &.groupimg{
-    max-height: 80%;
-    max-width: 80%;
-    bottom: -5%;
-    right: -20%;
+    max-height: 100%;
+    max-width: 100%;
+    bottom: -25%;
+    right: -25%;
     }
 
     &.logoutimg
