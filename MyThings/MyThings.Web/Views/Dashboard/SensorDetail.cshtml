@@ -45,7 +45,7 @@
 
     <article id="sensorcontainers">
         <h2>Containers</h2>
-        <div class="gridsterContainer">
+        <div class="gridsterContainer" style="padding: 0;">
             <div class="gridster ready">
                 @foreach (Container container in Model.Containers)
                 {
@@ -63,6 +63,7 @@
         <h2>Technical Details</h2>
         <div class="techtitle">
             <h3>Sensor @Model.Name</h3>
+            <span class="hyperlink">(Edit sensorname)</span>
         </div>
         <div class="techbody">
             <div class="maininfo">
@@ -103,9 +104,13 @@
     <article id="mapsholder">
         <h2>MapView</h2>
         <br/>
+        <div class="subscribesection">
+            <h4>Subscribe to this sensor</h4>
+            <p>Do you want to receive emails when a sensor updates it's location?</p>
+            <a href="http://lora-public.azurewebsites.net/subscribe/index?deviceId=@Model.MACAddress">Click here to subscribe on this sensor</a>
+        </div>
         <div id="map"></div>
         <p>Powered By Lora Team 'Out of Range'.</p>
-        <a href="http://lora-public.azurewebsites.net/subscribe/index?deviceId=@Model.MACAddress">Click here to subscribe on this sensor</a>
     </article>
 </section>
 
@@ -122,7 +127,7 @@
         function initMap() {
             var mapDiv = document.getElementById('map');
             var map = new google.maps.Map(mapDiv, {
-                center: {lat: 44.540, lng: -78.546},
+                center: {lat: 50.8315525, lng: 3.2553671},
                 zoom: 8
             });
 

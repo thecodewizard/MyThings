@@ -1214,7 +1214,12 @@ h3 {
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
 body .sensordetail {
-  padding: 50px; }
+  padding: 50px;
+  padding-top: 10px; }
+  body .sensordetail article {
+    margin: 50px 0; }
+    body .sensordetail article > h2 {
+      margin-bottom: 15px; }
 
 body .rotated {
   transform: rotate(-90deg);
@@ -1235,10 +1240,21 @@ body #sensorcontainers > div > div {
     color: #5C2D91; }
 
 body #techdetailholder .techtitle {
-  padding: 2px 25px 10px 25px;
-  background-color: #D1BBDA; }
+  margin-top: 15px;
+  padding: 15px 25px;
+  background-color: #D1BBDA;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center; }
   body #techdetailholder .techtitle h3 {
+    margin: 0;
     color: #9C5FB5; }
+  body #techdetailholder .techtitle .hyperlink {
+    color: #00bCEe;
+    display: inline;
+    margin-left: 10px;
+    margin-top: 2px;
+    cursor: pointer; }
 
 body #techdetailholder .techbody {
   background-color: #F2E7F2;
@@ -1273,9 +1289,10 @@ body #mapsholder {
   height: 100%;
   width: 100%; }
   body #mapsholder #map {
+    margin-top: 15px;
     position: relative;
     min-height: 500px;
-    min-width: 800px;
+    min-width: 400px;
     height: 100%;
     width: 100%;
     background-color: #CCC; }

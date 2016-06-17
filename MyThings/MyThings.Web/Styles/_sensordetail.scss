@@ -4,6 +4,15 @@
 body {
     .sensordetail{
         padding: 50px;
+        padding-top: 10px;
+
+        article{
+            margin: 50px 0;
+
+            & > h2{
+                margin-bottom: 15px;
+            }
+        }
     }
 
     .rotated{
@@ -36,11 +45,24 @@ body {
 
     #techdetailholder{
         .techtitle{
-            padding: 2px 25px 10px 25px;
+            margin-top: 15px;
+            padding: 15px 25px;
             background-color: $proximusterdarkpurple;
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
 
             h3{
+                margin: 0;
                 color: $proximussecpurple;
+            }
+
+            .hyperlink{
+                color: $proximusmainblue;
+                display: inline;
+                margin-left: 10px;
+                margin-top: 2px;
+                cursor: pointer;
             }
         }
 
@@ -92,9 +114,10 @@ body {
         width: 100%;
 
         #map{
+            margin-top: 15px;
             position: relative;
             min-height: 500px;
-            min-width: 800px;
+            min-width: 400px;
             height: 100%;
             width: 100%;
             background-color: #CCC;
