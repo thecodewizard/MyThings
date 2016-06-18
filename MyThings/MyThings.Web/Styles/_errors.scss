@@ -1,0 +1,117 @@
+﻿@import "_colors.scss";
+@import "_fonts.scss";
+
+
+.errorContainer{
+    width: 90%;
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+.errorItem{
+    margin: 0 0 30px 0;
+}
+
+.errorTop{
+    background-color: $proximusterdarkpurple;
+    padding: 7px 7px 0 7px;
+}
+
+.bubble{
+    padding: 0 8px 0 8px;
+    font-size: 0.8em;
+    border-radius: 50%;
+    margin: 0 50px 0 20px;
+}
+
+
+.errorBubble{  
+    background-color: $proximusred;
+}
+
+.warningBubble{
+    background-color: $proximusyellow;
+}
+
+.errorTitle{
+    margin: 0;
+    display: inline-block;
+    font-size: $fontsizesmall;
+    white-space: nowrap;   
+    overflow: hidden;
+    text-overflow:ellipsis; 
+    width: 85%;
+}
+
+.errorInfo{
+    background-color: $proximusterlightpurple;
+    transition: height, ease-in-out, 0.8s;
+    box-sizing: border-box;
+    padding: 0 0 0 94px;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.open{
+    max-height: 500px;
+}
+
+.errorDetailIcon{
+    cursor: pointer;
+    padding: 0 1% 0 1%;
+    float: right;
+    transition: transform, ease-in-out, 0.3s;
+}
+
+.rotatedArrow{   
+    transform: rotate(180deg);
+}
+
+
+.errorInfo > h3{
+    font-family: $proximuslightfont;
+    color: $proximusmainpurple;
+    font-size: $fontsizemedium;
+    margin: 0;
+    padding: 20px 0 10px 0;
+}
+
+.errorInfo > p{
+    margin: 0;
+}
+
+.linkContainer{
+    text-align: right;
+    padding: 0px 17px 25px 0;
+}
+
+.errorInfo a {
+    margin-top: 20px;
+    color: black;
+    display: inline-block;
+    font-size: 1.2em;
+    margin-left: 30px;
+}
+
+.errorInfo .supportBtn{
+    color: $proximuswhite;
+    background-color: $proximusmainpurple;
+    padding: 7px 20px 7px 20px;
+    transition: background-color, ease, 0.2s;
+}
+
+.errorInfo a:hover {
+    color: $proximusmainpurple;
+}
+
+.errorInfo .supportBtn:hover{
+    color: $proximuswhite;
+    background-color: $proximusmainblue;
+}
+
+.noMessages{
+    font-family: $proximuslightitalicfont;
+    font-size: 1.4em;
+    margin: 50px;
+    text-align: center;
+}

@@ -1,9 +1,107 @@
-﻿@model MyThings.Web.ViewModels.ErrorListViewModel
+﻿@using MyThings.Common.Models
+@model MyThings.Web.ViewModels.ErrorListViewModel
 
 @{
     ViewBag.Title = "ErrorList";
-    ViewBag.PageId = "errorlist";
+    ViewBag.PageId = "error";
+}
+<ul>
+    <li class="breadcrumbs">
+        @Html.ActionLink("Home", "Index", "Dashboard") >
+        @Html.ActionLink("Errors and Warnings", "ErrorList", "Dashboard")
+    </li>
+</ul>
+<h2>Errors and Warnings</h2>
+
+<section>
+    @using (Html.BeginForm("ErrorList", "Dashboard", FormMethod.Get, new { @class = "searchsensorform" }))
+    {
+        <div class="searchdiv unblur">
+            <input class="searchbardiv ui-autocomplete-input" autocomplete="off" maxlength="127" />
+            <input class="inputimg" type="image" src="http://loradatagroep9.blob.core.windows.net/proximusimages/search-icon.svg" />
+        </div>
+    }
+
+
+
+    <select class="dropdownsort  unblur"></select>
+</section>
+<hr class="purpleHr"/>
+@if (Model.AllErrorsWarnings.Count == 0)
+{
+    <p class="noMessages">Nothing to see here... Good job!</p>
+}
+else
+{
+    <article class="errorContainer">
+        @foreach (var error in Model.AllErrorsWarnings)
+        {
+            <section data-isopen="false" data-id="1" class="errorItem">
+                <div class="errorTop">
+                    <p class="errorTitle">
+                        @if (error.Type == ErrorType.Error)
+                        {<span class="bubble errorBubble"></span>}
+                        else
+                        {<span class="bubble warningBubble"></span> }
+                        @error.Title
+                    </p>
+                    <img class="errorDetailIcon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg" height="27px" alt="Show Details" />
+                </div>
+                <div class="errorInfo">
+                    <h3>Warning Detail</h3>
+                    <p>@error.Description</p>
+                    <p>Advice: @error.Advice</p>
+                    <div class="linkContainer">
+                        <a class="pinLink" data-sensorid="@error.SensorId" href="#"><img class="linkArrow" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon-purple.svg" height="20px" alt="Pin Sensor" />Pin Sensor</a>
+                        <a href="#"><img class="linkArrow" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon-purple.svg" height="20px" alt="Dismiss Message" />Dismiss Message</a>
+                        <a href="#" class="supportBtn">Contact Support >></a>
+
+                    </div>
+                </div>
+            </section>
+        }
+    </article>
 }
 
-<h2>ErrorList</h2>
+
+@section scripts{
+<script type="text/javascript">
+    //razor vars
+
+    //load
+    $(window)
+        .load(function () {
+            init();
+        });
+
+    function init() {
+        $(".errorDetailIcon")
+            .click(function (event) {
+                var id = $(event.target.parentElement.parentElement).data("id");
+                openMessage(id);
+        });
+    }
+
+    function openMessage(id) {
+        console.log("done");
+        var targetMessage = $("section[data-id='" + id + "']");
+        if (targetMessage.length === 0) return;
+        targetMessage = targetMessage.first();
+
+        if (targetMessage.attr("data-isopen") === "false") {
+            targetMessage.find(".errorDetailIcon").addClass("rotatedArrow");
+            targetMessage.find(".errorInfo").addClass("open");
+            targetMessage.attr("data-isopen", "true");
+        } else {
+            targetMessage.find(".errorDetailIcon").removeClass("rotatedArrow");
+            targetMessage.find(".errorInfo").removeClass("open");
+            targetMessage.attr("data-isopen", "false");
+        }
+    }
+</script>
+}
+
+
+
+
 

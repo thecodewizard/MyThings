@@ -14,7 +14,7 @@
 </head>
 
 
-    @if (ViewBag.PageId != "Home")
+    @if (ViewBag.PageId != "Home" && ViewBag.PageId != "login")
     {
         using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "hidden" }))
         { @Html.AntiForgeryToken() }
@@ -150,14 +150,25 @@
         </script>
         </body>
     }
-    else
+    else if (ViewBag.pageid == "Home")
     {
         <body class="homepageBody">
-            <div class="container body-content">
+        <div class="container body-content">
+            @RenderBody()
+        </div>
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/Scripts/gridster")
+        @Scripts.Render("~/Scripts/mythings")
+        @RenderSection("scripts", required: false)
+        </body>
+    }
+    else if(ViewBag.pageid == "login")
+    {
+        <body>
+            <div class="container loginContainer body-content">
                 @RenderBody()
             </div>
             @Scripts.Render("~/bundles/jquery")
-            @Scripts.Render("~/Scripts/gridster")
             @Scripts.Render("~/Scripts/mythings")
             @RenderSection("scripts", required: false)
         </body>
