@@ -336,6 +336,7 @@
     <Content Include="Styles\_containerdetail.scss" />
     <Content Include="Styles\_sensordetail.scss" />
     <Content Include="Styles\_errors.scss" />
+    <Content Include="Styles\_login.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
