@@ -1,6 +1,10 @@
 ﻿@import "_colors.scss";
 @import "_fonts.scss";
 
+.gridsterContainer > .gridster > ul{
+    min-width:100%;
+}
+
 .gridsterContainer > .gridster > ul > .tile{
     background-color: $proximusmainpurple;
     list-style: none;
