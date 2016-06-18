@@ -40,9 +40,8 @@
             </div>
 }
 
-            @*@Html.DropDownListFor(model => model.iets, null, "Pick a sorting method")*@
 
-<select class="dropdowntest  unblur">
+<select class="dropdownsort  unblur">
 </select>
 
 <table class="table sensorlist">
@@ -78,12 +77,12 @@
                     groups = groups || [];
                     autocompleteFeed = autocompleteFeed || [];
 
-                    console.log(allSensors);
-                    console.log(comboboxContainerTypes);
-                    console.log(pinnedSensors);
-                    console.log(groups);
-                    console.log(autocompleteFeed);
-                    console.log(allSensorsCount);
+                    //console.log(allSensors);
+                    //console.log(comboboxContainerTypes);
+                    //console.log(pinnedSensors);
+                    //console.log(groups);
+                    //console.log(autocompleteFeed);
+                    //console.log(allSensorsCount);
 
                     //global variables
                     var sensors = [];
@@ -96,7 +95,7 @@
                         for (var i = 0; i < groups.length && i < 10; i++) {
                             if (groups[i].Sensors == null) {
                                 $(".groupdiv")
-                                    .append('<div class="grouprectangletile"  id="group' +
+                                    .append('<div class="grouprectangletile oldgroups"  id="group' +
                                         groups[i].Id +
                                         '">' +
                                         '<div class="textdivgroup">' +
@@ -111,7 +110,7 @@
                                         '</div>');
                             } else {
                                 $(".groupdiv")
-                                    .append('<div class="grouprectangletile"  id="group' +
+                                    .append('<div class="grouprectangletile oldgroups"  id="group' +
                                         groups[i].Id +
                                         '">' +
                                         '<div class="textdivgroup itemName" title="' +
@@ -139,11 +138,14 @@
 
                     //Here we generate a place for the user to make a new group
                     $('.groupdiv').on('click','.addgrouptile',function() {
+                        if ($('.blur').length) {}else{
                         if ($('.newgroup').length) {
                             $('.newgroup').remove();
                             $('.addgroup').text("+");
                         } else {
                             $('.addgrouptile').remove();
+                            $('.sensorrows').remove();
+                            sensorlistCreate();
                             $(".groupdiv")
                                 .append('<div class="grouprectangletile newgroup">' +
                                     '<div class="groupinputlabel">Choose a name for the group</div>' +
@@ -164,21 +166,28 @@
                                '</a>' +
                                '</div>');
                         }
+                        }
                     });
 
                     //Get into edit mode with groups
                     $('.sensorul').on('click','.editbutton', function() {
-                        $('.sensorlist').css("z-index", "9001");
+                        $('.sensorrows').remove();
+                        if (('.newgroup').length) {
+                            $('.newgroup').remove();
+                            $('.addgroup').text("+");
+                        }
+                        sensorlistCreate();
+                        $('.sensorlist').css("z-index", "901");
                         $('.unblur').toggleClass('blur');
                         $('.blur').removeClass('.unblur');
                         if($('.unblur').length)
-                    $('.editgroupfield').remove();
-                });
+                            $('.editgroupfield').remove();
+                    });
 
 
                     //use edit mode to edit groups
-                    $('.groupdiv').on('click','.grouprectangletile', function(e) {
-                        var group = $(e.target).parent().attr('id');
+                    $('.groupdiv').on('click','.oldgroups', function(e) {
+                        group = $(e.target).parent().attr('id');
                         if(group!=undefined)
                             var groupId =  parseInt(group.substr(5));
                          sensorIds = [];
@@ -186,45 +195,34 @@
                             if (!$('.editgroupfield').length) {
                                 for (var i = 0; i < groups.length; i++) {
                                     if (groups[i].Id == groupId) {
+                                        var groupcontainer = groups[i].Sensors;
+
                                         $('<div class="grouprectangletile editgroupfield">' +
-                                                '<div class="groupinputlabel">Choose a new name for ' +
+                                                '<div class="groupeditinputlabel">Edit ' +
                                                 groups[i].Name +
                                                 '</div>' +
-                                                '<input class="groupinputtext" placeholder="' +
-                                                groups[i].Name +
-                                                '" type="text" maxlength="50" />' +
-                                                '<select class="selectpin" class="pinchoice">' +
+                                                '<select class="selecteditpin" class="pinchoice">' +
                                                 '<option name="nopinvalue" value="false">Do not pin</option>' +
                                                 '<option name="pinvalue" value="true">Pin</option>' +
                                                 '</select>' +
-                                                '<div class="newgroupbuttontext">Click on the sensors below to put in the group</div>' +
-                                                '<div type="button" class="newgroupbutton">Confirm group</div>' +
+                                                '<div class="editgroupbuttontext">Click the sensors below to change your group</div>' +
+                                                '<div type="button" class="editgroupbutton">Confirm group</div>' +
                                                 '</div>')
-                                            .insertAfter('.groupdiv');
+                                            .insertAfter($('.groupdiv'));
+                                        for (var j = 0; j < groupcontainer.length; j++) {
+                                            var groupsensorid = "sensor"+groupcontainer[j].Id;
+                                            $('#' + groupsensorid).addClass('groupsensorrow');
+                                        }
+                                       
                                     }
-                                   // if(groups[i].)
                                 }
                             } else {
                                 ($('.editgroupfield').remove());
+                                $('.groupsensorrow').removeClass('groupsensorrow');
                             }
                         } else {
                             ($('.sensorrows').remove());
                             ($('.sensordetails').remove());
-                            //for (var j = 0; j < allSensors.length; j++) {
-                            //    var sensorId= allSensors[j].Id;
-                            //    $.ajax({
-                            //        url: webApiBaseUrl + "get/GroupHasSensor?groupId=" + groupId+"&sensorId="+sensorId,
-                            //        method: "GET"
-                            //    }).done(function(data) {
-                            //        console.log('cva');
-                            //        data=JSON.parse(data);
-                            //        if (data == true) {
-                            //            console.log('ok');
-                            //            sortOnePinnedUnpinned(sensorId);
-                            //        }
-                            //    });
-                            //}
-                            
                            for (var j = 0; j < groups.length; j++) {
                                 if (groups[j].Id == groupId) {
                                     var sensorGroups = groups[j].Sensors;
@@ -244,17 +242,71 @@
                     //click on an item in the sensorlist
                     $('.sensorlist').on('click','.sensorrows', function(e) {
                         var sensor = $(e.target).parent().attr('id');
+                        sensor = sensor.substr(6);
                         var sensorvalues = [];
                         if (sensor != null) {
                             if ($('.newgroup').length) {
-                                sensors.push(sensor);
-                                $('<div id="dialogdiv" class="ui-front" title="Sensor added">Added the sensor to group</div>')
-                                    .insertBefore($('.dialogrule'))
-                                    .dialog({ autoOpen: false });
-                                $('#dialogdiv').dialog("open");
-                                setTimeout(function() { $('#dialogdiv').dialog("close"); },
-                                    1000);
+                                if (!$(e.target).parent('.groupsensorrow').length) {
+                                    $(e.target).parent().addClass('groupsensorrow');
+                                    sensors.push(sensor);
+                                    $('<div id="dialogdiv" class="ui-front" title="Sensor added">Added the sensor to your group</div>')
+                                        .insertBefore($('.dialogrule'))
+                                        .dialog({ autoOpen: false });
+                                    $('#dialogdiv').dialog("open");
+                                    setTimeout(function() { $('#dialogdiv').dialog("close"); },
+                                        2000);
+                                } else {
+                                    var index=sensors.indexOf(sensor);
+                                    if (index > -1) {
+                                        sensors.splice(index, 1);
+                                    }
+                                    $(e.target).parent().removeClass('groupsensorrow');
+                                    $('<div id="dialogdivremove" class="ui-front" title="Sensor removed">Removed the sensor from the group</div>')
+                                        .insertBefore($('.dialogrule'))
+                                        .dialog({ autoOpen: false });
+                                    $('#dialogdivremove').dialog("open");
+                                    setTimeout(function() { $('#dialogdivremove').dialog("close"); },
+                                        2000);
+                                }
                             } else {
+
+                                if ($('.editgroupfield').length) {
+                                    if(group!=undefined)
+                                        var groupId =  parseInt(group.substr(5));
+                                    if ($(e.target).parent('.groupsensorrow').length) {
+                                        var removesensor ={"groupId":groupId,"sensorId": parseInt($(e.target).parent().attr('id').substr(6))}
+                                        $(e.target).parent().removeClass('groupsensorrow');
+                                        $.ajax({
+                                            url: apiBaseUrl + "Dashboard/RemoveSensor",
+                                            data: JSON.stringify(removesensor),
+                                            method: "POST",
+                                            contentType: "application/json"
+                                        }).done(function (json) {
+                                        }).statusCode(function (statuscoderesponse) {
+                                            if (statuscoderesponse != null) {
+                                                console.log(statuscoderesponse.statusMessage);
+                                                console.log('status');
+                                            }
+                                        });
+                                    } else {
+                                        var addsensor ={"groupId":groupId,"sensorId": parseInt($(e.target).parent().attr('id').substr(6))}
+
+                                        $(e.target).parent().addClass('groupsensorrow');
+                                        $.ajax({
+                                            url: apiBaseUrl + "Dashboard/AddSensor",
+                                            data: JSON.stringify(addsensor),
+                                            method: "POST",
+                                            contentType: "application/json"
+                                        }).done(function (json) {
+                                        }).statusCode(function (statuscoderesponse) {
+                                            if (statuscoderesponse != null) {
+                                                console.log(statuscoderesponse.statusMessage);
+                                                console.log('status');
+                                            }
+                                        });
+                                    }
+                                }else{
+
                                 //get details from sensors
                                 // webApiBaseUrl
                                 for (var i = 0; i < allSensors.length; i++) {
@@ -306,18 +358,27 @@
                                        
                                     }
                                 }
+                                }
 
                             }
                         }
                     });
+
                     //Click on the button to create a new group
-                    $('.groupdiv')
-                        .on( 'click','.newgroupbutton',function() {
+                    $('.groupdiv').on( 'click','.newgroupbutton',function() {
                             var name = $('.groupinputtext').val();
                             var pinnedgroups = $('.selectpin').val();
                             if (pinnedgroups == "true")  pinnedgroups=true;
                             if (pinnedgroups == "false") pinnedgroups=false;
-                            group =
+                            if (name == "" || sensors.length==0) {
+                                $('<div id="dialogdivgroup" class="ui-front" title="Wrong group">Please submit a title for the group and at least one sensor.</div>')
+                                        .insertBefore($('.dialogrule'))
+                                        .dialog({ autoOpen: false });
+                                $('#dialogdivgroup').dialog("open");
+                                setTimeout(function() { $('#dialogdivgroup').dialog("close"); },
+                                    5000);
+                            }else{
+                            var groupArr =
                                     {
                                         "name": name,
                                         "sensors": sensors,
@@ -328,11 +389,11 @@
                             //json call to url
                             $.ajax({
                                 url: apiBaseUrl + "Dashboard/CreateGroup",
-                                data: JSON.stringify(group),
+                                data: JSON.stringify(groupArr),
                                 method: "POST",
                                 contentType: "application/json"
                             }).done(function (json) {
-                                console.log('ok');
+                                location.reload();
                             }).statusCode(function (statuscoderesponse) {
                                 if (statuscoderesponse != null) {
                                     console.log(statuscoderesponse.statusMessage);
@@ -342,8 +403,44 @@
                             $('.newgroup').remove();
                             $('.addgroup').text("+");
                             sensors.length=0;
-                            group.length=0;
+                            groupArr.length=0;
+                            $('<div id="dialogdivgroupmake" class="ui-front" title="Making group">Please wait while we create your group.</div>')
+                                .insertBefore($('.dialogrule'))
+                                .dialog({ autoOpen: false });
+                            $('#dialogdivgroupmake').dialog("open");
+                            setTimeout(function() { $('#dialogdivgroupmake').dialog("close"); },
+                                4000);
+                            }
                         });
+
+                    //Click on the button to edit a group
+                    $('.container').on( 'click','.editgroupbutton',function() {
+                            var urlpingroup = "";
+                            var pinnedgroups = $('.selecteditpin').val();
+                            if (pinnedgroups == "true")  urlpingroup = "PinGroup";
+                            else if (pinnedgroups == "false")  urlpingroup = "UnpinGroup";
+                           
+                            var groupId = parseInt(group.substr(5));
+                            groupId = {"groupId":groupId}
+                                 $.ajax({
+                                     url: apiBaseUrl + "Dashboard/"+urlpingroup,
+                                data: JSON.stringify(groupId),
+                                method: "POST",
+                                contentType: "application/json"
+                                 }).done(function(json) {
+                                     location.reload();
+                            })
+                           .fail(function(json) { console.log('sensor failed'); })
+                           .statusCode(function(statuscoderesponse) {
+                               if (statuscoderesponse != null) {
+                                   console.log(statuscoderesponse.statusMessage);
+                                   console.log('status');
+                               }
+                           });
+
+                    
+                        });
+
 
                     //Click on the pinimage to unpin a sensor
                     $('.sensorlist').on('click','.sensorpinimg', function(e) {
@@ -409,9 +506,9 @@
 
                     //dropdown with ways to sort the sensorlist
                     function fillSortingbox() {
-                        $(".dropdowntest").append('<option value="">Pick a sorting method</option>');
+                        $(".dropdownsort").append('<option value="">Pick a sorting method</option>');
                         for (var i = 0; i < comboboxContainerTypes.length; i++) {
-                            $(".dropdowntest")
+                            $(".dropdownsort")
                                 .append('<option value="' +
                                     comboboxContainerTypes[i].Id +
                                     '">' +
@@ -447,7 +544,7 @@
                         for (var n = 0; n < allSensors.length; n++) {
                             if (isInArray(allSensors[n].Id, allSensorIds)) {
                                 $(".sensorlist")
-                                    .append('<tr class="sensorrows" id="' +
+                                    .append('<tr class="sensorrows" id="sensor' +
                                         allSensors[n].Id +
                                         '">' +
                                         '<td class="idsensordiv">' +
@@ -470,7 +567,7 @@
                                         '</tr>');
                             } else {
                                 $(".sensorlist")
-                 .append('<tr class="sensorrows" id="'+
+                 .append('<tr class="sensorrows" id="sensor'+
                      allSensors[n].Id+'">' +
                      '<td class="idsensordiv">' +
                      allSensors[n].MACAddress +
@@ -525,7 +622,7 @@
                         for (var m = 0; m < allSensors.length; m++) {
                             if (!isInArray(allSensors[m].Id,sensors)){
                                 $(".sensorlist")
-                        .append('<tr class="sensorrows" id="'+
+                        .append('<tr class="sensorrows" id="sensor'+
                             allSensors[m].Id+'">' +
                             '<td class="idsensordiv">' +
                             allSensors[m].MACAddress +
@@ -550,7 +647,7 @@
                         for (var n = 0; n < allSensors.length; n++) {
                             if (isInArray(allSensors[n].Id,sensors)) {
                                 $(".sensorlist")
-                                          .append('<tr class="sensorrows" id="'+
+                                          .append('<tr class="sensorrows" id="sensor'+
                                               allSensors[n].Id+'">' +
                                               '<td class="idsensordiv">' +
                                               allSensors[n].MACAddress +
@@ -578,7 +675,7 @@
                         for (var m = 0; m < pinnedSensors.length; m++) {
                         if (allSensors[m].Id == sensor) {
                                 $(".sensorlist")
-                                    .append('<tr class="sensorrows" id="' +
+                                    .append('<tr class="sensorrows" id="sensor' +
                                         allSensors[m].Id +
                                         '">' +
                                         '<td class="idsensordiv">' +
@@ -601,7 +698,7 @@
                                         '</tr>');
                             } else {
                                 $(".sensorlist")
-                                        .append('<tr class="sensorrows" id="'+
+                                        .append('<tr class="sensorrows" id="sensor'+
                                             allSensors[m].Id+'">' +
                                             '<td class="idsensordiv">' +
                                             allSensors[m].MACAddress +
@@ -635,7 +732,7 @@
                                 for (var j = 0; j < pinnedSensors.length; j++) {
                                     if (arr[i].Id == pinnedSensors[j].Id) {
                                         $(".sensorlist")
-                                            .append('<tr class="sensorrows" id="' +
+                                            .append('<tr class="sensorrows" id="sensor' +
                                                 pinnedSensors[j].Id +
                                                 '">' +
                                                 '<td class="idsensordiv">' +
@@ -663,7 +760,7 @@
                                                 if(!isInArray(arr[i].Id, sensorVar)){
                                                     sensorVar.push(arr[i].Id);
                                                     $(".sensorlist")
-                                                        .append('<tr class="sensorrows" id="' +
+                                                        .append('<tr class="sensorrows" id="sensor' +
                                                             allSensors[l].Id +
                                                             '">' +
                                                             '<td class="idsensordiv">' +
@@ -696,7 +793,7 @@
                                 for (var l = 0; l< allSensors.length; l++) {
                                     if (arr[i].Id == allSensors[l].Id) {
                                         $(".sensorlist")
-                                          .append('<tr class="sensorrows" id="' +
+                                          .append('<tr class="sensorrows" id="sensor' +
                                               allSensors[l].Id +
                                               '">' +
                                               '<td class="idsensordiv">' +
@@ -730,11 +827,8 @@
                     }
 
 
-                    //search for sensors
-                    $('.searchdiv')
-                        .on('click',
-                            '.inputimg',
-                            function() {
+                    //search for sensors with searchbar
+                    $('.searchdiv').on('click','.inputimg',function() {
                                 var searchkeyword = $('.searchbardiv').val();
                                 $.ajax({
                                     url: webApiBaseUrl + "Get/GetSensorsOnQuery?query=" + searchkeyword,
@@ -753,9 +847,8 @@
                             });
 
                     //search for sensors with dropdownlist
-                    $('.dropdowntest')
-                        .change( function() {
-                            var searchkeyword = $('.dropdowntest :selected').val();
+                    $('.dropdownsort').change( function() {
+                            var searchkeyword = $('.dropdownsort :selected').val();
                                 $.ajax({
                                     url: webApiBaseUrl + "Get/GetSensorsOnQuery?query=" + searchkeyword,
                                     method: "GET",
@@ -772,8 +865,8 @@
                     .fail(function(json) { console.log('sensor failed'); });
                             });
 
-                    $('.searchsensorform')
-                        .submit(function(e) {
+                    //prevent default action for a form 
+                    $('.searchsensorform').submit(function(e) {
                             e.preventDefault();
                         });
 
@@ -782,17 +875,6 @@
                     fillSortingbox();
                     sensorlistCreate();
 
-                    //$('.addgrouptile').onclick = addgroupClick();
-                    @*
-
-            //Manier 2 - Met eigen objecten
-            var allSensors = [];
-            @foreach (Sensor sensor in Model.Sensors)
-            {
-                @: allSensors.push(Sensor.loadFromJson(@Html.Raw(JsonConvert.SerializeObject(sensor))));
-            }
-
-            *@
                 })
         </script>
     }

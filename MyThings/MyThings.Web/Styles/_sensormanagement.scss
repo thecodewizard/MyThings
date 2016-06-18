@@ -61,9 +61,11 @@ h2{
     }
     &:hover{
           cursor: pointer;
+    }
+}
+.oldgroups:hover{
            background-color: $proximusterdarkblue;
              color: $proximusmainpurple;
-    }
 }
 .addgrouptile:hover{
     background-color: $proximusterdarkblue;
@@ -113,7 +115,16 @@ h2{
     padding-left:2%;
 }
 .groupinputlabel{
+    color:$proximuswhite;
     display:block;
+}
+.groupeditinputlabel
+{
+    display:block;
+    margin-left:-10%;
+    text-align:center;
+    color:$proximuswhite;
+    font-size:$fontsizesmall;
 }
 .groupinputtext
 {
@@ -164,12 +175,26 @@ h2{
 .newgroupbuttontext{
     padding:1% 0 1% 0;
     font-weight:normal;
+    color:$proximuswhite;
 }
 
-.searchdiv
-{
-    //height:30px;
+.editgroupbutton{
+        margin-right:35%;
+     color:$proximusblack;
+         font-family:$proximusregularfont;
+         font-size:$fontsizesmall;
+         padding:0.5% 1%;
+     background-color:$proximusterlightpurple;
+     float:right;
+     &:hover{
+         color:$proximusblack;
+         background-color:$proximusterdarkpurple;
+            }
 }
+.editgroupbuttontext{
+    color:$proximuswhite;
+}
+
 .inputimg{
     width:30px;
     height:30px;
@@ -181,13 +206,7 @@ h2{
     height:30px;
 }
 
-.searchsensorform{
-    display:inline-block;
-    padding: 0 10% 5% 5%;
-}
-/*.sensormanagementhtml{
-    background-color:white;
-}*/
+
 .sensorlist{
     width:100%;
 }
@@ -229,6 +248,9 @@ h2{
     }
 }
 
+.groupsensorrow{
+      background-color:$proximusterdarkblue;
+}
 
 .sensornotpinimg{
     width:20px;
@@ -251,15 +273,3 @@ h2{
      padding:1% 0 0 4%;
     padding-bottom:10%;
 }
-
-/*.sensorpinimg{
-     display:none;
-    max-height:20px;
-    max-width:20px;
-    width:auto;
-    height:auto;
-}
-.pinlink{
-    display:inline;
-    float:right;
-}*/

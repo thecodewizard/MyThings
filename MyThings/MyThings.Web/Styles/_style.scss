@@ -42,7 +42,7 @@ select{
     background-image:url("http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg");
     background-position:98%;
     background-repeat:no-repeat;
-    &.dropdowntest{
+    &.dropdownsort{
         display:inline;
     margin-left:10px;
     padding:0 6% 0 1%;
@@ -52,9 +52,15 @@ select{
     margin-left:10px;
     padding:0 13% 0 1%;
     }
+    &.selecteditpin{
+         display:inline;
+    padding:0 13% 0 1%;
+        margin-left: 28%;
+    }
     &#language{
          display:inline;
     padding:0 35px 0 10px;
+    background-color:$proximusterlightgray;
     }
 }
 
@@ -95,4 +101,8 @@ ul{
                }
        }
     
+}
+.searchsensorform{
+    display:inline-block;
+    padding: 0 10% 5% 5%;
 }
