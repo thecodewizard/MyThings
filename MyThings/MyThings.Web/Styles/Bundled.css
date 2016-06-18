@@ -83,6 +83,10 @@ h3 {
 .gridsterContainer > .gridster > ul > .tile:hover {
   background-color: #00bCEe; }
 
+.gridsterContainer > .gridster > ul > .unhoverable:hover {
+  background-color: #5C2D91;
+  cursor: initial; }
+
 .tile * {
   transition: 0.2s; }
 
@@ -112,18 +116,22 @@ body {
   margin: 20px 0 0 50px; }
 
 .itemName {
-  text-align: center; }
+  text-align: center;
+  white-space: nowrap; }
 
 .itemName, .itemType {
   overflow: hidden;
   text-overflow: ellipsis; }
 
-.itemValue, .itemName, .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime {
+.itemValue, .itemName, .countValue, .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime, .itemValueClickBait, .itemValueTwoLines {
   margin: 2px; }
 
-.itemValue, .itemType, .itemValueTimeStampTime, .itemValueTimeStampDate {
+.itemValue, .itemType, .itemValueTimeStampTime, .itemValueTimeStampDate, .itemValueClickBait, .itemValueTwoLines {
   position: absolute;
   text-align: right; }
+
+.smallWidget .countValue {
+  font-size: 4em; }
 
 .smallWidget .itemValueTimeStampDate {
   bottom: 3px;
@@ -140,15 +148,29 @@ body {
   right: 5%;
   font-size: 2.4em; }
 
+.smallWidget .itemValueClickBait, .smallWidget .itemValueTwoLines {
+  top: 35%;
+  right: 5%;
+  font-size: 1em; }
+
 .smallWidget .itemType {
   right: 5%;
   top: 15%;
   font-size: 0.8em; }
 
+.largeWidget .countValue {
+  font-size: 6em;
+  left: 5%; }
+
 .largeWidget .itemValue {
   top: 35%;
   right: 5%;
   font-size: 5em; }
+
+.largeWidget .itemValueClickBait, .largeWidget .itemValueTwoLines {
+  top: 30%;
+  right: 5%;
+  font-size: 2.5em; }
 
 .largeWidget .itemName {
   font-size: 2em; }
@@ -177,19 +199,25 @@ sup {
 .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime {
   opacity: 0.4; }
 
+.noFade {
+  opacity: 0.9; }
+
 .customimg {
   position: absolute; }
-  .customimg.errorimg {
-    max-height: 75%;
-    max-width: 75%;
-    float: right;
-    bottom: 40%;
-    right: -20%; }
   .customimg.warningimg {
-    max-height: 65%;
-    max-width: 65%;
-    float: right;
-    bottom: 35%;
+    max-height: 70%;
+    max-width: 70%;
+    bottom: -10%;
+    right: -20%; }
+  .customimg.errorimg {
+    max-height: 80%;
+    max-width: 80%;
+    bottom: -5%;
+    right: -20%; }
+  .customimg.groupimg {
+    max-height: 80%;
+    max-width: 80%;
+    bottom: -5%;
     right: -20%; }
   .customimg.logoutimg {
     max-height: 95%;
@@ -200,6 +228,81 @@ sup {
     max-width: 80%;
     bottom: 0;
     left: -37%; }
+  .customimg.navimg {
+    max-height: 100%;
+    max-width: 100%; }
+
+.hidden {
+  display: none; }
+
+.clock {
+  border-radius: 50%;
+  background: #fff url(http://loradatagroep9.blob.core.windows.net/proximusimages/ios_clock.svg) no-repeat center;
+  background-size: 87%;
+  height: 90%;
+  position: absolute;
+  width: 90%;
+  margin: 5%; }
+
+.clock.simple:after {
+  background: #000;
+  border-radius: 50%;
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 5%;
+  height: 5%;
+  z-index: 10; }
+
+.minutes-container, .hours-container, .seconds-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0; }
+
+.hours {
+  background: #000;
+  height: 20%;
+  left: 48.75%;
+  position: absolute;
+  top: 30%;
+  transform-origin: 50% 100%;
+  width: 2.5%; }
+
+.minutes {
+  background: #000;
+  height: 40%;
+  left: 49%;
+  position: absolute;
+  top: 10%;
+  transform-origin: 50% 100%;
+  width: 2%; }
+
+.seconds {
+  background: #000;
+  height: 45%;
+  left: 49.5%;
+  position: absolute;
+  top: 14%;
+  transform-origin: 50% 80%;
+  width: 1%;
+  z-index: 8; }
+
+@keyframes rotate {
+  100% {
+    transform: rotateZ(360deg); } }
+
+.hours-container {
+  animation: rotate 43200s infinite linear; }
+
+.minutes-container {
+  transition: transform 0.3s cubic-bezier(0.4, 2.08, 0.55, 0.44); }
+
+.seconds-container {
+  transition: transform 0.2s cubic-bezier(0.4, 2.08, 0.55, 0.44); }
 
 /*$largeblock: 200px;
 $smallblock: 100px;
@@ -284,7 +387,7 @@ $fontsizestiny: 0.85em;
     font-size:$fontsizesmall;
     text-align:center;
 }
-.ciphervalue
+.countValue
 {
     margin:0 10px;
     font-size:$fontsizehuge;
@@ -846,4 +949,547 @@ h2 {
     display:inline;
     float:right;
 }*/
+h1 {
+  color: #5C2D91; }
+
+h2 {
+  color: #9C5FB5; }
+
+h3 {
+  color: #D1BBDA; }
+
+@font-face {
+  font-family: Proximus-Regular;
+  src: url("../fonts/Proximus-Regular.ttf") format("truetype"), url("../fonts/Proximus-Regular.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Light;
+  src: url("../fonts/Proximus-Light.ttf") format("truetype"), url("../fonts/Proximus-Light.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-LightItalic;
+  src: url("../fonts/Proximus-LightItalic.ttf") format("truetype"), url("../fonts/Proximus-LightItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-RegularItalic;
+  src: url("../fonts/Proximus-RegularItalic.ttf") format("truetype"), url("../fonts/Proximus-RegularItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Bold;
+  src: url("../fonts/Proximus-Bold.ttf") format("truetype"), url("../fonts/Proximus-Bold.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-BoldItalic;
+  src: url("../fonts/Proximus-BoldItalic.ttf") format("truetype"), url("../fonts/Proximus-BoldItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-ExtraBold;
+  src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
+
+.containerdetail {
+  margin: 0 0 50px 0;
+  position: relative; }
+  .containerdetail .invisible {
+    display: none; }
+  .containerdetail .button {
+    background: #5C2D91;
+    position: absolute;
+    right: 15px;
+    bottom: -10px;
+    display: block;
+    width: 150px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    margin: 20px 0 15px;
+    cursor: pointer; }
+    .containerdetail .button.unpin {
+      background: none;
+      color: #000000;
+      font-family: Proximus-Bold;
+      border: 2px #5C2D91 solid;
+      line-height: 25px; }
+  .containerdetail .titleholder {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center; }
+  .containerdetail h1 {
+    margin: 0 50px; }
+
+.blocksholder {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around; }
+
+.detailblock {
+  display: block;
+  position: relative;
+  margin: 10px;
+  padding-bottom: calc(33% - 10px);
+  overflow: hidden; }
+  .detailblock.square {
+    width: calc(33% - 20px);
+    height: 0;
+    background: #D1BBDA; }
+    .detailblock.square:nth-child(2n) {
+      background: #CCCCCC; }
+  .detailblock.rectangle {
+    width: calc(66% - 20px);
+    height: 0;
+    background: #F2E7F2; }
+    .detailblock.rectangle:nth-child(2n) {
+      background: #E5F1F9; }
+  .detailblock .tileimg {
+    height: auto;
+    width: auto;
+    max-height: 100%;
+    position: absolute;
+    top: 0;
+    left: -50%; }
+  .detailblock .title {
+    color: #5C2D91;
+    font-family: Proximus-Bold;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: right;
+    margin: 18px; }
+    .detailblock .title p {
+      height: 20px;
+      margin: 0 0 5px; }
+  .detailblock .value {
+    color: #FFFFFF;
+    font-family: Proximus-Light;
+    font-size: 8em;
+    position: absolute;
+    bottom: 8%;
+    right: 10%;
+    display: flex;
+    flex-flow: row nowrap; }
+    .detailblock .value .sup {
+      font-size: 40px;
+      margin-left: -25px; }
+  .detailblock #thresholdCarousel {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0; }
+    .detailblock #thresholdCarousel .carousel-control {
+      background-image: none; }
+    .detailblock #thresholdCarousel h3 {
+      text-align: right;
+      font-size: 2em; }
+    .detailblock #thresholdCarousel .item {
+      height: 100%; }
+    .detailblock #thresholdCarousel .item > div {
+      height: 100%;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 50px; }
+      .detailblock #thresholdCarousel .item > div.inactive {
+        display: none; }
+      .detailblock #thresholdCarousel .item > div.title {
+        position: absolute;
+        top: 0;
+        right: 0;
+        align-self: flex-start;
+        height: 20px;
+        margin: 18px;
+        padding: 0;
+        text-align: right; }
+      .detailblock #thresholdCarousel .item > div .value {
+        position: relative;
+        top: 0;
+        right: 0; }
+        .detailblock #thresholdCarousel .item > div .value.left * {
+          color: #00bCEe; }
+        .detailblock #thresholdCarousel .item > div .value.right * {
+          color: #5C2D91; }
+      .detailblock #thresholdCarousel .item > div .adjustable {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center; }
+        .detailblock #thresholdCarousel .item > div .adjustable > .arrows {
+          display: flex;
+          flex-flow: column nowrap;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          width: 100%; }
+  .detailblock .containerlist {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 225px;
+    width: 100%; }
+    .detailblock .containerlist li {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center;
+      height: 50px;
+      width: 100%;
+      font-family: Proximus-Regular;
+      font-size: 1.2em;
+      color: #5C2D91; }
+      .detailblock .containerlist li img {
+        width: auto;
+        height: auto;
+        max-height: 50px;
+        max-width: 75px; }
+      .detailblock .containerlist li p {
+        margin: 0 0 0 15px;
+        cursor: pointer; }
+
+.blue {
+  color: #00bCEe; }
+
+.purple {
+  color: #5C2D91; }
+
+#chart {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0; }
+  #chart .axis path,
+  #chart .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges; }
+  #chart .axis text {
+    fill: #000; }
+  #chart .axis .tick line {
+    stroke: rgba(0, 0, 0, 0.1); }
+  #chart .area {
+    stroke-width: 1; }
+  #chart .area.outer,
+  #chart .legend .outer {
+    fill: rgba(230, 230, 255, 0.8);
+    stroke: rgba(216, 216, 255, 0.8); }
+  #chart .area.inner,
+  #chart .legend .inner {
+    fill: rgba(0, 115, 207, 0.8);
+    stroke: rgba(0, 115, 207, 0.8); }
+  #chart .median-line,
+  #chart .legend .median-line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 3; }
+  #chart .legend .legend-bg {
+    fill: rgba(0, 0, 0, 0.5);
+    stroke: rgba(0, 0, 0, 0.5); }
+  #chart .marker.history .marker-bg,
+  #chart .marker.history path {
+    fill: rgba(0, 188, 238, 0.8);
+    stroke: rgba(0, 188, 238, 0.8);
+    stroke-width: 3; }
+  #chart .marker.current .marker-bg,
+  #chart .marker.current path {
+    fill: rgba(92, 45, 145, 0.8);
+    stroke: rgba(92, 45, 145, 0.8);
+    stroke-width: 3; }
+  #chart .marker path {
+    fill: none; }
+  #chart .legend text,
+  #chart .marker text {
+    fill: #fff;
+    font-weight: bold; }
+  #chart .marker text {
+    text-anchor: middle; }
+
+h1 {
+  color: #5C2D91; }
+
+h2 {
+  color: #9C5FB5; }
+
+h3 {
+  color: #D1BBDA; }
+
+@font-face {
+  font-family: Proximus-Regular;
+  src: url("../fonts/Proximus-Regular.ttf") format("truetype"), url("../fonts/Proximus-Regular.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Light;
+  src: url("../fonts/Proximus-Light.ttf") format("truetype"), url("../fonts/Proximus-Light.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-LightItalic;
+  src: url("../fonts/Proximus-LightItalic.ttf") format("truetype"), url("../fonts/Proximus-LightItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-RegularItalic;
+  src: url("../fonts/Proximus-RegularItalic.ttf") format("truetype"), url("../fonts/Proximus-RegularItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Bold;
+  src: url("../fonts/Proximus-Bold.ttf") format("truetype"), url("../fonts/Proximus-Bold.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-BoldItalic;
+  src: url("../fonts/Proximus-BoldItalic.ttf") format("truetype"), url("../fonts/Proximus-BoldItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-ExtraBold;
+  src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
+
+body .sensordetail {
+  padding: 50px;
+  padding-top: 10px; }
+  body .sensordetail article {
+    margin: 50px 0; }
+    body .sensordetail article > h2 {
+      margin-bottom: 15px; }
+  body .sensordetail .invisible {
+    display: none; }
+  body .sensordetail #sensornameinput {
+    width: 50%; }
+
+body .rotated {
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg); }
+
+body #sensorcontainers > div > div {
+  display: flex;
+  flex-flow: row wrap; }
+  body #sensorcontainers > div > div .tile {
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer; }
+  body #sensorcontainers > div > div h2 {
+    color: #5C2D91; }
+
+body #techdetailholder .techtitle {
+  margin-top: 15px;
+  padding: 15px 25px;
+  background-color: #D1BBDA;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center; }
+  body #techdetailholder .techtitle h3 {
+    margin: 0;
+    color: #9C5FB5; }
+  body #techdetailholder .techtitle .hyperlink {
+    color: #00bCEe;
+    display: inline;
+    margin-left: 10px;
+    margin-top: 2px;
+    cursor: pointer; }
+
+body #techdetailholder .techbody {
+  background-color: #F2E7F2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap; }
+  body #techdetailholder .techbody .maininfo {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 20px 5px;
+    width: 75%;
+    height: 100%; }
+    body #techdetailholder .techbody .maininfo > div {
+      display: flex;
+      flex-flow: row wrap; }
+      body #techdetailholder .techbody .maininfo > div p {
+        padding: 0 10px; }
+  body #techdetailholder .techbody .actionlinks {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 20px 5px;
+    width: 25%;
+    height: 100%; }
+    body #techdetailholder .techbody .actionlinks div {
+      margin: 10px 0; }
+    body #techdetailholder .techbody .actionlinks img {
+      height: 35px; }
+
+body #mapsholder {
+  position: relative;
+  height: 100%;
+  width: 100%; }
+  body #mapsholder #map {
+    margin-top: 15px;
+    position: relative;
+    min-height: 500px;
+    min-width: 400px;
+    height: 100%;
+    width: 100%;
+    background-color: #CCC; }
+
+body #sensorcontainers > div .gridsterContainer > .gridster > ul > .tile {
+  background-color: #5C2D91;
+  list-style: none;
+  color: white;
+  overflow: hidden;
+  transition: background-color 0.2s;
+  cursor: pointer; }
+
+body #sensorcontainers > div .gridsterContainer > .gridster > ul > .tile:hover {
+  background-color: #00bCEe; }
+
+body #sensorcontainers > div .gridsterContainer > .gridster > ul > .unhoverable:hover {
+  background-color: #5C2D91;
+  cursor: initial; }
+
+body #sensorcontainers > div .tile * {
+  transition: 0.2s; }
+
+body #sensorcontainers > div .tile {
+  background-color: #5C2D91;
+  list-style: none;
+  color: white; }
+
+body #sensorcontainers > div .homepageBody {
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 100vh;
+  font-family: Proximus-Regular, Helvetica, sans-serif; }
+
+body #sensorcontainers > div body {
+  background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png");
+  background-size: cover; }
+
+body #sensorcontainers > div .gridsterContainer {
+  padding: 30px 50px 50px 50px;
+  min-height: 100%;
+  height: 100%;
+  margin: 0 auto -20px; }
+
+body #sensorcontainers > div .homeTitle {
+  color: #fff;
+  margin: 20px 0 0 50px; }
+
+body #sensorcontainers > div .itemName {
+  text-align: center;
+  white-space: nowrap; }
+
+body #sensorcontainers > div .itemName, body #sensorcontainers > div .itemType {
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+body #sensorcontainers > div .itemValue, body #sensorcontainers > div .itemName, body #sensorcontainers > div .countValue, body #sensorcontainers > div .itemType, body #sensorcontainers > div .itemValueTimeStampDate, body #sensorcontainers > div .itemValueTimeStampTime, body #sensorcontainers > div .itemValueClickBait, body #sensorcontainers > div .itemValueTwoLines {
+  margin: 2px; }
+
+body #sensorcontainers > div .itemValue, body #sensorcontainers > div .itemType, body #sensorcontainers > div .itemValueTimeStampTime, body #sensorcontainers > div .itemValueTimeStampDate, body #sensorcontainers > div .itemValueClickBait, body #sensorcontainers > div .itemValueTwoLines {
+  position: absolute;
+  text-align: right; }
+
+body #sensorcontainers > div .smallWidget .countValue {
+  font-size: 4em; }
+
+body #sensorcontainers > div .smallWidget .itemValueTimeStampDate {
+  bottom: 3px;
+  right: 7px;
+  font-size: 0.75em; }
+
+body #sensorcontainers > div .smallWidget .itemValueTimeStampTime {
+  font-size: 0.75em;
+  bottom: 16px;
+  right: 7px; }
+
+body #sensorcontainers > div .smallWidget .itemValue {
+  top: 36%;
+  right: 5%;
+  font-size: 2.4em; }
+
+body #sensorcontainers > div .smallWidget .itemValueClickBait, body #sensorcontainers > div .smallWidget .itemValueTwoLines {
+  top: 35%;
+  right: 5%;
+  font-size: 1em; }
+
+body #sensorcontainers > div .smallWidget .itemType {
+  right: 5%;
+  top: 15%;
+  font-size: 0.8em; }
+
+body #sensorcontainers > div .largeWidget .countValue {
+  font-size: 6em;
+  left: 5%; }
+
+body #sensorcontainers > div .largeWidget .itemValue {
+  top: 35%;
+  right: 5%;
+  font-size: 5em; }
+
+body #sensorcontainers > div .largeWidget .itemValueClickBait, body #sensorcontainers > div .largeWidget .itemValueTwoLines {
+  top: 30%;
+  right: 5%;
+  font-size: 2.5em; }
+
+body #sensorcontainers > div .largeWidget .itemName {
+  font-size: 2em; }
+
+body #sensorcontainers > div .largeWidget .itemType {
+  right: 5%;
+  top: 15%;
+  font-size: 1.5em; }
+
+body #sensorcontainers > div .largeWidget .itemValueTimeStampDate {
+  bottom: 5px;
+  right: 7px;
+  font-size: 1.2em; }
+
+body #sensorcontainers > div .largeWidget .itemValueTimeStampTime {
+  bottom: 10%;
+  right: 7px;
+  font-size: 1.2em; }
+
+body #sensorcontainers > div sup {
+  font-size: 0.5em; }
+
+body #sensorcontainers > div .customimg {
+  opacity: 0.2; }
+
+body #sensorcontainers > div .itemType, body #sensorcontainers > div .itemValueTimeStampDate, body #sensorcontainers > div .itemValueTimeStampTime {
+  opacity: 0.4; }
+
+body #sensorcontainers > div .noFade {
+  opacity: 0.9; }
+
+body #sensorcontainers > div .customimg {
+  position: absolute; }
+  body #sensorcontainers > div .customimg.warningimg {
+    max-height: 70%;
+    max-width: 70%;
+    bottom: -10%;
+    right: -20%; }
+  body #sensorcontainers > div .customimg.errorimg {
+    max-height: 80%;
+    max-width: 80%;
+    bottom: -5%;
+    right: -20%; }
+  body #sensorcontainers > div .customimg.groupimg {
+    max-height: 80%;
+    max-width: 80%;
+    bottom: -5%;
+    right: -20%; }
+  body #sensorcontainers > div .customimg.logoutimg {
+    max-height: 95%;
+    max-width: 95%;
+    bottom: -2%; }
+  body #sensorcontainers > div .customimg.pinimg {
+    max-height: 80%;
+    max-width: 80%;
+    bottom: 0;
+    left: -37%; }
+  body #sensorcontainers > div .customimg.navimg {
+    max-height: 100%;
+    max-width: 100%; }
+
+body #sensorcontainers > div .hidden {
+  display: none; }
 

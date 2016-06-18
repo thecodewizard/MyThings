@@ -24,7 +24,7 @@ namespace MyThings.Api.Controllers
 
         #region GetSingleObject Methods
         [HttpGet]
-        public HttpResponseMessage GetSensor(int? sensorId = null)
+        public HttpResponseMessage GetSensor(int? sensorId = null, bool updateValues = false)
         {
             if (sensorId.HasValue)
             {
@@ -34,6 +34,14 @@ namespace MyThings.Api.Controllers
 
                 if (sensor != null)
                 {
+                    if (updateValues)
+                    {
+                        for (int i = 0; i < sensor.Containers.Count; i++)
+                        {
+                            sensor.Containers[i] = TableStorageRepository.UpdateValue(sensor.Containers[i]);
+                        }
+                    }
+
                     String json = JsonConvert.SerializeObject(sensor);
 
                     HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
@@ -265,7 +273,6 @@ namespace MyThings.Api.Controllers
 
         #region Group Management Methods
 
-
         [HttpGet]
         public HttpResponseMessage GroupHasSensor(int? groupId = null, int? sensorId = null)
         {
@@ -279,9 +286,19 @@ namespace MyThings.Api.Controllers
                 {
                     bool sensorInGroup = _groupRepository.SensorInGroup(groupID, sensorID);
                     if (sensorInGroup)
-                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    {
+                        HttpResponseMessage success = new HttpResponseMessage(HttpStatusCode.OK);
+                        success.Content = new StringContent(JsonConvert.SerializeObject(true));
+                        success.Headers.Add("Access-Control-Allow-Origin", "*");
+                        return success;
+                    }
                     else
-                        return new HttpResponseMessage(HttpStatusCode.NotFound);
+                    {
+                        HttpResponseMessage notfound = new HttpResponseMessage(HttpStatusCode.OK);
+                        notfound.Content = new StringContent(JsonConvert.SerializeObject(false));
+                        notfound.Headers.Add("Access-Control-Allow-Origin", "*");
+                        return notfound;
+                    }
                 }
 
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);

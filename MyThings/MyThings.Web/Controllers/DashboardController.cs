@@ -206,7 +206,7 @@ namespace MyThings.Web.Controllers
 
         [HttpGet]
         [Route("sensormanagement")]
-        public ActionResult Sensormanagement(String query = "", int? selectedSensor = null)
+        public ActionResult Sensormanagement(String query = "", int? selectedSensor = null, int? selectedGroup = null)
         {
             //Get the current user
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
@@ -234,6 +234,7 @@ namespace MyThings.Web.Controllers
             List<String> suggestionList = SuggestionListHelper.GetSuggestionList();
 
             //Fill the viewbag
+            ViewBag.SelectedGroup = selectedGroup;
             ViewBag.SelectedSensor = selectedSensor;
             ViewBag.Query = query;
 
@@ -260,6 +261,7 @@ namespace MyThings.Web.Controllers
                 //Get the sensor
                 int sensorId = id.Value;
                 Sensor sensor = _sensorRepository.GetSensorById(sensorId);
+                if (sensor == null) return RedirectToAction("Index");
                 if (!sensor.Company.Equals(user.Company)) return RedirectToAction("Index");
 
                 //Get the warnings and errors for the sensor
@@ -293,15 +295,32 @@ namespace MyThings.Web.Controllers
                 //Get the container
                 int containerId = id.Value;
                 Container container = _containerRepository.GetContainerById(containerId);
+                if (container == null) return RedirectToAction("Index");
 
                 //Get the parent sensor
                 Sensor sensor = (container.SensorId.HasValue)
                     ? _sensorRepository.GetSensorById(container.SensorId.Value)
                     : null;
-                if (sensor != null && !user.Company.Equals(sensor.Company)) return RedirectToAction("Index");
+                if (sensor == null || !user.Company.Equals(sensor.Company)) return RedirectToAction("Index");
+
+                //Create a new threshold the container
+                if (container.Threshold == null)
+                {
+                    container.Threshold = new Threshold()
+                    {
+                        BetweenValuesActive = false,
+                        FrequencyActive = false,
+                        MatchValueActive = false,
+                        MatchValue = "",
+                        MinUpdateInterval = TimeSpan.FromHours(23)
+                    };
+                    _containerRepository.Update(container);
+                    _containerRepository.SaveChanges();
+                }
 
                 //Fill the Viewbag
                 ViewBag.ParentSensor = sensor;
+                ViewBag.IsPinned = _pinRepository.IsContainerPinned(user.Id, container.Id);
                 return View(container);
             }
             return RedirectToAction("Index");
@@ -903,7 +922,6 @@ namespace MyThings.Web.Controllers
                             if (!sensor.Company.Equals(user.Company))
                                 return new HttpResponseMessage(HttpStatusCode.Forbidden);
                         }
-
 
                         //Check for changes and save them
                         if (!dbThreshold.MinValue.Equals(threshold.MinValue) ||

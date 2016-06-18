@@ -264,6 +264,7 @@
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\d3.min.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.gridster.min.js" />
     <Content Include="Scripts\MyThingsClock.js" />
@@ -334,6 +335,8 @@
     <Content Include="Views\Dashboard\SensorDetail.cshtml" />
     <Content Include="Views\Dashboard\ContainerDetail.cshtml" />
     <Content Include="Views\Dashboard\ErrorList.cshtml" />
+    <Content Include="Styles\_containerdetail.scss" />
+    <Content Include="Styles\_sensordetail.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

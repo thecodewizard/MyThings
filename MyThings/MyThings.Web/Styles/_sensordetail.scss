@@ -1,0 +1,349 @@
+﻿@import "_colors.scss";
+@import "_fonts.scss";
+
+body {
+    .sensordetail{
+        padding: 50px;
+        padding-top: 10px;
+
+        article{
+            margin: 50px 0;
+
+            & > h2{
+                margin-bottom: 15px;
+            }
+        }
+
+        .invisible{
+            display: none;
+        }
+
+        #sensornameinput{
+            width: 50%;
+        }
+    }
+
+    .rotated{
+        transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+    }
+
+    #sensorcontainers > div > div{
+        display: flex;
+        flex-flow: row wrap;
+
+        .tile{
+            display: block;
+            width: 120px;
+            height: 120px;
+            margin: 10px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+
+            &:nth-child(2n){
+                //background-color: $proximusmainblue;
+            }
+        }
+
+        h2{
+            color: $proximusmainpurple;
+        }
+    }
+
+    #techdetailholder{
+        .techtitle{
+            margin-top: 15px;
+            padding: 15px 25px;
+            background-color: $proximusterdarkpurple;
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+
+            h3{
+                margin: 0;
+                color: $proximussecpurple;
+            }
+
+            .hyperlink{
+                color: $proximusmainblue;
+                display: inline;
+                margin-left: 10px;
+                margin-top: 2px;
+                cursor: pointer;
+            }
+        }
+
+        .techbody{
+            background-color: $proximusterlightpurple;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-flow: row nowrap;
+
+            .maininfo{
+                display: flex;
+                flex-flow: column nowrap;
+                margin: 20px 5px;
+                width: 75%;
+                height: 100%;
+
+                & > div{
+                    display: flex;
+                    flex-flow: row wrap;
+
+                    p{
+                        padding: 0 10px;
+                    }
+                }
+            }
+
+            .actionlinks{
+                display: flex;
+                flex-flow: column nowrap;
+                margin: 20px 5px;
+                width: 25%;
+                height: 100%;
+
+                div{
+                    margin: 10px 0;
+                }
+
+                img{
+                    height: 35px;
+                }
+            }
+        }
+    }
+
+    #mapsholder{
+        position: relative;
+        height: 100%;
+        width: 100%;
+
+        #map{
+            margin-top: 15px;
+            position: relative;
+            min-height: 500px;
+            min-width: 400px;
+            height: 100%;
+            width: 100%;
+            background-color: #CCC;
+        }
+    }
+
+    #sensorcontainers > div{
+       .gridsterContainer > .gridster > ul > .tile{
+            background-color: $proximusmainpurple;
+            list-style: none;
+            color: white;
+            overflow: hidden;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+
+        .gridsterContainer > .gridster > ul > .tile:hover{
+            background-color: $proximusmainblue;
+        }
+
+        .gridsterContainer > .gridster > ul > .unhoverable:hover{
+            background-color: $proximusmainpurple;
+            cursor: initial;
+        }
+
+        .tile *{
+            transition: 0.2s;
+        }
+
+        .tile{
+            background-color: $proximusmainpurple;
+            list-style: none;
+            color: white;
+        }
+
+        .homepageBody{
+            overflow-x: auto;
+            overflow-y: hidden;
+            height: 100vh;
+             font-family: $proximusregularfont,$basicfonts;
+        }
+
+        body{
+            background-image: url("http://loradatagroep9.blob.core.windows.net/proximusimages/bg.png");
+            background-size:cover;
+        }
+
+        .gridsterContainer {
+            padding: 30px 50px 50px 50px ;
+            min-height: 100%;
+            height: 100%;
+            margin: 0 auto -20px;
+        }
+
+        .homeTitle{
+            color: #fff;
+            margin: 20px 0 0 50px;
+        }
+
+        .itemName 
+        {
+            text-align:center;
+            white-space: nowrap;
+        }
+
+        .itemName, .itemType{
+            overflow: hidden;
+            text-overflow:ellipsis;   
+        }
+
+        .itemValue, .itemName, .countValue, .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime, .itemValueClickBait, .itemValueTwoLines{
+            margin: 2px;
+        }
+
+        .itemValue, .itemType, .itemValueTimeStampTime, .itemValueTimeStampDate, .itemValueClickBait, .itemValueTwoLines{
+            position: absolute;
+            text-align: right;
+        }
+
+        .smallWidget .countValue{
+            font-size:4em;
+        }
+
+        .smallWidget .itemValueTimeStampDate{
+            bottom: 3px;
+            right: 7px;
+            font-size: 0.75em;
+        }
+
+        .smallWidget .itemValueTimeStampTime{
+            font-size: 0.75em;
+            bottom: 16px;
+            right: 7px;
+        }
+
+        .smallWidget .itemValue{
+            top: 36%;
+            right: 5%;  
+            font-size: 2.4em;
+        }
+
+        .smallWidget .itemValueClickBait, .smallWidget .itemValueTwoLines{
+            top: 35%;
+            right: 5%;
+            font-size:1em;
+        }
+
+        .smallWidget .itemName{
+
+        }
+
+        .smallWidget .itemType{
+            right: 5%;
+            top: 15%;
+            font-size: 0.8em;
+        }
+
+        .largeWidget .countValue{
+            font-size:$fontsizehuge;
+            left: 5%;
+        }
+
+        .largeWidget .itemValue{
+            top: 35%;
+            right: 5%;
+            font-size:5em;
+        }
+
+        .largeWidget .itemValueClickBait, .largeWidget .itemValueTwoLines{
+            top: 30%;
+            right: 5%;
+            font-size:2.5em;
+        }
+
+        .largeWidget .itemName{
+            font-size:$fontsizemedium;
+        }
+
+        .largeWidget .itemType{
+            right: 5%;
+            top: 15%;
+            font-size: 1.5em;
+        }
+
+        .largeWidget .itemValueTimeStampDate{
+            bottom: 5px;
+            right: 7px;
+            font-size: 1.2em;
+        }
+
+        .largeWidget .itemValueTimeStampTime{
+            bottom: 10%;
+            right: 7px;
+            font-size: 1.2em;
+        }
+
+        sup{
+            font-size: 0.5em;
+        }
+
+        .customimg{
+            opacity: 0.2;
+        }
+
+        .itemType, .itemValueTimeStampDate, .itemValueTimeStampTime{
+            opacity: 0.4;
+        }
+
+        .noFade{
+            opacity: 0.9;
+        }
+
+        .customimg
+        {
+            position:absolute;
+
+            &.warningimg{
+            max-height: 70%;
+            max-width: 70%;
+            bottom: -10%;
+            right: -20%;
+            }
+
+            &.errorimg{
+            max-height: 80%;
+            max-width: 80%;
+            bottom: -5%;
+            right: -20%;
+            }
+
+            &.groupimg{
+            max-height: 80%;
+            max-width: 80%;
+            bottom: -5%;
+            right: -20%;
+            }
+
+            &.logoutimg
+            {
+            max-height:95%;
+            max-width:95%;
+            bottom:-2%;
+            }
+            &.pinimg
+            {
+            max-height:80%;
+            max-width:80%;
+            bottom: 0;
+            left: -37%;
+            }
+            &.navimg{
+                max-height:100%;
+                max-width: 100%;
+            }
+        }
+
+        .hidden{
+            display: none;
+        }
+    }
+}

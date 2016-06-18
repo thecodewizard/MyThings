@@ -95,7 +95,7 @@ namespace MyThings.Common.Repositories
         public static List<Pin> RenderNavigationPinsForUser(String userid)
         {
             List<Pin> navigationpins = new List<Pin>();
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 4; i++)
             {
                 Pin navItem = new Pin();
                 navItem.SavedId = i;
