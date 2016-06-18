@@ -5,20 +5,33 @@
     background-color: rgba(255, 255, 255, .7);
     margin: auto;
 }
+.bodyPadding{
+        padding-top: 55px;
+    }
+
 @media (min-width: 768px){
     .colorWrapper {
-    width: 750px;
-}
+        width: 750px;
+    }
+    .bodyPadding{
+        padding-top: 155px;
+    }
 }
 @media (min-width: 992px){
 .colorWrapper {
     width: 970px;
 }
+.bodyPadding{
+    padding-top: 85px;
+}
 }
 @media (min-width: 1200px){
     .colorWrapper{
-    width: 1170px;
-}
+        width: 1170px;
+    }
+    .bodyPadding{
+    padding-top: 85px;
+    }
 }
 
 body{

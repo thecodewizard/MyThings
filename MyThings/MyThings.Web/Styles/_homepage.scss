@@ -51,8 +51,9 @@
 
 .homepageBody{
     overflow-x: auto;
-    height: 100vh;
-     font-family: $proximusregularfont,$basicfonts;
+    overflow-y: auto;
+    font-family: $proximusregularfont,$basicfonts;
+    height: 95vh;
 }
 
 body{
@@ -160,7 +161,7 @@ body{
 }
 
 .bottomBarWrapper{
-   
+   z-index: 1000;
    position:fixed;
    left:0px;
    bottom:0px;
