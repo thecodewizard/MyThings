@@ -54,7 +54,7 @@ h2{
     height:125px;
     color: $proximuswhite;
     background-color: $proximusmainblue;
-    margin:1%;
+    margin:0.5%;
     opacity:0.8;
     & a{
     color: $proximuswhite;
@@ -150,12 +150,12 @@ h2{
     margin: 0 20%;
 }
 
-.form-control{
+/*.form-control{
     display:inline-block;
     width:unset;
     margin-right:2%;
     float:right;
-}
+}*/
 #newgrouppin{
     display:inline-block;
 }
@@ -239,7 +239,9 @@ h2{
     }
     &:hover{
       cursor: pointer;
+       color:$proximusblack;
       background-color:$proximusterdarkblue;
+      opacity:0.6;
     }
     &:hover .sensornotpinimg{
     width:20px;
@@ -249,7 +251,8 @@ h2{
 }
 
 .groupsensorrow{
-      background-color:$proximusterdarkblue;
+    color:$proximuswhite;
+      background-color:$proximusterdarkgray;
 }
 
 .sensornotpinimg{
