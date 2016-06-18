@@ -46,12 +46,42 @@ body{
 li{
     list-style-type:none;
 }
+
+select{
+    
+    font-family:$proximusregularfont;
+    -webkit-appearance: none; 
+    height:30px;
+    background-image:url("http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg");
+    background-position:98%;
+    background-repeat:no-repeat;
+    &.dropdownsort{
+        display:inline;
+    margin-left:10px;
+    padding:0 6% 0 1%;
+    }
+    &.selectpin{
+         display:inline;
+    margin-left:10px;
+    padding:0 13% 0 1%;
+    }
+    &.selecteditpin{
+         display:inline;
+    padding:0 13% 0 1%;
+        margin-left: 28%;
+    }
+    &#language{
+         display:inline;
+    padding:0 35px 0 10px;
+    background-color:$proximusterlightgray;
+    }
+}
+
 footer{
     bottom:unset;
     color:$proximuswhite;
     float:right;
     color:$proximusmainpurple;
-    float:right;
 }
 
 a:hover{
@@ -84,4 +114,8 @@ ul{
                }
        }
     
+}
+.searchsensorform{
+    display:inline-block;
+    padding: 0 10% 5% 5%;
 }

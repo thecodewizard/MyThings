@@ -265,6 +265,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\d3.min.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.gridster.min.js" />
     <Content Include="Scripts\MyThingsClock.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
@@ -330,6 +331,7 @@
     <Content Include="Views\Dashboard\Sensormanagement.cshtml" />
     <Content Include="Styles\_sensormanagement.scss" />
     <Content Include="Views\Test\PinEverything.cshtml" />
+    <Content Include="Styles\_jqueryui.scss" />
     <Content Include="Views\Dashboard\SensorDetail.cshtml" />
     <Content Include="Views\Dashboard\ContainerDetail.cshtml" />
     <Content Include="Views\Dashboard\ErrorList.cshtml" />

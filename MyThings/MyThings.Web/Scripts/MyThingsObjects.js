@@ -69,6 +69,7 @@ function Sensor(id, name, company, macaddress, location, creationdate, sensorent
             }).done(function (json) {
                 if (json != null) {
                     var dataUpdate = JSON.parse(json);
+                    
                     that.id = dataUpdate.Id;
                     if ($.isFunction(onSensorPinned)) {
                         onSensorPinned(that);
@@ -79,6 +80,10 @@ function Sensor(id, name, company, macaddress, location, creationdate, sensorent
                     MyThings.logToUser("The sensor" +
                         that.sensor.id +
                         " could not be pinned.");
+                }
+            }).statusCode(function (json) {
+                if (json != null) {
+                   // json.statusCode.
                 }
             });
         }
@@ -174,7 +179,7 @@ function Container(id, name, macaddress, creationtime, lastupdatedtime, containe
 
         if (that.id != null && that.name != null) {
             $.ajax({
-                url: apiBaseUrl + "post/pinSensor?sensorId=" + that.container.id,
+                url: apiBaseUrl + "post/pinContainer?containerId=" + that.container.id,
                 method: "POST"
             }).done(function (json) {
                 if (json != null) {
@@ -247,7 +252,7 @@ function Group(id, name, sensors) {
 
         if (that.id != null && that.name != null) {
             $.ajax({
-                url: apiBaseUrl + "post/pinSensor?sensorId=" + that.group.id,
+                url: apiBaseUrl + "post/pinGroup?groupId=" + that.group.id,
                 method: "POST"
             }).done(function (json) {
                 if (json != null) {
