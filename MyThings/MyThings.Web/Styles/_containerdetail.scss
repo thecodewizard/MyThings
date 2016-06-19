@@ -12,7 +12,7 @@
     .button{
         background: $proximusmainpurple;
         position: absolute;
-        right: 15px;
+        right: 15px !important;
         bottom: -10px;
         display: block;
         width: 150px;
@@ -23,8 +23,8 @@
         margin: 20px 0 15px;
         cursor: pointer;
 
-        &.unpin{
-            background: none;
+        &.upb{
+            background: none !important;
             color: $proximusblack;
             font-family: $proximusboldfont;
             border: 2px $proximusmainpurple solid;
@@ -36,8 +36,7 @@
         position: relative;
         display: flex;
         flex-flow: row wrap;
-        align-items: center;
-        
+        align-items: center;      
     }
 
     h1{
