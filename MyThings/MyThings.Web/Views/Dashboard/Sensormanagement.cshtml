@@ -89,7 +89,9 @@
                     var group;
                     var apiBaseUrl = "/";
                     var webApiBaseUrl = "http://mythingsapi.azurewebsites.net/api/";
-
+                    var groupviewbag = '@ViewBag.SelectedGroup';
+                    var sensorviewbag = '@ViewBag.SelectedSensor';
+                    var queryviewbag = '@ViewBag.Query';
 
 
 
@@ -216,7 +218,7 @@
                                             var groupsensorid = "sensor"+groupcontainer[j].Id;
                                             $('#' + groupsensorid).addClass('groupsensorrow');
                                         }
-                                       
+
                                     }
                                 }
                             } else {
@@ -231,11 +233,10 @@
                                     var sensorGroups = groups[j].Sensors;
                                     for (var l = 0; l < sensorGroups.length; l++) {
                                         sensorIds.push(sensorGroups[l]);
-                                      
+
                                     }
                                 }
                             }
-                          // sensorlistPinSort(sensorIds,allSensors);
                             groupSort(sensorIds);
 
                         }
@@ -257,7 +258,7 @@
                                         .dialog({ autoOpen: false });
                                     $('#dialogdiv').dialog("open");
                                     setTimeout(function() { $('#dialogdiv').dialog("close"); },
-                                        2000);
+                                        1000);
                                 } else {
                                     var index=sensors.indexOf(sensor);
                                     if (index > -1) {
@@ -269,7 +270,7 @@
                                         .dialog({ autoOpen: false });
                                     $('#dialogdivremove').dialog("open");
                                     setTimeout(function() { $('#dialogdivremove').dialog("close"); },
-                                        2000);
+                                        1000);
                                 }
                             } else {
 
@@ -291,6 +292,17 @@
                                                 console.log('status');
                                             }
                                         });
+
+                                        $('<div id="dialogdivremove" class="ui-front" title="Sensor removed">Removed the sensor from the group</div>')
+                                       .insertBefore($('.dialogrule'))
+                                       .dialog({ autoOpen: false });
+                                        $('#dialogdivremove').css("z-index", "9002");
+                                        $('.editgroupfield').css("z-index", "1");
+                                        $('#dialogdivremove').dialog("open");
+                                        setTimeout(function() { $('#dialogdivremove').dialog("close");    
+                                            $('.editgroupfield').css("z-index", "9001");},
+                                            1000);
+                                     
                                     } else {
                                         var addsensor ={"groupId":groupId,"sensorId": parseInt($(e.target).parent().attr('id').substr(6))}
 
@@ -307,6 +319,19 @@
                                                 console.log('status');
                                             }
                                         });
+                                        
+                                        $('<div id="dialogdiv" class="ui-front" title="Sensor added">Added the sensor to your group</div>')
+                                       .insertBefore($('.dialogrule'))
+                                       .dialog({ autoOpen: false });
+                                        $('#dialogdivremove').css("z-index", "9002");
+                                        $('.editgroupfield').css("z-index", "1");
+                                        $('#dialogdiv').dialog("open");
+                                        setTimeout(function() {
+                                                $('#dialogdiv').dialog("close"); 
+                                                $('.editgroupfield').css("z-index", "9001");
+                                            },
+                                            1000);
+
                                     }
                                 }else{
 
@@ -315,7 +340,7 @@
                                 for (var i = 0; i < allSensors.length; i++) {
                                     if (sensor == allSensors[i].Id) {
                                         var sensorcontainer = allSensors[i].Containers;
-                                       
+
                                         if (!$('.sensordetails').length) {
                                             $('<div class="sensordetails">' +
                                                     '<h2>Extra details' +
@@ -334,6 +359,7 @@
                                                     '</div>' +
                                                     '<div class="sensordetailcreation">CreationDate: ' +
                                                     allSensors[i].CreationDate +
+                                                    '</div>' +
                                                     '<div class="sensordetailsensorentries">Sensorentries: ' +
                                                     allSensors[i].SensorEntries +
                                                     '</div>' +
@@ -358,7 +384,7 @@
                                             ($('.sensordetails').remove());
                                             ($('.sensordetailcontainers').remove());
                                         }
-                                       
+
                                     }
                                 }
                                 }
@@ -422,7 +448,7 @@
                             var pinnedgroups = $('.selecteditpin').val();
                             if (pinnedgroups == "true")  urlpingroup = "PinGroup";
                             else if (pinnedgroups == "false")  urlpingroup = "UnpinGroup";
-                           
+
                             var groupId = parseInt(group.substr(5));
                             groupId = {"groupId":groupId}
                                  $.ajax({
@@ -441,7 +467,7 @@
                                }
                            });
 
-                    
+
                         });
 
 
@@ -470,8 +496,7 @@
                     });
 
                     //Click on the pinimage to pin a sensor
-                    $('.sensorlist').on('click','.sensornotpinimg',
-                            function(e) {
+                    $('.sensorlist').on('click','.sensornotpinimg', function(e) {
                                 ($('.sensordetails').remove());
                                 ($('.sensordetailcontainers').remove());
                                 var sensorId = parseInt($(e.target).parent().attr('id'));
@@ -726,11 +751,11 @@
 
                     //sort sensors with click on group
                     function groupSort(arr) {
-                        
+
                         var sensorVar = [];
                         for(var i=0;i<arr.length;i++)
                         {
-                            
+
                             if (!pinnedSensors.length == 0) {
                                 for (var j = 0; j < pinnedSensors.length; j++) {
                                     if (arr[i].Id == pinnedSensors[j].Id) {
@@ -787,8 +812,8 @@
                                                 } else {
                                                     sensorVar.push(arr[i].Id);
                                                 }
-                                            
-                                        
+
+
                                     }
                                 }
 
@@ -819,7 +844,7 @@
                                               '</tr>');
                                     }
                                 }
-                                
+
                             }
                         }
                     }
@@ -844,7 +869,7 @@
                                         groupSort(data);
 
                                     }
-                                  
+
                                 })
                     .fail(function(json) { console.log('sensor failed'); });
                             });
@@ -863,21 +888,178 @@
                                         groupSort(data);
 
                                     }
-                                  
+
                                 })
                     .fail(function(json) { console.log('sensor failed'); });
                             });
 
-                    //prevent default action for a form 
+                    //prevent default action for a form
                     $('.searchsensorform').submit(function(e) {
                             e.preventDefault();
+                    });
+
+                    //check if there is a viewbag with content
+                    function sensorStartupSort(){
+                    if (groupviewbag != "" && sensorviewbag!="") {
+                        var sensorIds = [];
+                         ($('.sensorrows').remove());
+                            ($('.sensordetails').remove());
+                           for (var j = 0; j < groups.length; j++) {
+                               if (groups[j].Id == groupviewbag) {
+                                    var sensorGroups = groups[j].Sensors;
+                                    for (var l = 0; l < sensorGroups.length; l++) {
+                                        sensorIds.push(sensorGroups[l]);
+
+                                    }
+                                }
+                            }
+                            groupSort(sensorIds);
+
+                    for (var i = 0; i < allSensors.length; i++) {
+                        if (sensorviewbag == allSensors[i].Id) {
+                            var sensorcontainer = allSensors[i].Containers;
+                            
+                            var sensorviewbagid = "#sensor" + sensorviewbag;
+                            if (!$('.sensordetails').length) {
+                                $('<div class="sensordetails">' +
+                                        '<h2>Extra details' +
+                                        '</h2>' +
+                                        '<div class="sensordetailcompany">Company: ' +
+                                        allSensors[i].Company +
+                                        '</div>' +
+                                        '<div class="sensordetaillocation">Location: ' +
+                                        allSensors[i].Location +
+                                        '</div>' +
+                                        '<div class="sensordetaillocation">BasestationLat: ' +
+                                        allSensors[i].Lat +
+                                        '</div>' +
+                                        '<div class="sensordetaillocation">BasestationLng: ' +
+                                        allSensors[i].Lng +
+                                        '</div>' +
+                                        '<div class="sensordetailcreation">CreationDate: ' +
+                                        allSensors[i].CreationDate +
+                                        '</div>' +
+                                        '<div class="sensordetailsensorentries">Sensorentries: ' +
+                                        allSensors[i].SensorEntries +
+                                        '</div>' +
+                                        '</div>')
+                                    .insertAfter(sensorviewbagid);
+                                for (var j = 0; j < sensorcontainer.length; j++) {
+                                    $('<div class="sensordetailcontainers">' +
+                                        '<h2 class="sensordetailcontainer">Container: ' +
+                                            sensorcontainer[j].ContainerType.Name +
+                                            '</h2>' +
+                                            '<div class="containertype">Containertype: ' +
+                                            sensorcontainer[j].ContainerType.Name +
+                                            '</div><div class="creationtime">Creationtime: ' +
+                                            sensorcontainer[j].CreationTime +
+                                            '</div><div class="lasttime">LastUpdatedTime: ' +
+                                            sensorcontainer[j].LastUpdatedTime +
+                                            '</div>'+
+                                            '</div>')
+                                        .insertAfter($('.sensordetails'));
+                                }
+                            } else {
+                                ($('.sensordetails').remove());
+                                ($('.sensordetailcontainers').remove());
+                            }
+
+                        }
+                    }
+                    }else if (groupviewbag != "") {
+                        var sensorIds = [];
+                        ($('.sensorrows').remove());
+                        ($('.sensordetails').remove());
+                        for (var j = 0; j < groups.length; j++) {
+                            if (groups[j].Id == groupviewbag) {
+                                var sensorGroups = groups[j].Sensors;
+                                for (var l = 0; l < sensorGroups.length; l++) {
+                                    sensorIds.push(sensorGroups[l]);
+
+                                }
+                            }
+                        }
+                        groupSort(sensorIds);
+                    }
+                    else if (sensorviewbag != "") {
+                        
+                        sensorlistCreate(); 
+                        for (var i = 0; i < allSensors.length; i++) {
+                            if (sensorviewbag == allSensors[i].Id) {
+                                var sensorcontainer = allSensors[i].Containers;
+                                var sensorviewbagid = "#sensor" + sensorviewbag;
+                                if (!$('.sensordetails').length) {
+                                    $('<div class="sensordetails">' +
+                                            '<h2>Extra details' +
+                                            '</h2>' +
+                                            '<div class="sensordetailcompany">Company: ' +
+                                            allSensors[i].Company +
+                                            '</div>' +
+                                            '<div class="sensordetaillocation">Location: ' +
+                                            allSensors[i].Location +
+                                            '</div>' +
+                                            '<div class="sensordetaillocation">BasestationLat: ' +
+                                            allSensors[i].Lat +
+                                            '</div>' +
+                                            '<div class="sensordetaillocation">BasestationLng: ' +
+                                            allSensors[i].Lng +
+                                            '</div>' +
+                                            '<div class="sensordetailcreation">CreationDate: ' +
+                                            allSensors[i].CreationDate +
+                                            '</div>' +
+                                            '<div class="sensordetailsensorentries">Sensorentries: ' +
+                                            allSensors[i].SensorEntries +
+                                            '</div>' +
+                                            '</div>')
+                                        .insertAfter(sensorviewbagid);
+                                    for (var j = 0; j < sensorcontainer.length; j++) {
+                                        $('<div class="sensordetailcontainers">' +
+                                                '<h2 class="sensordetailcontainer">Container: ' +
+                                                sensorcontainer[j].ContainerType.Name +
+                                                '</h2>' +
+                                                '<div class="containertype">Containertype: ' +
+                                                sensorcontainer[j].ContainerType.Name +
+                                                '</div><div class="creationtime">Creationtime: ' +
+                                                sensorcontainer[j].CreationTime +
+                                                '</div><div class="lasttime">LastUpdatedTime: ' +
+                                                sensorcontainer[j].LastUpdatedTime +
+                                                '</div>' +
+                                                '</div>')
+                                            .insertAfter($('.sensordetails'));
+                                    }
+                                } else {
+                                    ($('.sensordetails').remove());
+                                    ($('.sensordetailcontainers').remove());
+                                }
+
+                            }
+                        }
+                    } else if (queryviewbag != "") {     
+                        $.ajax({
+                            url: webApiBaseUrl + "Get/GetSensorsOnQuery?query=" + queryviewbag,
+                    method: "GET",
+                    contentType: "application/json"
+                }).done(function(json) {
+                    if (json != null) {
+                        var data = JSON.parse(json);
+                        $('.sensorrows').remove();
+                        groupSort(data);
+
+                    }
+
+                }).fail(function(json) {
+                            console.log('sensor failed'); 
+                            
                         });
+                    } else {
+                        sensorlistCreate();
+                    }
+                    }
 
                     grouplistCreate();
                     searchauto();
                     fillSortingbox();
-                    sensorlistCreate();
-
+                    sensorStartupSort();
                 })
         </script>
     }
