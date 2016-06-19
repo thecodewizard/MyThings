@@ -19,11 +19,51 @@ namespace MyThings.TableToQueueConverter
     class Program
     {
         static SensorRepository sensorRepository = new SensorRepository();
+        static ContainerRepository containerRepository = new ContainerRepository();
+        static GroupRepository groupRepository = new GroupRepository();
 
         static void Main(string[] args)
         {
             //PortTableStorageToQueue();
             FetchLocationForAllSensors().Wait();
+            RenameAllContainers();
+        }
+
+        private static void RenameAllContainers()
+        {
+            ////Rename all containers after their sensor
+            //List<Container> containers = containerRepository.GetContainers();
+            //foreach (Container container in containers)
+            //{
+            //    if (container.SensorId.HasValue)
+            //    {
+            //        Sensor sensor = sensorRepository.GetSensorById(container.SensorId.Value);
+            //        if (sensor != null)
+            //        {
+            //            container.Name = sensor.Name;
+            //            containerRepository.Update(container);
+            //        }
+            //    }
+            //}
+            //containerRepository.SaveChanges();
+
+            //Rename all virtual containers to their group and type
+            List<Group> groups = groupRepository.GetGroups();
+            foreach (Group group in groups)
+            {
+                Sensor virtSensor = sensorRepository.GetSensorById(group.VirtualSensorIdentifier);
+                if (virtSensor != null)
+                {
+                    if(virtSensor.Containers != null)
+                    foreach (Container container in virtSensor.Containers)
+                    {
+                        String name = "VContainer " + group.Id + " - " + container.ContainerType.Name;
+                        container.Name = name;
+                        containerRepository.Update(container);
+                    }
+                }
+            }
+            containerRepository.SaveChanges();
         }
 
         private static async Task FetchLocationForAllSensors()
