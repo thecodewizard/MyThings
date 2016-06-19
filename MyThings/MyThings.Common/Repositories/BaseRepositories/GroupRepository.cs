@@ -188,12 +188,13 @@ namespace MyThings.Common.Repositories
                 _sensorRepository.SaveChanges();
 
                 // Make the new containers
+                int count = 0;
                 List<Container> VirtualContainers = new List<Container>(); 
                 foreach (ContainerType uniqueType in uniqueContainerTypes)
                 {
                     //Create the container
                     Container container = new Container();
-                    container.Name = "VContainer " +  group.Id + "-" + uniqueType.Name;
+                    container.Name = "VContainer " +  group.Id + " - " + uniqueType.Name;
                     container.ContainerType = uniqueType;
                     container.CreationTime = DateTime.Now;
                     container.MACAddress = sensor.MACAddress;
@@ -220,10 +221,12 @@ namespace MyThings.Common.Repositories
                     String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
                     ContainerEntity entity = new ContainerEntity(sensor.Company, container.MACAddress, container.ContainerType.Name, sensor.Location, payloadValue, oldestDate.Ticks.ToString(), null);
                     TableStorageRepository.WriteToVirtualSensorTable(entity, false);
+                    count++; //Update the 'sensorentry' count
                 }
                 _containerRepository.SaveChanges();
 
                 // Update the sensor
+                sensor.SensorEntries = count;
                 sensor.Containers = VirtualContainers;
                 _sensorRepository.Update(sensor);
                 _sensorRepository.SaveChanges();

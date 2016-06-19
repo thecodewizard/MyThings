@@ -87,22 +87,6 @@ namespace MyThings.Common.Repositories
             SaveChanges();
         }
 
-        //public Error SaveOrUpdateError(Error error)
-        //{
-        //    if (DbSet.Find(error.Id) != null)
-        //    {
-        //        //The error already exists -> Update the error
-        //        Update(error);
-        //    } else
-        //    {
-        //        //The error doesn't exist -> Insert the error
-        //        error = Insert(error);
-        //    }
-
-        //    SaveChanges();
-        //    return error;
-        //}
-
         #endregion
     }
 }
