@@ -70,22 +70,16 @@
             <div class="maininfo">
                 <div>
                     <p>MAC Address:</p>
-                    <p>@Model.MACAddress</p>
-                </div>
-                <div>
                     <p>Containers</p>
-                    <p>@ViewBag.ContainerCount</p>
-                </div>
-                <div>
                     <p>Last Update:</p>
-                    <p id="lastUpdated">@Model.CreationDate</p>
-                </div>
-                <div>
                     <p>Total Entries:</p>
-                    <p>@Model.SensorEntries</p>
+                    <p>Location:</p>
                 </div>
                 <div>
-                    <p>Location:</p>
+                    <p>@Model.MACAddress</p>
+                    <p>@ViewBag.ContainerCount</p>
+                    <p id="lastUpdated">@Model.CreationDate</p>
+                    <p>@Model.SensorEntries</p>
                     <p>@Model.Location</p>
                 </div>
             </div>
