@@ -250,7 +250,7 @@ namespace DataStorageQueue
             {
                 //Create the container
                 container = new Container();
-                container.Name = containerEntity.macaddress;
+                container.Name = sensor.Name;
                 container.ContainerType = type;
                 container.CreationTime = DateTime.Now;
                 container.MACAddress = containerEntity.macaddress;

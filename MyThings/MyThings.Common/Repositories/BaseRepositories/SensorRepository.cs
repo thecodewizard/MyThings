@@ -14,40 +14,22 @@ namespace MyThings.Common.Repositories
         #region GenericRepository - Eager Loading Adaptations
         public override IEnumerable<Sensor> All()
         {
-            IEnumerable<Sensor> sensors =
-                (from s in Context.Sensors
+            return (from s in Context.Sensors
                     .Include(s => s.Containers.Select(c => c.ContainerType))
                  orderby s.CreationDate descending
                  select s)
                     .ToList();
-
-            foreach (Sensor sensor in sensors)
-            {
-                foreach (Container container in sensor.Containers)
-                {
-                    container.Name = sensor.Name;
-                }
-            }
-
-            return sensors;
         }
 
         public override Sensor GetByID(object id)
         {
             int sensorId = -1;
-            Sensor sensor = !int.TryParse(id.ToString(), out sensorId)
+            return !int.TryParse(id.ToString(), out sensorId)
                 ? null
                 : (from s in Context.Sensors
                     .Include(s => s.Containers.Select(c => c.ContainerType))
                     where s.Id == sensorId
                     select s).FirstOrDefault();
-
-            foreach (Container container in sensor.Containers)
-            {
-                container.Name = sensor.Name;
-            }
-
-            return sensor;
         }
 
         public override void Update(Sensor sensor)
@@ -133,23 +115,6 @@ namespace MyThings.Common.Repositories
             Delete(sensor);
             SaveChanges();
         }
-
-        //public Sensor SaveOrUpdateSensor(Sensor sensor)
-        //{
-        //    if (DbSet.Find(sensor.Id) != null)
-        //    {
-        //        //The sensor already exists -> Update the sensor
-        //        Update(sensor);
-        //    }
-        //    else
-        //    {
-        //        //The sensor doesn't exist -> Insert the sensor
-        //        sensor = Insert(sensor);
-        //    }
-
-        //    SaveChanges();
-        //    return sensor;
-        //}
 
         #endregion
     }
