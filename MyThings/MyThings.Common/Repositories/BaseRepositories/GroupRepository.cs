@@ -193,7 +193,7 @@ namespace MyThings.Common.Repositories
                 {
                     //Create the container
                     Container container = new Container();
-                    container.Name = "VContainer " +  group.Id + "-" + uniqueType.Name;
+                    container.Name = "VContainer " +  group.Id + " - " + uniqueType.Name;
                     container.ContainerType = uniqueType;
                     container.CreationTime = DateTime.Now;
                     container.MACAddress = sensor.MACAddress;
