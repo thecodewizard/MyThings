@@ -151,6 +151,7 @@ namespace DataStorageQueue
                         foreach (Container c in virtSensor.Containers) virtSensorContainers.Add(c);
 
                         Console.Write(" -- Adding new Values");
+                        int count = 0;
                         foreach (Container container in virtSensorContainers)
                         {
                             // Delete depricated containers
@@ -186,8 +187,14 @@ namespace DataStorageQueue
                                 String payloadValue = payload.ToString(CultureInfo.InvariantCulture);
                                 ContainerEntity entity = new ContainerEntity(virtSensor.Company, container.MACAddress, container.ContainerType.Name, virtSensor.Location, payloadValue, oldestDate.Ticks.ToString(), null);
                                 TableStorageRepository.WriteToVirtualSensorTable(entity, false);
+                                count++;
                             }
                         }
+
+                        //Update the sensor entries count
+                        virtSensor.SensorEntries = count;
+                        _sensorRepository.Update(virtSensor);
+                        _sensorRepository.SaveChanges();
 
                         //Set the 'changed' flag false
                         group.IsChanged = false;
