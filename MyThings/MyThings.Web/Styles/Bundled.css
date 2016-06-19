@@ -2818,12 +2818,12 @@ h3 {
     color: white;
     margin: 20px 0 15px;
     cursor: pointer; }
-  .containerdetail .upb {
-    background: none !important;
-    color: #000000;
-    font-family: Proximus-Bold;
-    border: 2px #5C2D91 solid;
-    line-height: 25px; }
+    .containerdetail .button.upb {
+      background: none !important;
+      color: #000000;
+      font-family: Proximus-Bold;
+      border: 2px #5C2D91 solid;
+      line-height: 25px; }
   .containerdetail .titleholder {
     position: relative;
     display: flex;
@@ -3111,13 +3111,13 @@ body #techdetailholder .techbody {
   flex-flow: row nowrap; }
   body #techdetailholder .techbody .maininfo {
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: row nowrap;
     margin: 20px 5px;
     width: 75%;
     height: 100%; }
     body #techdetailholder .techbody .maininfo > div {
       display: flex;
-      flex-flow: row wrap; }
+      flex-flow: column wrap; }
       body #techdetailholder .techbody .maininfo > div p {
         padding: 0 10px; }
   body #techdetailholder .techbody .actionlinks {
