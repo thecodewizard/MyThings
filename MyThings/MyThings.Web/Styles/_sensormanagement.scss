@@ -267,12 +267,47 @@ h2{
 }
 
 .sensordetails{
+    
+    position:relative;
+    //z-index:20;
     display: block;
+    //width:100%;
     padding:1% 0 0 4%;
     padding-bottom:5%;
+    background-color:$proximusmainblue;
+    margin-top: -25px;
+    font-size:$fontsizesmall;
 }
+.sensordetailcontainer{
+         display: block;
+    }
 .sensordetailcontainers{
-    display: block;
-     padding:1% 0 0 4%;
-    padding-bottom:5%;
+    
+    color:$proximuswhite;
+    display: inline-flex;
+}
+.pincaseimg{
+    width:25px;
+    height:25px;
+}
+.sensordetaillink{
+    color:$proximuswhite;
+    position:absolute;
+    top:20%;
+    right:5%;
+
+    &:hover{
+    color:$proximussecdarkblue;
+    }
+}
+.linkicondetail{
+    position:absolute;
+    top:20%;
+    right:50%;
+}
+.containerdetaillink{
+    color:$proximuswhite;
+    &:hover{
+    color:$proximussecdarkblue;
+    }
 }
