@@ -285,15 +285,17 @@ namespace DataStorageQueue
                 if (containerEntity.payload < 5)
                 {
                     //Get the time to live
-                    TimeSpan timeToLive = MachineLearningRepository.CalculateTimeToLive(container, containerEntity.payload);
+                    container = TableStorageRepository.UpdateValue(container);
+                    TimeSpan timeToLive = MachineLearningRepository.CalculateTimeToLive(container, container.CurrentValue.Value);
 
                     //Give the error
                     Error error = Error.BatteryCriticalError(sensor, container, timeToLive);
                     _errorRepository.Insert(error);
                 } else if (containerEntity.payload < 15)
-                {                    
+                {
                     //Get the time to live
-                    TimeSpan timeToLive = MachineLearningRepository.CalculateTimeToLive(container, containerEntity.payload);
+                    container = TableStorageRepository.UpdateValue(container);
+                    TimeSpan timeToLive = MachineLearningRepository.CalculateTimeToLive(container, container.CurrentValue.Value);
 
                     //Give the error
                     Error error = Error.BatteryWarning(sensor, container, timeToLive);

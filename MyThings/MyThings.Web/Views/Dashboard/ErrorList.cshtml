@@ -1,4 +1,5 @@
 ﻿@using MyThings.Common.Models
+@using Newtonsoft.Json
 @model MyThings.Web.ViewModels.ErrorListViewModel
 
 @{
@@ -16,15 +17,13 @@
 <section>
     @using (Html.BeginForm("ErrorList", "Dashboard", FormMethod.Get, new { @class = "searchsensorform" }))
     {
-        <div class="searchdiv unblur">
+        <div class="searchdiv">
             <input class="searchbardiv ui-autocomplete-input" autocomplete="off" maxlength="127" />
             <input class="inputimg" type="image" src="http://loradatagroep9.blob.core.windows.net/proximusimages/search-icon.svg" />
         </div>
     }
 
-
-
-    <select class="dropdownsort  unblur"></select>
+    <select class="dropdownsort"></select>
 </section>
 <hr class="purpleHr"/>
 @if (Model.AllErrorsWarnings.Count == 0)
@@ -36,29 +35,62 @@ else
     <article class="errorContainer">
         @foreach (var error in Model.AllErrorsWarnings)
         {
-            <section data-isopen="false" data-id="1" class="errorItem">
-                <div class="errorTop">
-                    <p class="errorTitle">
-                        @if (error.Type == ErrorType.Error)
-                        {<span class="bubble errorBubble"></span>}
-                        else
-                        {<span class="bubble warningBubble"></span> }
-                        @error.Title
-                    </p>
-                    <img class="errorDetailIcon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg" height="27px" alt="Show Details" />
-                </div>
-                <div class="errorInfo">
-                    <h3>Warning Detail</h3>
-                    <p>@error.Description</p>
-                    <p>Advice: @error.Advice</p>
-                    <div class="linkContainer">
-                        <a class="pinLink" data-sensorid="@error.SensorId" href="#"><img class="linkArrow" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon-purple.svg" height="20px" alt="Pin Sensor" />Pin Sensor</a>
-                        <a href="#"><img class="linkArrow" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon-purple.svg" height="20px" alt="Dismiss Message" />Dismiss Message</a>
-                        <a href="#" class="supportBtn">Contact Support >></a>
-
+            if (error.Read == false)
+            {
+                <section data-isopen="false" data-id="1" class="errorItem">
+                    <div class="errorTop">
+                        <p class="errorTitle">
+                            @if (error.Type == ErrorType.Error)
+                            {
+                                <span class="bubble errorBubble"></span>
+                            }
+                            else
+                            {
+                                <span class="bubble warningBubble"></span>
+                            }
+                            @error.Title
+                        </p>
+                        <img class="errorDetailIcon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg" height="27px" alt="Show Details"/>
                     </div>
-                </div>
-            </section>
+                    <div class="errorInfo">
+                        <h3>Warning Detail</h3>
+                        <p>@error.Description</p>
+                        <p>Advice: @error.Advice</p>
+                        <div class="linkContainer">
+                            <a class="pinLink" data-sensorid="@error.SensorId" href="#"><img class="linkArrow" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon-purple.svg" height="20px" alt="Pin Sensor"/>Pin Sensor</a>
+                            <a class="dismisslink" href="#" data-errorid="@error.Id"><img class="linkArrow" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon-purple.svg" height="20px" alt="Dismiss Message"/>Dismiss Message</a>
+                            <a href="http://www.proximus.be/support/en/id_zwpr_support/personal/support.html" class="supportBtn">Contact Support >></a>
+                        </div>
+                    </div>
+                </section>
+            } else
+            {
+                <section hidden="hidden" data-isopen="false" data-id="1" class="errorItem">
+                    <div class="errorTop">
+                        <p class="errorTitle">
+                            @if (error.Type == ErrorType.Error)
+                            {
+                                <span class="bubble errorBubble"></span>
+                            } else
+                            {
+                                <span class="bubble warningBubble"></span>
+                            }
+                            @error.Title
+                        </p>
+                        <img class="errorDetailIcon" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg" height="27px" alt="Show Details" />
+                    </div>
+                    <div class="errorInfo">
+                        <h3>Warning Detail</h3>
+                        <p>@error.Description</p>
+                        <p>Advice: @error.Advice</p>
+                        <div class="linkContainer">
+                            <a class="pinLink" data-sensorid="@error.SensorId" href="#"><img class="linkArrow" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon-purple.svg" height="20px" alt="Pin Sensor" />Pin Sensor</a>
+                            <a class="dismisslink" href="#" data-errorid="@error.Id"><img class="linkArrow" src="http://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon-purple.svg" height="20px" alt="Dismiss Message" />Dismiss Message</a>
+                            <a href="http://www.proximus.be/support/en/id_zwpr_support/personal/support.html" class="supportBtn">Contact Support >></a>
+                        </div>
+                    </div>
+                </section>
+            }
         }
     </article>
 }
@@ -67,6 +99,9 @@ else
 @section scripts{
 <script type="text/javascript">
     //razor vars
+    var pinnedSensors = @Html.Raw(JsonConvert.SerializeObject(ViewBag.PinnedSensors));
+    var comboboxContainerTypes = @Html.Raw(JsonConvert.SerializeObject(Model.ErrorCategoryStrings));
+    var autocompleteFeed = @Html.Raw(JsonConvert.SerializeObject(Model.AutoCompleteSuggestionList));
 
     //load
     $(window)
@@ -75,11 +110,33 @@ else
         });
 
     function init() {
+        //autocomplete searchbox
+        makeSearchBarAutoComplete();
+
         $(".errorDetailIcon")
             .click(function (event) {
                 var id = $(event.target.parentElement.parentElement).data("id");
                 openMessage(id);
-        });
+            });
+
+        //Fill Sorting box
+        fillSortingbox();
+
+        //Set  links
+        makePinLinks();
+        makeDismissLinks();
+    }
+
+    function makeSearchBarAutoComplete() {
+        var arr = [];
+        for (var i = 0; i < autocompleteFeed.length; i++) {
+            arr.push(autocompleteFeed[i]);
+        }
+        $(".searchbardiv")
+            .autocomplete({
+                source: arr
+            });
+
     }
 
     function openMessage(id) {
@@ -97,6 +154,94 @@ else
             targetMessage.find(".errorInfo").removeClass("open");
             targetMessage.attr("data-isopen", "false");
         }
+    }
+
+    function makePinLinks() {
+        var pinlinks = $(".pinLink");
+        pinlinks.each(function(i) {
+            var pinlink = $(pinlinks.get(i));
+            var id = pinlink.data("sensorid");
+
+            pinlink.click(function() {
+                pinSensor(id,
+                    function() {
+                        logToUser("Sensor Pinned");
+                    });
+                pinlink.remove();
+            });
+
+            setPinLink(id, pinlink);
+        });
+    }
+
+    function makeDismissLinks() {
+        var dismisslinks = $(".dismisslink");
+        dismisslinks.each(function(i) {
+            var dismisslink = $(dismisslinks.get(i));
+            var id = dismisslink.data("errorid");
+
+            dismisslink.click(function() {
+                dismissMessage(id,
+                    function() {
+                        $("section[data-id='" + id + "']").remove();
+                    });
+            });
+        });
+    }
+
+    function setPinLink(id, jqueryElement) {
+        var found = false;
+        for (var i = 0; i < pinnedSensors.length; i++) {
+            console.log(id);
+            console.log("p " + pinnedSensors[i].Id);
+            if (pinnedSensors[i].Id == id) {
+                found = true;
+            }
+        }
+
+        if (found) {
+            jqueryElement.remove();
+        }
+    }
+
+    //dropdown with ways to sort the sensorlist
+    function fillSortingbox() {
+        for (var i = 0; i < comboboxContainerTypes.length; i++) {
+            $(".dropdownsort")
+                .append('<option value="' +  comboboxContainerTypes[i] + '">' + comboboxContainerTypes[i] + '</option>');
+        }
+    }
+
+    function pinSensor(sensorId, sensorPinned) {
+        $.ajax({
+            method: 'POST',
+            url: siteBaseUrl + "PinSensor",
+            data: {"sensorId": sensorId}
+        }).done(function(){
+            if ($.isFunction(sensorPinned)) {
+                sensorPinned(true);
+            }
+        }).fail(function() {
+            if ($.isFunction(MyThings.logToUser)) {
+                MyThings.logToUser("Cannot pin this sensor");
+            }
+        });
+    }
+
+    function dismissMessage(errorId, errorDismissed) {
+        $.ajax({
+            method: 'POST',
+            url: siteBaseUrl + "ChangeErrorReadStatus",
+            data: {"errorId": errorId, "readstate": true}
+        }).done(function(){
+            if ($.isFunction(errorDismissed)) {
+                errorDismissed(true);
+            }
+        }).fail(function() {
+            if ($.isFunction(MyThings.logToUser)) {
+                MyThings.logToUser("Cannot dismiss this error");
+            }
+        });
     }
 </script>
 }

@@ -265,7 +265,7 @@ namespace MyThings.Web.Controllers
                 if (!sensor.Company.Equals(user.Company)) return RedirectToAction("Index");
 
                 //Get the warnings and errors for the sensor
-                List<Error> errorsForSensor = _errorRepository.GetErrorsForUser(user.Id);
+                List<Error> errorsForSensor = _errorRepository.GetErrorsForUser(user.Company);
 
                 //Fill the viewbag
                 ViewBag.ContainerCount = sensor.Containers.Count;
@@ -335,7 +335,7 @@ namespace MyThings.Web.Controllers
             ApplicationUser user = UserManager.FindByName(User.Identity.Name);
 
             //Get the errors for the user
-            List<Error> allErrors = _errorRepository.GetErrorsForUser(user.Id);
+            List<Error> allErrors = _errorRepository.GetErrorsForUser(user.Company);
 
             //Fill the category list for the combobox
             List<ErrorCategory> errorCategories = Enum.GetValues(typeof(ErrorCategory)).Cast<ErrorCategory>().ToList();
@@ -345,6 +345,16 @@ namespace MyThings.Web.Controllers
             List<String> suggestionList = SuggestionListHelper.GetSuggestionList(true, true, true, true, true, true,
                 true, true, true, true);
 
+            //Check the pinnedsensors
+            List<Sensor> sensors = (from s in _sensorRepository.GetSensors(null, true) where s.Company.Equals(user.Company) select s).ToList();
+            List<Tile> tiles = GridsterHelper.JsonToTileList(_pinRepository.GetGridsterJson(user.Id).GridsterJson);
+            List<Sensor> pinnedSensors = new List<Sensor>();
+            foreach (Tile tile in (from t in tiles where t.Pin.SavedType.Equals(PinType.Sensor) select t).ToList())
+            {
+                Sensor sensor = (from s in sensors where s.Id.Equals(tile.Pin.SavedId) select s).FirstOrDefault();
+                if (sensor != null) pinnedSensors.Add(sensor);
+            }
+
             //Fill the viewbag
             ViewBag.Query = query;
             ViewBag.SelectedError = selectedError;
@@ -352,6 +362,7 @@ namespace MyThings.Web.Controllers
             ViewBag.ErrorCount = (from e in allErrors where e.Type.Equals(ErrorType.Error) select e).Count();
             ViewBag.WarningCount = (from e in allErrors where e.Type.Equals(ErrorType.Warning) select e).Count();
 
+            ViewBag.PinnedSensors = pinnedSensors;
             return View(new ErrorListViewModel()
             {
                 AllErrorsWarnings = allErrors,
@@ -979,7 +990,7 @@ namespace MyThings.Web.Controllers
                     //Fetch the user
                     ApplicationUser user = UserManager.FindByName(User.Identity.Name);
                     Error error =
-                        (from e in _errorRepository.GetErrorsForUser(user.Id) where e.Id.Equals(errorId.Value) select e)
+                        (from e in _errorRepository.GetErrorsForUser(user.Company) where e.Id.Equals(errorId.Value) select e)
                             .FirstOrDefault();
 
                     if (error != null)
