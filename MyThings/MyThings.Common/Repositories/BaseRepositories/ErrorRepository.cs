@@ -29,9 +29,12 @@ namespace MyThings.Common.Repositories
         {
             Error prevError = (from e in GetErrors()
                                where
-                                   (e.SensorId.Equals(error.SensorId) && e.ContainerId.Equals(error.ContainerId) &&
-                                   e.ErrorCode.Equals(error.ErrorCode)) || (DateTime.Now.Subtract(error.Time) < TimeSpan.FromDays(1))
+                                   e.SensorId.Equals(error.SensorId) && e.ContainerId.Equals(error.ContainerId) &&
+                                   e.ErrorCode.Equals(error.ErrorCode)
                                select e).FirstOrDefault();
+
+            //(DateTime.Now.Subtract(prevError.Time) > TimeSpan.FromDays(1))
+
             if (prevError == null)
             {
                 if (error.Sensor != null && Context.Entry(error.Sensor).State != EntityState.Unchanged)

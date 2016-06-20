@@ -31,21 +31,21 @@ namespace MyThings.TableToQueueConverter
 
         private static void RenameAllContainers()
         {
-            ////Rename all containers after their sensor
-            //List<Container> containers = containerRepository.GetContainers();
-            //foreach (Container container in containers)
-            //{
-            //    if (container.SensorId.HasValue)
-            //    {
-            //        Sensor sensor = sensorRepository.GetSensorById(container.SensorId.Value);
-            //        if (sensor != null)
-            //        {
-            //            container.Name = sensor.Name;
-            //            containerRepository.Update(container);
-            //        }
-            //    }
-            //}
-            //containerRepository.SaveChanges();
+            //Rename all containers after their sensor
+            List<Container> containers = containerRepository.GetContainers();
+            foreach (Container container in containers)
+            {
+                if (container.SensorId.HasValue)
+                {
+                    Sensor sensor = sensorRepository.GetSensorById(container.SensorId.Value);
+                    if (sensor != null)
+                    {
+                        container.Name = sensor.Name;
+                        containerRepository.Update(container);
+                    }
+                }
+            }
+            containerRepository.SaveChanges();
 
             //Rename all virtual containers to their group and type
             List<Group> groups = groupRepository.GetGroups();

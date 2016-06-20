@@ -2568,7 +2568,7 @@ h2 {
   width: 200px;
   height: 125px;
   color: #FFFFFF;
-  background-color: #00bCEe;
+  background-color: #5C2D91;
   margin: 0.5%;
   opacity: 0.8; }
   .grouprectangletile a {
@@ -2618,7 +2618,7 @@ h2 {
 
 .newgroup {
   height: 125px;
-  width: 415px;
+  width: 407px;
   font-size: 1.2em;
   font-weight: normal;
   color: #000000;
@@ -2655,12 +2655,6 @@ h2 {
   padding-left: 2%;
   margin: 0 20%; }
 
-/*.form-control{
-    display:inline-block;
-    width:unset;
-    margin-right:2%;
-    float:right;
-}*/
 #newgrouppin {
   display: inline-block; }
 
@@ -2757,42 +2751,66 @@ h2 {
   opacity: 1; }
 
 .sensordetails {
-  position: relative;
+  position: fixed;
   display: block;
-  padding: 1% 0 8% 4%;
-  background-color: #00bCEe;
-  margin-top: -25px;
-  font-size: 1.2em; }
+  width: 100%;
+  height: 80px;
+  background-color: #030e1f;
+  font-size: 1.2em;
+  left: 0;
+  bottom: 0; }
+  .sensordetails h2 {
+    color: #FFFFFF; }
 
 .sensordetailcontainer {
   display: block;
+  margin: 0 0 0 0.5%;
   background-color: unset; }
 
 .sensordetailcontainers {
+  margin: 0 10px 0;
   color: #FFFFFF;
-  display: inline-flex; }
+  display: inline-flex;
+  padding: 15px 0 0 10px; }
 
 .pincaseimg {
   width: 25px;
   height: 25px; }
 
+.arrowlinkimg {
+  max-width: 25px;
+  max-height: 25px; }
+
 .sensordetaillink {
-  color: #FFFFFF;
-  position: absolute;
-  bottom: 5%;
-  right: 30px; }
+  color: #FFFFFF; }
   .sensordetaillink:hover {
-    color: #0073CF; }
+    color: #00bCEe; }
 
 .linkicondetail {
-  position: absolute;
-  bottom: 5%;
-  right: 400px; }
+  margin-right: 10px; }
 
 .containerdetaillink {
   color: #FFFFFF; }
-  .containerdetaillink:hover {
-    color: #0073CF; }
+  .containerdetaillink:hover, .containerdetaillink :focus {
+    color: #00bCEe; }
+
+.sensordetailsdiv {
+  margin: 0 0 250px 20%; }
+
+.virtualgrouplink {
+  font-size: 1.2em;
+  color: #0073CF;
+  padding: 0 0 0 1%; }
+  .virtualgrouplink:hover {
+    color: #00bCEe; }
+
+.linkgroupdetail {
+  margin: -0.5% 0 0 4%; }
+
+.sensordetaillinkdiv {
+  position: absolute;
+  top: 10%;
+  left: 70%; }
 
 h1 {
   color: #5C2D91; }
@@ -3416,8 +3434,7 @@ h3 {
 
 .errorContainer {
   width: 90%;
-  margin: auto;
-  margin-bottom: 30px; }
+  margin: 30px auto; }
 
 .errorItem {
   margin: 0 0 30px 0; }

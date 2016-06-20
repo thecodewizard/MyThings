@@ -51,7 +51,7 @@ namespace MyThings.Common.Models
             //Calculated
             Read = false;
             SensorId = sensor.Id;
-            ContainerId = container.Id;
+            ContainerId = container?.Id ?? 0;
             Time = DateTime.Now;
         }
 
