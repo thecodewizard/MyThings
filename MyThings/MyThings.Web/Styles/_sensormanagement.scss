@@ -272,14 +272,15 @@ h2{
     //z-index:20;
     display: block;
     //width:100%;
-    padding:1% 0 0 4%;
-    padding-bottom:5%;
+    padding:1% 0 8% 4%;
     background-color:$proximusmainblue;
     margin-top: -25px;
     font-size:$fontsizesmall;
 }
 .sensordetailcontainer{
          display: block;
+         
+    background-color:unset;
     }
 .sensordetailcontainers{
     
@@ -293,8 +294,8 @@ h2{
 .sensordetaillink{
     color:$proximuswhite;
     position:absolute;
-    top:20%;
-    right:5%;
+    bottom:5%;
+    right:30px;
 
     &:hover{
     color:$proximussecdarkblue;
@@ -302,8 +303,8 @@ h2{
 }
 .linkicondetail{
     position:absolute;
-    top:20%;
-    right:50%;
+    bottom:5%;
+    right:400px;
 }
 .containerdetaillink{
     color:$proximuswhite;
