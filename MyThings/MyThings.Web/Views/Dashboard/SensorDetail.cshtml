@@ -17,30 +17,34 @@
     </ul>
 
     <article id="errorcontainers">
-        @*@foreach (Error error in ViewBag.ErrorList)
+        @foreach (Error error in ViewBag.ErrorList)
         {
-            <div class="errorimg">
-                <img alt="error icon" src="https://loradatagroep9.blob.core.windows.net/proximusimages/error-icon.png" />
-            </div>
-            <div class="errormessage">
-                <h3 class="errortitle">@error.Title</h3>
-                <p class="errordescr">@error.Description</p>
-                <p class="erroradvice">@error.Advice</p>
-                <p class="errortime">@error.Time.ToLocalTime().ToLongDateString()</p>
+            <div class="errorWrapper">
+                <div class="errorimg">
+                    <img alt="error icon" src="https://loradatagroep9.blob.core.windows.net/proximusimages/error-icon.png" />
+                </div>
+                <div class="errormessage">
+                    <h3 class="errortitle">@error.Title</h3>
+                    <p class="errordescr">@error.Description</p>
+                    <p class="erroradvice">@error.Advice</p>
+                    <p class="errortime">@error.Time.ToLocalTime().ToLongDateString()</p>
+                </div>
             </div>
         }
         @foreach (Error warning in ViewBag.WarningList)
         {
-            <div class="errorimg">
-                <img alt="warning icon" src="https://loradatagroep9.blob.core.windows.net/proximusimages/warning-icon.png" />
+            <div class="warningWrapper">
+                <div class="errorimg">
+                    <img alt="warning icon" src="https://loradatagroep9.blob.core.windows.net/proximusimages/warning-icon.png" />
+                </div>
+                <div class="errormessage">
+                    <h3 class="errortitle">@warning.Title</h3>
+                    <p class="errordescr">@warning.Description</p>
+                    <p class="erroradvice">@warning.Advice</p>
+                    <p class="errortime">@warning.Time.ToLocalTime().ToLongDateString()</p>
+                </div>
             </div>
-            <div class="errormessage">
-                <h3 class="errortitle">@warning.Title</h3>
-                <p class="errordescr">@warning.Description</p>
-                <p class="erroradvice">@warning.Advice</p>
-                <p class="errortime">@warning.Time.ToLocalTime().ToLongDateString()</p>
-            </div>
-        }*@
+        }
     </article>
 
     <article id="sensorcontainers">

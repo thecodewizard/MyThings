@@ -28,6 +28,61 @@ body {
         -webkit-transform: rotate(-90deg);
     }
 
+    #errorcontainers{
+        .errorWrapper{
+            background: $proximusredlight;
+
+            display: flex;
+            flex-flow: row nowrap;
+            overflow: hidden;
+
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .warningWrapper{
+            //background: rgba(255,241,23, 0.3);
+            background: rgba(255, 251, 213, 1);
+
+            display: flex;
+            flex-flow: row nowrap;
+            overflow: hidden;
+
+            position: relative;        
+            margin-bottom: 20px;
+        }
+
+        .errorimg{
+            position: absolute;
+            bottom: 0;
+            right:-50px;
+
+            height: auto;
+            width: auto;
+            max-height: 150px;
+            max-width: 150px;
+
+            img{
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .errormessage{
+            padding: 0 50px 10px 20px;
+            z-index: 100;
+        }
+
+        .errortime{
+            color: $proximusmainpurple;
+            text-decoration: underline;
+        }
+
+        .errortitle{
+            color: $proximusred;
+        }
+    }
+
     #sensorcontainers > div > div{
         display: flex;
         flex-flow: row wrap;

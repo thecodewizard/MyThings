@@ -3103,6 +3103,45 @@ body .rotated {
   transform: rotate(-90deg);
   -webkit-transform: rotate(-90deg); }
 
+body #errorcontainers .errorWrapper {
+  background: #FDE6E6;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px; }
+
+body #errorcontainers .warningWrapper {
+  background: #fffbd5;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px; }
+
+body #errorcontainers .errorimg {
+  position: absolute;
+  bottom: 0;
+  right: -50px;
+  height: auto;
+  width: auto;
+  max-height: 150px;
+  max-width: 150px; }
+  body #errorcontainers .errorimg img {
+    width: 100%;
+    height: 100%; }
+
+body #errorcontainers .errormessage {
+  padding: 0 50px 10px 20px;
+  z-index: 100; }
+
+body #errorcontainers .errortime {
+  color: #5C2D91;
+  text-decoration: underline; }
+
+body #errorcontainers .errortitle {
+  color: #EE0707; }
+
 body #sensorcontainers > div > div {
   display: flex;
   flex-flow: row wrap; }

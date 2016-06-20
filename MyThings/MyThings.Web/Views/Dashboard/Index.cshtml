@@ -531,12 +531,13 @@
                     var count = $(event.target.parentElement).find('div').length;
                     var index = $(event.target.parentElement).find('div').not(".hidden").first().index();
                     $($(event.target.parentElement).find('div')[index]).addClass("hidden");
-                    if (isNext)
+                    if (isNext) {
                         $($(event.target.parentElement).find('div')[(index + 1) % count])
                             .removeClass("hidden");
-                    else
-                        $($(event.target.parentElement).find('div')[(index - 1) % count])
+                    } else {
+                        $($(event.target.parentElement).find('div')[(index - 1 + count) % count])
                             .removeClass("hidden");
+                    }
                 });
         }
 
