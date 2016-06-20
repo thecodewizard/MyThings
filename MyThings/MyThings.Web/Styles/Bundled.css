@@ -2569,7 +2569,7 @@ h2 {
   height: 125px;
   color: #FFFFFF;
   background-color: #00bCEe;
-  margin: 1%;
+  margin: 0.5%;
   opacity: 0.8; }
   .grouprectangletile a {
     color: #FFFFFF; }
@@ -2655,12 +2655,12 @@ h2 {
   padding-left: 2%;
   margin: 0 20%; }
 
-.form-control {
-  display: inline-block;
-  width: unset;
-  margin-right: 2%;
-  float: right; }
-
+/*.form-control{
+    display:inline-block;
+    width:unset;
+    margin-right:2%;
+    float:right;
+}*/
 #newgrouppin {
   display: inline-block; }
 
@@ -2734,14 +2734,17 @@ h2 {
     color: #000000; }
   .sensorrows:hover {
     cursor: pointer;
-    background-color: #c2d3de; }
+    color: #000000;
+    background-color: #c2d3de;
+    opacity: 0.6; }
   .sensorrows:hover .sensornotpinimg {
     width: 20px;
     height: 20px;
     opacity: 1; }
 
 .groupsensorrow {
-  background-color: #c2d3de; }
+  color: #FFFFFF;
+  background-color: #636363; }
 
 .sensornotpinimg {
   width: 20px;
@@ -2754,14 +2757,42 @@ h2 {
   opacity: 1; }
 
 .sensordetails {
+  position: relative;
   display: block;
-  padding: 1% 0 0 4%;
-  padding-bottom: 5%; }
+  padding: 1% 0 8% 4%;
+  background-color: #00bCEe;
+  margin-top: -25px;
+  font-size: 1.2em; }
+
+.sensordetailcontainer {
+  display: block;
+  background-color: unset; }
 
 .sensordetailcontainers {
-  display: block;
-  padding: 1% 0 0 4%;
-  padding-bottom: 10%; }
+  color: #FFFFFF;
+  display: inline-flex; }
+
+.pincaseimg {
+  width: 25px;
+  height: 25px; }
+
+.sensordetaillink {
+  color: #FFFFFF;
+  position: absolute;
+  bottom: 5%;
+  right: 30px; }
+  .sensordetaillink:hover {
+    color: #0073CF; }
+
+.linkicondetail {
+  position: absolute;
+  bottom: 5%;
+  right: 400px; }
+
+.containerdetaillink {
+  color: #FFFFFF; }
+  .containerdetaillink:hover {
+    color: #0073CF; }
 
 h1 {
   color: #5C2D91; }
@@ -3072,6 +3103,45 @@ body .rotated {
   transform: rotate(-90deg);
   -webkit-transform: rotate(-90deg); }
 
+body #errorcontainers .errorWrapper {
+  background: #FDE6E6;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px; }
+
+body #errorcontainers .warningWrapper {
+  background: #fffbd5;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px; }
+
+body #errorcontainers .errorimg {
+  position: absolute;
+  bottom: 0;
+  right: -50px;
+  height: auto;
+  width: auto;
+  max-height: 150px;
+  max-width: 150px; }
+  body #errorcontainers .errorimg img {
+    width: 100%;
+    height: 100%; }
+
+body #errorcontainers .errormessage {
+  padding: 0 50px 10px 20px;
+  z-index: 100; }
+
+body #errorcontainers .errortime {
+  color: #5C2D91;
+  text-decoration: underline; }
+
+body #errorcontainers .errortitle {
+  color: #EE0707; }
+
 body #sensorcontainers > div > div {
   display: flex;
   flex-flow: row wrap; }
@@ -3306,4 +3376,149 @@ body #sensorcontainers > div .customimg {
 
 body #sensorcontainers > div .hidden {
   display: none; }
+
+h1 {
+  color: #5C2D91; }
+
+h2 {
+  color: #9C5FB5; }
+
+h3 {
+  color: #D1BBDA; }
+
+@font-face {
+  font-family: Proximus-Regular;
+  src: url("../fonts/Proximus-Regular.ttf") format("truetype"), url("../fonts/Proximus-Regular.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Light;
+  src: url("../fonts/Proximus-Light.ttf") format("truetype"), url("../fonts/Proximus-Light.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-LightItalic;
+  src: url("../fonts/Proximus-LightItalic.ttf") format("truetype"), url("../fonts/Proximus-LightItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-RegularItalic;
+  src: url("../fonts/Proximus-RegularItalic.ttf") format("truetype"), url("../fonts/Proximus-RegularItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-Bold;
+  src: url("../fonts/Proximus-Bold.ttf") format("truetype"), url("../fonts/Proximus-Bold.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-BoldItalic;
+  src: url("../fonts/Proximus-BoldItalic.ttf") format("truetype"), url("../fonts/Proximus-BoldItalic.woff") format("woff"); }
+
+@font-face {
+  font-family: Proximus-ExtraBold;
+  src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
+
+.errorContainer {
+  width: 90%;
+  margin: auto;
+  margin-bottom: 30px; }
+
+.errorItem {
+  margin: 0 0 30px 0; }
+
+.errorTop {
+  background-color: #D1BBDA;
+  padding: 7px 7px 0 7px; }
+
+.bubble {
+  padding: 0 8px 0 8px;
+  font-size: 0.8em;
+  border-radius: 50%;
+  margin: 0 50px 0 20px; }
+
+.errorBubble {
+  background-color: #EE0707; }
+
+.warningBubble {
+  background-color: #fff117; }
+
+.errorTitle {
+  margin: 0;
+  display: inline-block;
+  font-size: 1.2em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 85%; }
+
+.errorInfo {
+  background-color: #F2E7F2;
+  transition: height, ease-in-out, 0.8s;
+  box-sizing: border-box;
+  padding: 0 0 0 94px;
+  max-height: 0;
+  overflow: hidden; }
+
+.open {
+  max-height: 500px; }
+
+.errorDetailIcon {
+  cursor: pointer;
+  padding: 0 1% 0 1%;
+  float: right;
+  transition: transform, ease-in-out, 0.3s; }
+
+.rotatedArrow {
+  transform: rotate(180deg); }
+
+.errorInfo > h3 {
+  font-family: Proximus-Light;
+  color: #5C2D91;
+  font-size: 2em;
+  margin: 0;
+  padding: 20px 0 10px 0; }
+
+.errorInfo > p {
+  margin: 0; }
+
+.linkContainer {
+  text-align: right;
+  padding: 0px 17px 25px 0; }
+
+.errorInfo a {
+  margin-top: 20px;
+  color: black;
+  display: inline-block;
+  font-size: 1.2em;
+  margin-left: 30px; }
+
+.errorInfo .supportBtn {
+  color: #FFFFFF;
+  background-color: #5C2D91;
+  padding: 7px 20px 7px 20px;
+  transition: background-color, ease, 0.2s; }
+
+.errorInfo a:hover {
+  color: #5C2D91; }
+
+.errorInfo .supportBtn:hover {
+  color: #FFFFFF;
+  background-color: #00bCEe; }
+
+.noMessages {
+  font-family: Proximus-LightItalic;
+  font-size: 1.4em;
+  margin: 50px;
+  text-align: center; }
+
+.loginContainer {
+  background-color: rgba(255, 255, 255, 0.7);
+  margin: auto;
+  display: inline-block;
+  max-width: 550px !important;
+  border-radius: 2px;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); }
+
+.hrMargin {
+  margin-bottom: 20px; }
 

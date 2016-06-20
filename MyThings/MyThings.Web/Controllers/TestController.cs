@@ -27,6 +27,7 @@ namespace MyThings.Web.Controllers
         private readonly SensorRepository _sensorRepository = new SensorRepository();
         private readonly ContainerRepository _containerRepository = new ContainerRepository();
         private readonly PinRepository _pinRepository = new PinRepository();
+        private readonly ErrorRepository _errorRepository = new ErrorRepository();
 
         // GET: Test
         public ActionResult Index()
@@ -43,6 +44,18 @@ namespace MyThings.Web.Controllers
             c =  TableStorageRepository.GetHistory(c, new TimeSpan(24, 0, 0));
 
             return View();
+        }
+
+        public ActionResult ReviveAllErrors()
+        {
+            List<Error> errors = _errorRepository.GetErrors();
+            foreach (Error error in errors)
+            {
+                error.Read = false;
+                _errorRepository.Update(error);
+            }
+            _errorRepository.SaveChanges();
+            return View("PinEverything");
         }
 
         [HttpGet]

@@ -200,7 +200,7 @@
                                 document.location.href = "/sensormanagement";
                                 break;
                             case 2:
-                                document.location.href = "/";
+                                document.location.href = "http://www.proximus.be/support/en/id_zwpr_support/personal/support.html";
                                 break;
                             case 3:
                                 document.location.href = "/";
@@ -531,12 +531,13 @@
                     var count = $(event.target.parentElement).find('div').length;
                     var index = $(event.target.parentElement).find('div').not(".hidden").first().index();
                     $($(event.target.parentElement).find('div')[index]).addClass("hidden");
-                    if (isNext)
+                    if (isNext) {
                         $($(event.target.parentElement).find('div')[(index + 1) % count])
                             .removeClass("hidden");
-                    else
-                        $($(event.target.parentElement).find('div')[(index - 1) % count])
+                    } else {
+                        $($(event.target.parentElement).find('div')[(index - 1 + count) % count])
                             .removeClass("hidden");
+                    }
                 });
         }
 

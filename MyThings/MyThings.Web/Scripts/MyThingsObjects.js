@@ -4,7 +4,7 @@
 //Serverlocations
 //var apiBaseUrl = "http://localhost:22056/api/";
 var apiBaseUrl = "http://mythingsapi.azurewebsites.net/api/";
-var siteBaseUrl = "http://localhost:16964/Dashboard/";
+var siteBaseUrl = "/Dashboard/";
 
 //OBJECTS
 function Sensor(id, name, company, macaddress, location, creationdate, sensorentries, basestationlat, basestationlng, containers) {

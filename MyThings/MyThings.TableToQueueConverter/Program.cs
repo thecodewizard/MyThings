@@ -26,7 +26,7 @@ namespace MyThings.TableToQueueConverter
         {
             //PortTableStorageToQueue();
             FetchLocationForAllSensors().Wait();
-            RenameAllContainers();
+            //RenameAllContainers();
         }
 
         private static void RenameAllContainers()
