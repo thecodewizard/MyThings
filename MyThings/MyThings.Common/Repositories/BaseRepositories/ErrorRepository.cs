@@ -43,6 +43,10 @@ namespace MyThings.Common.Repositories
                     Context.Entry(error.Container).State = EntityState.Unchanged;
 
                 Context.Error.Add(error);
+            } else if (error.ErrorCode == 199 || error.ErrorCode == 299)
+            {
+                //Add always if generic error or warning.
+                Context.Error.Add(error);
             }
             return error;
         }
