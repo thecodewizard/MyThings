@@ -33,11 +33,11 @@
 else
 {
     <article class="errorContainer">
-        @foreach (var error in Model.AllErrorsWarnings)
+        @foreach (Error error in Model.AllErrorsWarnings)
         {
             if (error.Read == false)
             {
-                <section data-isopen="false" data-id="1" class="errorItem">
+                <section data-isopen="false" data-id="@error.Id" class="errorItem">
                     <div class="errorTop">
                         <p class="errorTitle">
                             @if (error.Type == ErrorType.Error)
