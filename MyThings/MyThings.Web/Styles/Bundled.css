@@ -3432,6 +3432,14 @@ h3 {
   font-family: Proximus-ExtraBold;
   src: url("../fonts/Proximus-ExtraBold.ttf") format("truetype"), url("../fonts/Proximus-ExtraBold.woff") format("woff"); }
 
+#errorlisth2 {
+  margin: 0 0 30px 60px;
+  padding-bottom: 20px;
+  height: 50px; }
+
+#errorlistsection {
+  margin-top: 10px; }
+
 .errorContainer {
   width: 90%;
   margin: 30px auto; }

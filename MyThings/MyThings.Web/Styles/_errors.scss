@@ -1,6 +1,15 @@
 ﻿@import "_colors.scss";
 @import "_fonts.scss";
 
+#errorlisth2{
+    margin: 0 0 30px 60px;
+    padding-bottom: 20px;
+    height: 50px;
+}
+
+#errorlistsection{
+    margin-top: 10px;
+}
 
 .errorContainer{
     width: 90%;

@@ -12,9 +12,9 @@
         @Html.ActionLink("Errors and Warnings", "ErrorList", "Dashboard")
     </li>
 </ul>
-<h2>Errors and Warnings</h2>
+<h2 id="errorlisth2">Errors and Warnings</h2>
 
-<section>
+<section id="errorlistsection">
     @using (Html.BeginForm("ErrorList", "Dashboard", FormMethod.Get, new { @class = "searchsensorform" }))
     {
         <div class="searchdiv">
