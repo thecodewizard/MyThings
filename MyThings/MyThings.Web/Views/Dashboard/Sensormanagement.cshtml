@@ -144,7 +144,8 @@
                     //Here we generate a place for the user to make a new group
                     $('.groupdiv').on('click','.addgrouptile',function() {
                         if ($('.blur').length) {}else{
-                            
+                            $('.linkgroupdetail').remove();
+                            $('.virtualgrouplink').remove();
                             $('.sensordetails').remove();
                         if ($('.newgroup').length) {
                             $('.newgroup').remove();
@@ -182,6 +183,8 @@
                     //Get into edit mode with groups
                     $('.sensorul').on('click','.editbutton', function() {
                         $('.sensorrows').remove();
+                        $('.linkgroupdetail').remove();
+                        $('.virtualgrouplink').remove();
                         $('.sensordetails').remove();
                         if (('.newgroup').length) {
                             $('.newgroup').remove();
@@ -352,10 +355,11 @@
 
                                 //get details from sensors
                                     // webApiBaseUrl
-                                    $('.sensordetails').remove();
-                                    showsensorDetail(sensor);
-
-
+                                    if ($('.groupsensorrow').hasClass('groupsensorrow')) {
+                                        if(!$(e.target).parent().hasClass('groupsensorrow'))
+                                            $('.sensordetails').remove();
+                                    }
+                                    showsensorDetail(sensor,e);
                                 }
 
                             }
@@ -363,22 +367,28 @@
                     });
 
                     //show the detail (containers in a div) for a sensor
-                    function showsensorDetail(sensor){
+                    function showsensorDetail(sensor,e){
 
                         for (var i = 0; i < allSensors.length; i++) {
                             if (sensor == allSensors[i].Id) {
                                 var sensorcontainer = allSensors[i].Containers;
 
                                 if (!$('.sensordetails').length) {
-                                    $('.groupsensorrow').removeClass('groupsensorrow');
-                                    $('#sensor' + sensor).addClass('groupsensorrow');
+                                    if (!$(e.target).parent().hasClass('groupsensorrow')) {
+                                        $('.groupsensorrow').removeClass('groupsensorrow');
+                                        $('#sensor' + sensor).addClass('groupsensorrow');
+                                    } else {
+                                        $('.groupsensorrow').removeClass('groupsensorrow');
+                                    }
                                     var sensorId = allSensors[i].Id;
                                     $('<div class="sensordetails">' +
                                         '<div class="sensordetailsdiv">' +
                                              '<h2 class="sensordetailcontainer">Containers' +
                                               '</h2>' +
+                                              '<div class="sensordetaillinkdiv">'+
                                             '<img class="arrowlinkimg linkicondetail" src="https://loradatagroep9.blob.core.windows.net/proximusimages/arrow-icon-white.png" />'+
                                                '<a href="/sensor/'+allSensors[i].Id+'" class="sensordetaillink">Go to the sensor</a>' +
+                                               '</div>'+
                                             '</div>'+
                                             '</div>')
                                         .insertAfter($('.sensorlist'));
@@ -387,21 +397,24 @@
                                         switch (sensorcontainer[j].ContainerType.Name) {
                                             case "Battery level":
                                                 $('<div class="sensordetailcontainers">' +
-                                        '<a href="/container/'+sensorcontainer[j].Id+'" class="containerdetaillink">'+containercurvalue+'</a>'+
+                                        '<a href="/container/'+sensorcontainer[j].Id+'" class="containerdetaillink">'+containercurvalue+
+                    "<sup>%</sup></p>" +'</a>'+
                                             '<img class="pincaseimg" alt="Battery" src="http://loradatagroep9.blob.core.windows.net/proximusimages/battery-icon-white.png" /> ' +
                                         '</div>')
                                     .insertAfter($('.sensordetailcontainer'));
                                                 break;
                                             case "Temperature":
                                                 $('<div class="sensordetailcontainers">' +
-                                        '<a href="/container/'+sensorcontainer[j].Id+'" class="containerdetaillink">'+containercurvalue+'</a>'+
+                                        '<a href="/container/'+sensorcontainer[j].Id+'" class="containerdetaillink">'+containercurvalue+
+                    "<sup>°C</sup></p>" +'</a>'+
                                                     "<img class='pincaseimg' alt='Temperature' src='http://loradatagroep9.blob.core.windows.net/proximusimages/temperature-icon-white.png' /> "+ 
                                                                                '</div>')
                                                                             .insertAfter($('.sensordetailcontainer'));
                                                 break;
                                             case "Humidity":
                                                 $('<div class="sensordetailcontainers">' +
-                                        '<a href="/container/'+sensorcontainer[j].Id+'" class="containerdetaillink">'+containercurvalue+'</a>'+
+                                        '<a href="/container/'+sensorcontainer[j].Id+'" class="containerdetaillink">'+containercurvalue+
+                    "<sup>%</sup></p>" +'</a>'+
                                                     "<img class='pincaseimg' alt='Humidity' src='http://loradatagroep9.blob.core.windows.net/proximusimages/humidity-icon-white.png' /> "+
                                                                                 '</div>')
                                                                             .insertAfter($('.sensordetailcontainer'));
@@ -471,7 +484,6 @@
                             }
                         }
                     }
-
 
 
                     //Click on the button to create a new group

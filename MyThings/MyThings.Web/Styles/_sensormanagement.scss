@@ -266,7 +266,7 @@ h2{
     display: block;
     width:100%;
     height:80px;
-    background-color:$proximusmainpurple;
+    background-color:#030e1f;
     font-size:$fontsizesmall;
     left:0;
     bottom:0;
@@ -276,14 +276,14 @@ h2{
 }
 .sensordetailcontainer{
          display: block;
-         margin:0 0 0 -1%;
+         margin:0 0 0 0.5%;
     background-color:unset;
     }
 .sensordetailcontainers{
     margin:0 10px 0;
     color:$proximuswhite;
     display: inline-flex;
-    padding: 15px 0 0 0; 
+    padding: 15px 0 0 10px; 
 }
 .pincaseimg{
     width:25px;
@@ -295,25 +295,17 @@ h2{
 }
 .sensordetaillink{
     color:$proximuswhite;
-    position:absolute;
-    top:10%;
-    right:21%;
-
     &:hover{
-    color:$proximuswhite;
-    text-decoration:underline;
+    color:$proximusmainblue;
     }
 }
 .linkicondetail{
-    position:absolute;
-    top:10%;
-    right:360px;
+    margin-right:10px;
 }
 .containerdetaillink{
     color:$proximuswhite;
     &:hover,:focus{
-    color:$proximuswhite;
-    text-decoration:underline;
+    color:$proximusmainblue;
     }
 }
 .sensordetailsdiv{
@@ -329,4 +321,10 @@ h2{
 }
 .linkgroupdetail{
     margin: -0.5% 0 0 4%;
+}
+.sensordetaillinkdiv{
+    position: absolute;
+    top: 10%;
+    left: 70%;
+
 }
