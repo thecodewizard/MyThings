@@ -53,8 +53,8 @@ h2{
     width:$largeblock;
     height:125px;
     color: $proximuswhite;
-    background-color: $proximusmainblue;
-    margin:1%;
+    background-color:$proximusmainpurple;
+    margin:0.5%;
     opacity:0.8;
     & a{
     color: $proximuswhite;
@@ -108,7 +108,7 @@ h2{
 }
 .newgroup{
     height:125px;
-    width:415px;
+    width:407px;
     font-size:$fontsizesmall;
     font-weight:normal;
     color:$proximusblack;
@@ -150,12 +150,6 @@ h2{
     margin: 0 20%;
 }
 
-.form-control{
-    display:inline-block;
-    width:unset;
-    margin-right:2%;
-    float:right;
-}
 #newgrouppin{
     display:inline-block;
 }
@@ -239,7 +233,9 @@ h2{
     }
     &:hover{
       cursor: pointer;
+       color:$proximusblack;
       background-color:$proximusterdarkblue;
+      opacity:0.6;
     }
     &:hover .sensornotpinimg{
     width:20px;
@@ -249,7 +245,8 @@ h2{
 }
 
 .groupsensorrow{
-      background-color:$proximusterdarkblue;
+    color:$proximuswhite;
+      background-color:$proximusterdarkgray;
 }
 
 .sensornotpinimg{
@@ -264,12 +261,70 @@ h2{
 }
 
 .sensordetails{
+    
+    position:fixed;
     display: block;
-    padding:1% 0 0 4%;
-    padding-bottom:5%;
+    width:100%;
+    height:80px;
+    background-color:#030e1f;
+    font-size:$fontsizesmall;
+    left:0;
+    bottom:0;
+    & h2{
+        color:$proximuswhite;
+    }
 }
+.sensordetailcontainer{
+         display: block;
+         margin:0 0 0 0.5%;
+    background-color:unset;
+    }
 .sensordetailcontainers{
-    display:  block;
-     padding:1% 0 0 4%;
-    padding-bottom:10%;
+    margin:0 10px 0;
+    color:$proximuswhite;
+    display: inline-flex;
+    padding: 15px 0 0 10px; 
+}
+.pincaseimg{
+    width:25px;
+    height:25px;
+}
+.arrowlinkimg{
+    max-width:25px;
+    max-height:25px;
+}
+.sensordetaillink{
+    color:$proximuswhite;
+    &:hover{
+    color:$proximusmainblue;
+    }
+}
+.linkicondetail{
+    margin-right:10px;
+}
+.containerdetaillink{
+    color:$proximuswhite;
+    &:hover,:focus{
+    color:$proximusmainblue;
+    }
+}
+.sensordetailsdiv{
+    margin:0 0 250px 20%;
+}
+.virtualgrouplink{
+    font-size:$fontsizesmall;
+    color:$proximussecdarkblue;
+    padding: 0 0 0 1%;
+    &:hover{
+    color:$proximusmainblue;
+    }
+}
+.linkgroupdetail{
+    margin: -0.5% 0 0 4%;
+}
+.sensordetaillinkdiv{
+    position: absolute;
+    top: 10%;
+    left: 70%;
+
 }
