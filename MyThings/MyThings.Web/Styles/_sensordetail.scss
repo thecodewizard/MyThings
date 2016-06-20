@@ -83,14 +83,14 @@ body {
 
             .maininfo{
                 display: flex;
-                flex-flow: column nowrap;
+                flex-flow: row nowrap;
                 margin: 20px 5px;
                 width: 75%;
                 height: 100%;
 
                 & > div{
                     display: flex;
-                    flex-flow: row wrap;
+                    flex-flow: column wrap;
 
                     p{
                         padding: 0 10px;
