@@ -951,7 +951,7 @@
                     $('.searchdiv').on('click','.inputimg',function() {
                                 var searchkeyword = $('.searchbardiv').val();
                                 $.ajax({
-                                    url: webApiBaseUrl + "Get/GetSensorsOnQuery?query=" + searchkeyword,
+                                    url: webApiBaseUrl + "Get/GetSensorsOnQuery?query=\"" + searchkeyword + "\"",
                                     method: "GET",
                                     contentType: "application/json"
                                 }).done(function(json) {
@@ -972,7 +972,7 @@
                         ($('.sensordetails').remove());
                             var searchkeyword = $('.dropdownsort :selected').val();
                                 $.ajax({
-                                    url: webApiBaseUrl + "Get/GetSensorsOnQuery?query=" + searchkeyword,
+                                    url: webApiBaseUrl + "Get/GetSensorsOnQuery?query=\"" + searchkeyword+ "\"",
                                     method: "GET",
                                     contentType: "application/json"
                                 }).done(function(json) {
@@ -1110,7 +1110,7 @@
                         }
                     } else if (queryviewbag != "") {
                         $.ajax({
-                            url: webApiBaseUrl + "Get/GetSensorsOnQuery?query=" + queryviewbag,
+                            url: webApiBaseUrl + "Get/GetSensorsOnQuery?query=\"" + queryviewbag+ "\"",
                     method: "GET",
                     contentType: "application/json"
                 }).done(function(json) {
@@ -1128,7 +1128,7 @@
                     } else {
                         sensorlistCreate();
                     }
-                    }
+                }
 
                     grouplistCreate();
                     searchauto();

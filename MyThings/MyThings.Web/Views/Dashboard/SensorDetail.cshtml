@@ -53,7 +53,7 @@
             <div class="gridster ready">
                 @foreach (Container container in Model.Containers)
                 {
-                    <div class="smallWidget tile" data-id="@container.Id" style="display: list-item;">
+                    <div class="smallWidget tile hoverable" data-id="@container.Id" style="display: list-item;">
                         <p title="@container.MACAddress" class="itemName">@container.Name</p>
                         <p class="itemType">@container.ContainerType.Name</p>
                         <img class="pinimg customimg" alt="Generic" src="https://loradatagroep9.blob.core.windows.net/proximusimages/proximus-x-white.png">
@@ -94,7 +94,7 @@
                 </div>
                 <div>
                     <img class="rotated" src="https://loradatagroep9.blob.core.windows.net/proximusimages/arrow-down-icon.svg" />
-                    <a href="#">Support</a>
+                    <a href="http://www.proximus.be/support/en/id_zwpr_support/personal/support.html">Support</a>
                 </div>
             </div>
         </div>
