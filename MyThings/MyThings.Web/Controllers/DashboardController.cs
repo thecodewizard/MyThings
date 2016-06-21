@@ -864,6 +864,47 @@ namespace MyThings.Web.Controllers
             return message;
         }
 
+        [HttpPost]
+        public HttpResponseMessage UpdateGroupName(int? groupId, String name)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (groupId.HasValue)
+                {
+                    int Id = groupId.Value;
+
+                    if (!String.IsNullOrWhiteSpace(name))
+                    {
+                        //Fetch the user
+                        ApplicationUser user = UserManager.FindByName(User.Identity.Name);
+
+                        Group group = _groupRepository.GetGroupById(Id);
+                        if (group != null)
+                        {
+                            group.Name = name;
+                            _groupRepository.Update(group);
+                            _groupRepository.SaveChanges();
+
+                            //Return the sensor when successful
+                            HttpResponseMessage success = new HttpResponseMessage();
+                            success.StatusCode = HttpStatusCode.OK;
+                            success.Content = new StringContent(JsonConvert.SerializeObject(group));
+                            return success;
+                        }
+                        return new HttpResponseMessage(HttpStatusCode.NotFound);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                }
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            //Throw a 'Not Allowed' Error
+            HttpResponseMessage message = new HttpResponseMessage();
+            message.StatusCode = HttpStatusCode.MethodNotAllowed;
+            message.Content = new StringContent("You must be logged in to perform this operation");
+            return message;
+        }
+
         #endregion
 
         #region Sensor Management Methods
